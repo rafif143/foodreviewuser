@@ -48,15 +48,37 @@
   
   // Fungsi untuk merender konten dari database dengan support untuk format TipTap HTML dan JSON blocks
   function renderContent(content) {
-    // Jika content adalah string HTML (format TipTap), render langsung
+    // Jika content adalah string, coba parse sebagai JSON terlebih dahulu
     if (typeof content === 'string') {
-      // Parse dan format HTML dari TipTap dengan styling yang sesuai
-      return formatTipTapHtml(content);
+      try {
+        // Coba parse sebagai JSON
+        const parsedContent = JSON.parse(content);
+        
+        // Jika berhasil di-parse dan merupakan array, render sebagai JSON blocks
+        if (Array.isArray(parsedContent)) {
+          // Cek apakah ini format baru (dengan id, type, content, order, config)
+          if (parsedContent.length > 0 && parsedContent[0].hasOwnProperty('type') && parsedContent[0].hasOwnProperty('order')) {
+            return renderNewJsonBlocks(parsedContent);
+          } else {
+            // Format lama (tanpa id, order, config)
+            return renderLegacyJsonBlocks(parsedContent);
+          }
+        }
+      } catch (e) {
+        // Jika bukan JSON, anggap sebagai HTML string dan format dengan TipTap
+        return formatTipTapHtml(content);
+      }
     }
     
-    // Jika content adalah array (format JSON blocks lama), gunakan logic lama
+    // Jika content langsung berupa array (format JSON blocks), gunakan logic yang sesuai
     if (Array.isArray(content)) {
-      return renderJsonBlocks(content);
+      // Cek apakah ini format baru (dengan id, type, content, order, config)
+      if (content.length > 0 && content[0].hasOwnProperty('type') && content[0].hasOwnProperty('order')) {
+        return renderNewJsonBlocks(content);
+      } else {
+        // Format lama (tanpa id, order, config)
+        return renderLegacyJsonBlocks(content);
+      }
     }
     
     return '';
@@ -120,8 +142,112 @@
     return formattedHtml;
   }
   
-  // Fungsi untuk merender JSON blocks (format lama)
-  function renderJsonBlocks(contentArray) {
+  // Fungsi untuk merender JSON blocks format baru (dengan id, type, content, order, config)
+  function renderNewJsonBlocks(contentArray) {
+    if (!contentArray || !Array.isArray(contentArray)) return '';
+    
+    // Urutkan berdasarkan order jika ada
+    const sortedBlocks = [...contentArray].sort((a, b) => (a.order || 0) - (b.order || 0));
+    
+    return sortedBlocks.map((block, index) => {
+      let html = '';
+      
+      switch (block.type) {
+        case 'rich_text':
+          // Rich text content dengan HTML support
+          if (block.content) {
+            // Apply styling untuk HTML content
+            const formattedContent = block.content
+              .replace(/<p>/g, '<p class="mb-6 leading-relaxed text-gray-700">')
+              .replace(/<p style="text-align: left;">/g, '<p class="mb-6 leading-relaxed text-gray-700 text-left">')
+              .replace(/<p style="text-align: center;">/g, '<p class="mb-6 leading-relaxed text-gray-700 text-center">')
+              .replace(/<p style="text-align: right;">/g, '<p class="mb-6 leading-relaxed text-gray-700 text-right">')
+              .replace(/<p style="text-align: justify;">/g, '<p class="mb-6 leading-relaxed text-gray-700 text-justify">')
+              .replace(/<strong>/g, '<strong class="font-bold text-gray-900">')
+              .replace(/<em>/g, '<em class="italic text-gray-800">')
+              .replace(/<u>/g, '<u class="underline text-gray-800">')
+              .replace(/<mark>/g, '<mark class="bg-yellow-200 px-1 rounded text-gray-900">')
+              .replace(/<h1>/g, '<h1 class="text-3xl font-bold text-gray-900 mb-6 mt-8">')
+              .replace(/<h2>/g, '<h2 class="text-2xl font-bold text-gray-800 mb-6 mt-8">')
+              .replace(/<h3>/g, '<h3 class="text-xl font-bold text-gray-800 mb-4 mt-6">')
+              .replace(/<h4>/g, '<h4 class="text-lg font-bold text-gray-800 mb-3 mt-5">')
+              .replace(/<h5>/g, '<h5 class="text-base font-bold text-gray-800 mb-2 mt-4">')
+              .replace(/<h6>/g, '<h6 class="text-sm font-bold text-gray-800 mb-2 mt-3">')
+              .replace(/<ul>/g, '<ul class="mb-6 ml-6 space-y-2">')
+              .replace(/<ol>/g, '<ol class="mb-6 ml-6 space-y-2">')
+              .replace(/<li>/g, '<li class="text-gray-700">')
+              .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-red-500 pl-6 py-2 my-6 bg-red-50 italic text-gray-700">')
+              .replace(/<code>/g, '<code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800">')
+              .replace(/<pre>/g, '<pre class="bg-gray-100 p-4 rounded-lg my-6 overflow-x-auto">')
+              .replace(/<a>/g, '<a class="text-red-600 hover:text-red-700 underline">')
+              .replace(/<table>/g, '<table class="w-full border-collapse border border-gray-300 my-6">')
+              .replace(/<th>/g, '<th class="border border-gray-300 px-4 py-2 bg-gray-100 font-bold text-gray-800">')
+              .replace(/<td>/g, '<td class="border border-gray-300 px-4 py-2 text-gray-700">');
+            
+            // Jika konten sudah berupa elemen block (p, h1-h6, ul, ol, blockquote, pre, table), 
+            // tidak perlu dibungkus dengan div lagi
+            if (formattedContent.trim().match(/^<(p|h[1-6]|ul|ol|blockquote|pre|table)/i)) {
+              html = formattedContent;
+            } else {
+              html = `<div class="mb-6 leading-relaxed text-gray-700">${formattedContent}</div>`;
+            }
+          }
+          break;
+          
+        case 'image':
+          // Image content
+          if (block.content) {
+            const config = block.config || {};
+            const alt = config.alt || '';
+            const caption = config.caption || '';
+            
+            html = `
+              <figure class="my-8">
+                <img src="${validateImageUrl(block.content)}" alt="${alt}" class="w-full rounded-lg shadow-md">
+                ${caption ? `<figcaption class="text-sm text-gray-600 mt-2 text-center">${caption}</figcaption>` : ''}
+              </figure>
+            `;
+          }
+          break;
+          
+        case 'subtitle':
+          // Sub judul dengan margin bottom yang besar agar ada jarak dengan konten berikutnya
+          html = `<h2 class="text-2xl font-bold text-gray-800 mb-6 mt-8">${block.content}</h2>`;
+          break;
+          
+        case 'text':
+          // Teks dengan margin bottom yang cukup dan support HTML formatting
+          const formattedContent = block.content
+            .replace(/\n/g, '<br>')
+            .replace(/<strong>/g, '<strong class="font-bold text-gray-900">')
+            .replace(/<em>/g, '<em class="italic text-gray-800">')
+            .replace(/<mark>/g, '<mark class="bg-yellow-200 px-1 rounded text-gray-900">');
+          
+          html = `<div class="mb-6 leading-relaxed text-gray-700">${formattedContent}</div>`;
+          break;
+          
+        case 'subpoint':
+          // Sub point dengan margin yang sesuai
+          html = `<div class="mb-6 ml-4">• ${block.content}</div>`;
+          break;
+          
+        default:
+          // Fallback untuk tipe konten lain
+          html = `<div class="mb-4">${block.content || ''}</div>`;
+      }
+      
+      // Tambahkan extra spacing jika ini adalah block terakhir atau jika block berikutnya adalah subtitle
+      const nextBlock = sortedBlocks[index + 1];
+      if (nextBlock && nextBlock.type === 'subtitle') {
+        html += '<div class="mb-8"></div>'; // Extra spacing sebelum subtitle
+      }
+      
+      return html;
+    }).join('');
+  }
+  
+  // Fungsi untuk merender JSON blocks format lama
+  function renderLegacyJsonBlocks(contentArray) {
     if (!contentArray || !Array.isArray(contentArray)) return '';
     
     return contentArray.map((block, index) => {
@@ -481,10 +607,5 @@
   .prose {
     color: rgb(55 65 81);
   }
-  
-  .prose p {
-    margin-bottom: 1.5rem;
-    font-size: 1.125rem;
-    line-height: 1.75;
-  }
+
 </style>

@@ -1,7 +1,7 @@
 <script>
   import { goto } from '$app/navigation';
   import FeaturedArticles from '$lib/components/PopularArticles.svelte';
-  import CategoryShowcase from '$lib/components/RandomArticle.svelte';
+  import VideoShowcase from '$lib/components/VideoShowcase.svelte';
   import RecentPost from '$lib/components/RecentPost.svelte';
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
@@ -18,8 +18,6 @@
       goto(`/${data.website.slug}/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   }
-  
-
 </script>
 
 <svelte:head>
@@ -78,26 +76,26 @@
     </div>
   </section>
   
-  <!-- Article Random -->
+  <!-- Video Random -->
   <section class="py-16 bg-gradient-to-br from-red-50 to-orange-50">
     <div class="container mx-auto px-4">
       <div class="text-center mb-12">
         <div class="inline-block p-2 bg-gradient-to-r from-orange-100 to-red-100 rounded-full mb-6">
           <div class="w-12 h-12 bg-gradient-to-br from-orange-600 to-red-600 rounded-full flex items-center justify-center mx-auto">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
         </div>
         <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent mb-4">
-          Artikel Random
+          Video Kuliner
         </h2>
         <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto rounded-full mb-6"></div>
         <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
-          Jelajahi berbagai kategori kuliner yang kami sajikan untuk Anda
+          Tonton video-video menarik tentang kuliner dan tempat makan terbaik di Kelantan
         </p>
       </div>
-             <CategoryShowcase articles={data.randomArticles} websiteSlug={data.website.slug} />
+      <VideoShowcase videos={data.randomVideos} websiteSlug={data.website.slug} />
     </div>
   </section>
   
