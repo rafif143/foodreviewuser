@@ -25,7 +25,7 @@ export default config;
   publish = "build"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
 ```
 
 ### 3. `_redirects` (di root project)
@@ -72,7 +72,23 @@ Jika ada masalah dengan deployment:
 1. **Periksa build logs** di Netlify dashboard
 2. **Test build lokal**: `npm run build`
 3. **Periksa file konfigurasi** (`netlify.toml`, `_redirects`)
-4. **Pastikan Node.js version** sesuai (18.x)
+4. **Pastikan Node.js version** sesuai (20.x)
+
+### Error Node.js Version
+
+Jika Anda mendapatkan error seperti:
+```
+npm error engine Unsupported engine
+npm error engine Not compatible with your version of node/npm: @sveltejs/vite-plugin-svelte@6.1.1
+npm error notsup Required: {"node":"^20.19 || ^22.12 || >=24"}
+npm error notsup Actual:   {"npm":"10.8.2","node":"v18.20.8"}
+```
+
+**Solusi**: Pastikan `netlify.toml` menggunakan Node.js versi 20:
+```toml
+[build.environment]
+  NODE_VERSION = "20"
+```
 
 ## Catatan
 
