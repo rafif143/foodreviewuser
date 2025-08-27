@@ -9,7 +9,14 @@ Proyek ini sudah dikonfigurasi untuk deployment ke Netlify menggunakan `@sveltej
 import adapter from '@sveltejs/adapter-netlify';
 
 /** @type {import('@sveltejs/kit').Config} */
-const config = { kit: { adapter: adapter() } };
+const config = {
+	kit: {
+		adapter: adapter({
+			edge: false,
+			split: false
+		})
+	}
+};
 
 export default config;
 ```
@@ -26,7 +33,7 @@ export default config;
 
 ### 3. `_redirects` (di root project)
 ```
-/*    /index.html   200
+/*    /.netlify/functions/entry    200
 ```
 
 ## Langkah Deployment
@@ -86,19 +93,24 @@ npm error notsup Actual:   {"npm":"10.8.2","node":"v18.20.8"}
   NODE_VERSION = "20"
 ```
 
-### Error "Page not found"
+### Error "Page not found" (SSR)
 
-Jika Anda mendapatkan error "Page not found" setelah deployment:
+Jika Anda mendapatkan error "Page not found" setelah deployment dengan SSR:
 
-**Solusi**: Pastikan file `_redirects` menggunakan format yang benar untuk SvelteKit:
+**Solusi**: Pastikan file `_redirects` menggunakan format yang benar untuk SvelteKit SSR:
 ```
-/*    /index.html   200
+/*    /.netlify/functions/entry    200
 ```
 
 Dan konfigurasi adapter di `svelte.config.js`:
 ```javascript
-adapter: adapter()
+adapter: adapter({
+  edge: false,
+  split: false
+})
 ```
+
+**Penting**: Untuk SvelteKit dengan SSR, gunakan `/.netlify/functions/entry` bukan `/index.html`
 
 ## Catatan
 
