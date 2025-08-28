@@ -1,13 +1,6 @@
 import adapter from '@sveltejs/adapter-netlify';
 
-const config = {
-  kit: {
-    adapter: adapter({
-      edge: false,
-      split: false,
-      includeFiles: ['src/**/*']
-    })
-  }
-};
+/** @type {import('@sveltejs/kit').Config} */
+const config = { kit: { adapter: adapter() } };
 
 export default config;
