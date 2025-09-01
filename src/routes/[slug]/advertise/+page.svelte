@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
+  import AdBanner from '$lib/components/AdBanner.svelte';
   import { supabase } from '$lib/supabase.js';
 
   /** @type {import('./$types').PageData} */
@@ -124,6 +125,13 @@
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
     </div>
   {:else}
+    <!-- Ad Banner Section -->
+    <div class="py-4 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <AdBanner websiteSlug={data.website.slug} />
+      </div>
+    </div>
+
     <!-- Page Header -->
     {#if advertiseData.page_title}
       <PageHeader 

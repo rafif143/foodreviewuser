@@ -5,6 +5,7 @@
   import RecentPost from '$lib/components/RecentPost.svelte';
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
+  import AdBanner from '$lib/components/AdBanner.svelte';
 
   /** @type {import('./$types').PageData} */
   export let data;
@@ -26,6 +27,9 @@
 </svelte:head>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
+  <!-- Ad Banner Section -->
+  <AdBanner websiteSlug={data.website.slug} />
+  
   <!-- Featured Articles Section -->
   <PageHeader 
     title="Artikel Terpopuler"
@@ -79,23 +83,35 @@
   <!-- Video Random -->
   <section class="py-16 bg-gradient-to-br from-red-50 to-orange-50">
     <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <div class="inline-block p-2 bg-gradient-to-r from-orange-100 to-red-100 rounded-full mb-6">
-          <div class="w-12 h-12 bg-gradient-to-br from-orange-600 to-red-600 rounded-full flex items-center justify-center mx-auto">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-3">
+          <div class="text-center mb-12">
+            <div class="inline-block p-2 bg-gradient-to-r from-orange-100 to-red-100 rounded-full mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-orange-600 to-red-600 rounded-full flex items-center justify-center mx-auto">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent mb-4">
+              Food Review
+            </h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto rounded-full mb-6"></div>
+            <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
+              Tonton video-video menarik tentang kuliner dan tempat makan terbaik di Kelantan
+            </p>
+          </div>
+          <VideoShowcase videos={data.randomVideos} websiteSlug={data.website.slug} />
+        </div>
+        
+        <!-- Sidebar Ad -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-4">
+            <AdBanner websiteSlug={data.website.slug} variant="vertical" />
           </div>
         </div>
-        <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent mb-4">
-          Food Review
-        </h2>
-        <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto rounded-full mb-6"></div>
-        <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
-          Tonton video-video menarik tentang kuliner dan tempat makan terbaik di Kelantan
-        </p>
       </div>
-      <VideoShowcase videos={data.randomVideos} websiteSlug={data.website.slug} />
     </div>
   </section>
   

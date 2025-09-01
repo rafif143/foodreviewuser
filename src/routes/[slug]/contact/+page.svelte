@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { supabase } from '$lib/supabase.js';
   import { page } from '$app/stores';
+  import AdBanner from '$lib/components/AdBanner.svelte';
 
   let contactData = null;
   let loading = true;
@@ -210,6 +211,13 @@
   </div>
 {:else if contactData}
   <div class="min-h-screen bg-gray-50">
+    <!-- Ad Banner Section -->
+    <div class="py-4 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <AdBanner websiteSlug={$page.params.slug} />
+      </div>
+    </div>
+    
     <!-- Header -->
     <div class="bg-white shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

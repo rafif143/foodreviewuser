@@ -3,6 +3,7 @@
   import NavigationMenu from '$lib/components/NavigationMenu.svelte';
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   import Footer from '$lib/components/Footer.svelte';
+  import AdBanner from '$lib/components/AdBanner.svelte';
   import { goto } from '$app/navigation';
 
   /** @type {import('./$types').PageData} */
@@ -60,6 +61,9 @@
 
 <main class="bg-gray-50 min-h-screen">
   <div class="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+    <!-- Ad Banner Section -->
+    <AdBanner websiteSlug={websiteSlug} />
+    
     <!-- Breadcrumb -->
     <nav class="mb-6">
       <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-gray-600">
@@ -191,6 +195,11 @@
       
       <!-- Sidebar -->
       <div class="lg:col-span-1">
+        <!-- Ad Banner Vertical -->
+        <div class="mb-6">
+          <AdBanner websiteSlug={websiteSlug} variant="vertical" />
+        </div>
+        
         <TrendingSidebar />
       </div>
     </div>

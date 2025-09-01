@@ -2,6 +2,7 @@
   import FoodCard from '$lib/components/FoodCard.svelte';
   import AboutKelantanCard from '$lib/components/AboutKelantanCard.svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
+  import AdBanner from '$lib/components/AdBanner.svelte';
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
@@ -119,6 +120,9 @@
 </svelte:head>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
+  <!-- Ad Banner Section -->
+  <AdBanner websiteSlug={data.website.slug} />
+  
   <!-- Page Header -->
   <PageHeader 
     title="Event & Festival"
@@ -200,6 +204,9 @@
         
         <!-- Sidebar -->
         <div class="lg:col-span-1 space-y-8">
+          <!-- Ad Banner Vertical -->
+          <AdBanner websiteSlug={data.website.slug} variant="vertical" />
+          
           <!-- About Events Section -->
           <AboutKelantanCard 
             title="Tentang Event Kelantan"

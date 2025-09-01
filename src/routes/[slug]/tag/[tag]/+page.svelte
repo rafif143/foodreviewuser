@@ -4,6 +4,7 @@
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import FoodCard from '$lib/components/FoodCard.svelte';
+  import AdBanner from '$lib/components/AdBanner.svelte';
 
   /** @type {import('./$types').PageData} */
   export let data;
@@ -40,6 +41,13 @@
 </svelte:head>
 
 <main class="bg-gray-50 min-h-screen">
+  <!-- Ad Banner Section -->
+  <div class="py-4 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <AdBanner websiteSlug={websiteSlug} />
+    </div>
+  </div>
+
   <div class="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
     <!-- Breadcrumb -->
     <nav class="mb-6">
@@ -148,10 +156,15 @@
         {/if}
       </div>
       
-      <!-- Sidebar -->
-      <div class="lg:col-span-1">
-        <TrendingSidebar />
-      </div>
+             <!-- Sidebar -->
+       <div class="lg:col-span-1">
+         <!-- Ad Banner Vertical -->
+         <div class="mb-6">
+           <AdBanner websiteSlug={websiteSlug} variant="vertical" />
+         </div>
+         
+         <TrendingSidebar />
+       </div>
     </div>
   </div>
 </main>
