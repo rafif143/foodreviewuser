@@ -64,11 +64,27 @@
     return match ? match[1] : null;
   }
   
+  // Extract TikTok video ID
+  function getTikTokId(url) {
+    // Handle both direct URLs and embed codes
+    if (url.includes('data-video-id=')) {
+      const match = url.match(/data-video-id="([^"]+)"/);
+      return match ? match[1] : null;
+    } else if (url.includes('tiktok.com')) {
+      const match = url.match(/tiktok\.com\/@[^\/]+\/video\/(\d+)/);
+      return match ? match[1] : null;
+    }
+    return null;
+  }
+  
   // Get embed URL
   function getEmbedUrl(video) {
     if (video.video_type === 'youtube') {
       const videoId = getYouTubeId(video.url);
       return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    } else if (video.video_type === 'tiktok') {
+      const videoId = getTikTokId(video.url);
+      return videoId ? `https://www.tiktok.com/embed/v2/${videoId}` : null;
     }
     return null;
   }
@@ -77,6 +93,10 @@
     loadAllVideos();
   });
 </script>
+
+<svelte:head>
+  <script async src="https://www.tiktok.com/embed.js"></script>
+</svelte:head>
 
 <div class="w-full max-w-6xl mx-auto p-4">
   
@@ -88,7 +108,6 @@
     </div>
   {:else}
     
-
     <!-- Tab Navigation -->
     <div class="flex justify-center mb-8">
       <div class="bg-gray-100 rounded-2xl p-2 flex gap-2">
@@ -98,7 +117,7 @@
         >
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
             YouTube ({youtubeVideos.length})
           </div>
@@ -120,16 +139,14 @@
 
     <!-- Video Grid -->
     {#if currentVideos.length > 0}
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {#each currentVideos as video (video.id)}
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
-            
-            <!-- Video Content -->
-            <div class="relative">
-              <div class="w-full h-48 bg-gray-100">
-                
-                {#if video.video_type === 'youtube'}
-                  <!-- YouTube Embed -->
+             <!-- YouTube Videos - With Cards in Grid -->
+       {#if activeTab === 'youtube'}
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+           {#each currentVideos as video (video.id)}
+             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300">
+               <!-- Video Content -->
+               <div class="relative">
+                 <div class="w-full h-40 bg-gray-100">
                   {#if getEmbedUrl(video)}
                     <iframe
                       src="{getEmbedUrl(video)}"
@@ -144,7 +161,7 @@
                       <div class="text-center">
                         <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-2">
                           <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                           </svg>
                         </div>
                         <p class="text-red-600 text-sm font-medium">YouTube Video</p>
@@ -152,68 +169,76 @@
                       </div>
                     </div>
                   {/if}
-                  
-                {:else if video.video_type === 'tiktok'}
-                  <!-- TikTok Preview -->
-                  <div class="w-full h-full bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 flex items-center justify-center">
-                    <div class="text-center text-white">
-                      <div class="w-12 h-12 bg-black bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                </div>
+              </div>
+              
+                             <!-- Video Info -->
+               <div class="p-4">
+                 <h3 class="text-base font-bold text-gray-900 mb-2 line-clamp-2">
+                   {video.title}
+                 </h3>
+                 
+                 {#if video.description}
+                   <p class="text-gray-600 text-xs mb-3 line-clamp-2">
+                     {video.description}
+                   </p>
+                 {/if}
+                 
+                 <div class="flex items-center justify-between">
+                   <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-600">
+                     YouTube
+                   </span>
+                   
+                   <a 
+                     href={video.url}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     class="text-blue-600 hover:text-blue-800 text-xs font-medium flex items-center gap-1"
+                   >
+                     Buka Video
+                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                     </svg>
+                   </a>
+                 </div>
+               </div>
+            </div>
+          {/each}
+        </div>
+      {/if}
+      
+                           <!-- TikTok Videos - Free Layout in 2 Columns -->
+        {#if activeTab === 'tiktok'}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            {#each currentVideos as video (video.id)}
+              <div class="w-full">
+                {#if getEmbedUrl(video)}
+                  <iframe
+                    src="{getEmbedUrl(video)}"
+                    title="TikTok Video"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="w-full"
+                                         style="min-height: 800px; max-width: 100%;"
+                  ></iframe>
+                {:else}
+                  <div class="w-full bg-pink-50 flex items-center justify-center p-6">
+                    <div class="text-center">
+                      <div class="w-12 h-12 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
                         </svg>
                       </div>
-                      <p class="font-bold text-sm">TikTok Video</p>
-                      <p class="text-xs opacity-75">Klik untuk menonton</p>
-                    </div>
-                  </div>
-                  
-                {:else}
-                  <!-- Unknown video type -->
-                  <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <div class="text-center">
-                      <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                      </svg>
-                      <p class="text-gray-500 text-sm">Video</p>
+                      <p class="text-pink-600 text-sm font-medium">TikTok Video</p>
+                      <p class="text-pink-400 text-xs">URL tidak valid</p>
                     </div>
                   </div>
                 {/if}
               </div>
-            </div>
-            
-            <!-- Video Info -->
-            <div class="p-6">
-              <h3 class="text-lg font-bold text-gray-900 mb-2">
-                {video.title}
-              </h3>
-              
-              {#if video.description}
-                <p class="text-gray-600 text-sm mb-3">
-                  {video.description}
-                </p>
-              {/if}
-              
-              <div class="flex items-center justify-between">
-                <span class="px-3 py-1 text-xs font-medium rounded-full {video.video_type === 'youtube' ? 'bg-red-100 text-red-600' : 'bg-pink-100 text-pink-600'}">
-                  {video.video_type === 'youtube' ? 'YouTube' : 'TikTok'}
-                </span>
-                
-                <a 
-                  href={video.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"
-                >
-                  Buka Video
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                  </svg>
-                </a>
-              </div>
-            </div>
+            {/each}
           </div>
-        {/each}
-      </div>
+        {/if}
       
       <!-- Pagination -->
       {#if totalPages > 1}
