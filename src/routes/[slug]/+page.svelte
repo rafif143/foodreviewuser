@@ -88,7 +88,7 @@
           </div>
         </div>
         <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent mb-4">
-          Video Kuliner
+          Food Review
         </h2>
         <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto rounded-full mb-6"></div>
         <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">

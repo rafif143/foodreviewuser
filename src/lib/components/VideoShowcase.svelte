@@ -1,259 +1,261 @@
 <script>
-  import { onDestroy, onMount, tick } from 'svelte';
-  import { page } from '$app/stores';
+  import { onMount } from 'svelte';
   
-  /** @type {import('./$types').PageData} */
-  export let videos = [];
-  export let websiteSlug = '';
+  export let websiteId = 1; // Default website ID
   
-  // Menggunakan data dari prop jika tersedia, jika tidak gunakan data dari halaman
-  $: baseVideos = videos && videos.length > 0 ? 
-    mapVideoData(videos) : 
-    ($page.data.randomVideos ? mapVideoData($page.data.randomVideos) : []);
+  let allVideos = [];
+  let activeTab = 'youtube';
+  let currentPage = 1;
+  const itemsPerPage = 4;
+  let loading = true;
   
-  // Fungsi untuk memformat data video
-  function mapVideoData(videos) {
-    if (!videos || videos.length === 0) return [];
-    
-    return videos.map((video) => {
-      // Extract YouTube video ID from URL
-      const videoId = extractYouTubeId(video.url);
-      return {
-        id: video.id,
-        title: video.title,
-        description: video.description,
-        url: video.url,
-        videoId: videoId,
-        thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-      };
-    });
-  }
-  
-  // Fungsi untuk extract YouTube video ID dari URL
-  function extractYouTubeId(url) {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
-  }
-  
-  let scroller;
-  let track;
-  let groupSize = 0;
-  let groupWidth = 0;
-  let secondStart = 0;
-  let thirdStart = 0;
-  let timer;
-  let displayVideos = [];
-  const scrollSpeed = 1;
-  
-  function startAutoScroll() {
-    if (!scroller || groupWidth === 0) return;
-    
-    stopAutoScroll();
-    timer = setInterval(() => {
-      if (!scroller) return;
+  // Load semua video dari database
+  async function loadAllVideos() {
+    try {
+      loading = true;
       
-      scroller.scrollLeft += scrollSpeed;
+      // Query langsung ke Supabase (sesuaikan dengan setup Anda)
+      const response = await fetch(`/api/videos?website_id=${websiteId}`);
+      const data = await response.json();
       
-      if (scroller.scrollLeft >= thirdStart - 100) {
-        scroller.scrollTo({ left: secondStart, behavior: 'auto' });
-      }
-    }, 16);
-  }
-  
-  function stopAutoScroll() {
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
-    }
-  }
-  
-  function next() {
-    if (!scroller || groupWidth === 0) return;
-    
-    const step = Math.max(320, Math.floor(scroller.clientWidth * 0.6));
-    const currentScroll = scroller.scrollLeft;
-    
-    if (currentScroll >= thirdStart - 200) {
-      scroller.scrollTo({ left: secondStart, behavior: 'smooth' });
-    } else {
-      scroller.scrollBy({ left: step, behavior: 'smooth' });
-    }
-  }
-  
-  function prev() {
-    if (!scroller || groupWidth === 0) return;
-    
-    const step = Math.max(320, Math.floor(scroller.clientWidth * 0.6));
-    const currentScroll = scroller.scrollLeft;
-    
-    
-    if (currentScroll <= secondStart - groupWidth + 200) {
-      scroller.scrollTo({ left: thirdStart - groupWidth, behavior: 'smooth' });
-    } else {
-      scroller.scrollBy({ left: -step, behavior: 'smooth' });
-    }
-  }
-  
-  function handleScroll() {
-    if (!scroller || groupWidth === 0) return;
-    
-    if (scroller.scrollLeft >= thirdStart - 100) {
-      scroller.scrollTo({ left: secondStart, behavior: 'auto' });
-    }
-    else if (scroller.scrollLeft <= secondStart - groupWidth + 100) {
-      scroller.scrollTo({ left: thirdStart - groupWidth, behavior: 'auto' });
-    }
-  }
-  
-  function handleMouseEnter() {
-    isUserInteracting = true;
-  }
-  
-  function handleMouseLeave() {
-    setTimeout(() => {
-      isUserInteracting = false;
-      startAutoScroll();
-    }, 1000);
-  }
-  
-  onMount(async () => {
-    if (!baseVideos || baseVideos.length === 0) {
-      console.log('No videos available');
-      return;
-    }
-    
-    console.log(`Random videos loaded: ${baseVideos.length} videos`);
-    
-    groupSize = baseVideos.length;
-    displayVideos = [...baseVideos, ...baseVideos, ...baseVideos];
-    
-    await tick();
-    
-    if (track && track.children && track.children.length > 0) {
-      const firstStart = track.children[0].offsetLeft;
-      secondStart = track.children[groupSize].offsetLeft;
-      thirdStart = track.children[groupSize * 2].offsetLeft;
-      groupWidth = secondStart - firstStart;
+      allVideos = data.videos || [];
       
-      if (scroller && Number.isFinite(secondStart)) {
-        scroller.scrollLeft = secondStart;
-      }
+    } catch (error) {
+      allVideos = [];
+    } finally {
+      loading = false;
     }
-    
-    if (scroller) {
-      scroller.addEventListener('scroll', handleScroll);
-    }
-    
-    setTimeout(() => {
-      startAutoScroll();
-    }, 1000);
-  });
+  }
   
-  onDestroy(() => {
-    stopAutoScroll();
-    if (scroller) {
-      scroller.removeEventListener('scroll', handleScroll);
+  // Pisahkan video berdasarkan tipe
+  $: youtubeVideos = allVideos.filter(video => 
+    video.video_type === 'youtube'
+  );
+  
+  $: tiktokVideos = allVideos.filter(video => 
+    video.video_type === 'tiktok'
+  );
+  
+  // Video yang ditampilkan berdasarkan tab aktif
+  $: displayVideos = activeTab === 'youtube' ? youtubeVideos : tiktokVideos;
+  
+  // Pagination
+  $: totalPages = Math.ceil(displayVideos.length / itemsPerPage);
+  $: startIndex = (currentPage - 1) * itemsPerPage;
+  $: currentVideos = displayVideos.slice(startIndex, startIndex + itemsPerPage);
+  
+  // Reset halaman saat ganti tab
+  function switchTab(tab) {
+    activeTab = tab;
+    currentPage = 1;
+  }
+  
+  function nextPage() {
+    if (currentPage < totalPages) currentPage++;
+  }
+  
+  function prevPage() {
+    if (currentPage > 1) currentPage--;
+  }
+  
+  // Extract YouTube ID
+  function getYouTubeId(url) {
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+    return match ? match[1] : null;
+  }
+  
+  // Get embed URL
+  function getEmbedUrl(video) {
+    if (video.video_type === 'youtube') {
+      const videoId = getYouTubeId(video.url);
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
     }
+    return null;
+  }
+  
+  onMount(() => {
+    loadAllVideos();
   });
 </script>
 
-<div class="relative">
-  <div class="pointer-events-none absolute -left-6 top-0 h-full w-24 bg-gradient-to-r from-orange-50 to-transparent z-10"></div>
-  <div class="pointer-events-none absolute -right-6 top-0 h-full w-24 bg-gradient-to-l from-orange-50 to-transparent z-10"></div>
+<div class="w-full max-w-6xl mx-auto p-4">
+  
+  <!-- Loading State -->
+  {#if loading}
+    <div class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+      <span class="ml-2">Memuat video...</span>
+    </div>
+  {:else}
+    
 
-  <div
-    class="overflow-x-hidden"
-    bind:this={scroller}
-    role="region"
-    aria-label="Carousel video YouTube"
-    on:mouseenter={handleMouseEnter}
-    on:mouseleave={handleMouseLeave}
-  >
-    <div class="flex gap-6 py-2" bind:this={track}>
-      {#each displayVideos as video, i}
-        <article class="flex-none w-80 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-          <div class="relative">
-            <!-- YouTube Embed -->
-            <div class="relative w-full h-48">
-              <iframe
-                src="https://www.youtube.com/embed/{video.videoId}"
-                title={video.title}
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                class="w-full h-full rounded-t-2xl"
-                loading="lazy"
-              ></iframe>
+    <!-- Tab Navigation -->
+    <div class="flex justify-center mb-8">
+      <div class="bg-gray-100 rounded-2xl p-2 flex gap-2">
+        <button
+          class="px-6 py-3 rounded-xl font-semibold transition-all duration-300 {activeTab === 'youtube' ? 'bg-white text-red-600 shadow-lg' : 'text-gray-600 hover:text-gray-800'}"
+          on:click={() => switchTab('youtube')}
+        >
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            YouTube ({youtubeVideos.length})
+          </div>
+        </button>
+        
+        <button
+          class="px-6 py-3 rounded-xl font-semibold transition-all duration-300 {activeTab === 'tiktok' ? 'bg-white text-pink-600 shadow-lg' : 'text-gray-600 hover:text-gray-800'}"
+          on:click={() => switchTab('tiktok')}
+        >
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+            </svg>
+            TikTok ({tiktokVideos.length})
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Video Grid -->
+    {#if currentVideos.length > 0}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {#each currentVideos as video (video.id)}
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            
+            <!-- Video Content -->
+            <div class="relative">
+              <div class="w-full h-48 bg-gray-100">
+                
+                {#if video.video_type === 'youtube'}
+                  <!-- YouTube Embed -->
+                  {#if getEmbedUrl(video)}
+                    <iframe
+                      src="{getEmbedUrl(video)}"
+                      title={video.title}
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                      class="w-full h-full"
+                    ></iframe>
+                  {:else}
+                    <div class="w-full h-full bg-red-50 flex items-center justify-center">
+                      <div class="text-center">
+                        <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                          </svg>
+                        </div>
+                        <p class="text-red-600 text-sm font-medium">YouTube Video</p>
+                        <p class="text-red-400 text-xs">URL tidak valid</p>
+                      </div>
+                    </div>
+                  {/if}
+                  
+                {:else if video.video_type === 'tiktok'}
+                  <!-- TikTok Preview -->
+                  <div class="w-full h-full bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 flex items-center justify-center">
+                    <div class="text-center text-white">
+                      <div class="w-12 h-12 bg-black bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                        </svg>
+                      </div>
+                      <p class="font-bold text-sm">TikTok Video</p>
+                      <p class="text-xs opacity-75">Klik untuk menonton</p>
+                    </div>
+                  </div>
+                  
+                {:else}
+                  <!-- Unknown video type -->
+                  <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <div class="text-center">
+                      <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                      </svg>
+                      <p class="text-gray-500 text-sm">Video</p>
+                    </div>
+                  </div>
+                {/if}
+              </div>
             </div>
             
-            <!-- Play button overlay (optional) -->
-            <div class="absolute top-4 right-4">
-              <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
-                <svg class="w-5 h-5 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-          
-          <div class="p-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
-              {video.title}
-            </h3>
-            {#if video.description}
-              <p class="text-gray-600 text-sm mb-3 line-clamp-2">
-                {video.description}
-              </p>
-            {/if}
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span class="text-xs text-gray-500 font-medium">
-                  YouTube Video
+            <!-- Video Info -->
+            <div class="p-6">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">
+                {video.title}
+              </h3>
+              
+              {#if video.description}
+                <p class="text-gray-600 text-sm mb-3">
+                  {video.description}
+                </p>
+              {/if}
+              
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 text-xs font-medium rounded-full {video.video_type === 'youtube' ? 'bg-red-100 text-red-600' : 'bg-pink-100 text-pink-600'}">
+                  {video.video_type === 'youtube' ? 'YouTube' : 'TikTok'}
                 </span>
+                
+                <a 
+                  href={video.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"
+                >
+                  Buka Video
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                  </svg>
+                </a>
               </div>
-              <a 
-                href={video.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-red-600 text-sm font-semibold hover:text-red-700 transition-colors duration-300 flex items-center gap-1"
-              >
-                Tonton di YouTube
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                </svg>
-              </a>
             </div>
           </div>
-        </article>
-      {/each}
-    </div>
-  </div>
-
-  <div class="mt-6 flex items-center justify-center gap-4">
-    <button 
-      class="px-6 py-3 text-sm font-semibold text-gray-700 bg-white border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" 
-      on:click={prev}
-      aria-label="Video sebelumnya"
-    >
-      ← Sebelumnya
-    </button>
-    <button 
-      class="px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" 
-      on:click={next}
-      aria-label="Video berikutnya"
-    >
-      Berikutnya →
-    </button>
-  </div>
+        {/each}
+      </div>
+      
+      <!-- Pagination -->
+      {#if totalPages > 1}
+        <div class="flex justify-center items-center gap-4">
+          <button 
+            on:click={prevPage}
+            disabled={currentPage === 1}
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            ← Sebelumnya
+          </button>
+          
+          <span class="text-sm text-gray-600">
+            Halaman {currentPage} dari {totalPages}
+          </span>
+          
+          <button 
+            on:click={nextPage}
+            disabled={currentPage === totalPages}
+            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Berikutnya →
+          </button>
+        </div>
+      {/if}
+      
+    {:else}
+      <!-- Empty State -->
+      <div class="text-center py-12">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-600 mb-2">
+          Belum ada video {activeTab === 'youtube' ? 'YouTube' : 'TikTok'}
+        </h3>
+        <p class="text-gray-500">
+          Video akan ditampilkan di sini setelah ditambahkan
+        </p>
+      </div>
+    {/if}
+    
+  {/if}
 </div>
-
-<style>
-  .line-clamp-2 {
-    line-clamp: 2;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-</style>

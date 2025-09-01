@@ -109,7 +109,6 @@ export async function getRandomArticles(websiteId, count = 10) {
     }
 
     if (!allArticles || allArticles.length === 0) {
-      console.log('No articles available');
       return [];
     }
 
@@ -119,7 +118,7 @@ export async function getRandomArticles(websiteId, count = 10) {
     // Ambil 10 artikel pertama dari hasil shuffle
     const selectedArticles = shuffledArticles.slice(0, Math.min(count, shuffledArticles.length));
     
-    console.log(`Daily random articles for ${today.toDateString()}: ${selectedArticles.length} articles`);
+    
     
     return selectedArticles;
   } catch (error) {

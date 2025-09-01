@@ -146,14 +146,11 @@
   onMount(async () => {
     // Pastikan ada artikel yang tersedia
     if (!baseArticles || baseArticles.length === 0) {
-      console.log('No articles available');
+      
       return;
     }
     
-    // Log untuk debugging - pastikan kita dapat 10 artikel yang berbeda
-    console.log(`Random articles loaded: ${baseArticles.length} articles`);
-    console.log('Article IDs:', baseArticles.map(a => a.id));
-    console.log('Article titles:', baseArticles.map(a => a.title));
+    
     
     // Set group size berdasarkan jumlah artikel yang tersedia
     groupSize = baseArticles.length;
@@ -161,7 +158,7 @@
     // Duplicate artikel untuk infinite loop (awal, tengah, akhir)
     displayArticles = [...baseArticles, ...baseArticles, ...baseArticles];
     
-    console.log(`Total display articles: ${displayArticles.length} (${groupSize} unique × 3 groups)`);
+    
     
     // Tunggu DOM update
     await tick();
@@ -173,8 +170,7 @@
       thirdStart = track.children[groupSize * 2].offsetLeft;
       groupWidth = secondStart - firstStart;
       
-      console.log(`Group size: ${groupSize}, Width: ${groupWidth}`);
-      console.log(`Positions: ${firstStart}, ${secondStart}, ${thirdStart}`);
+      
       
       // Set scroll position ke tengah (grup kedua)
       if (scroller && Number.isFinite(secondStart)) {
