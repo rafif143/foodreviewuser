@@ -1,3 +1,23 @@
-# allow crawling everything by default
+
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://foodreviewuser.netlify.app/sitemap.xml
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_app/
+
+# Allow important pages
+Allow: /food/
+Allow: /cafe/
+Allow: /article/
+Allow: /restaurant/
+Allow: /events/
+Allow: /recipe/
+Allow: /things-to-do/
+
+# Crawl delay
+Crawl-delay: 1
