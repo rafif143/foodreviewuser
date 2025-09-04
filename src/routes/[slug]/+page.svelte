@@ -6,9 +6,14 @@
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
   import AdBanner from '$lib/components/AdBanner.svelte';
+  import SEOHead from '$lib/components/SEOHead.svelte';
+  import SEOTemplates from '$lib/components/SEOTemplates.svelte';
 
   /** @type {import('./$types').PageData} */
   export let data;
+  
+  // SEO Configuration
+  $: websiteId = data.website.id || 1;
   
   // Fungsi carian
   let searchQuery = '';
@@ -21,10 +26,14 @@
   }
 </script>
 
-<svelte:head>
-  <title>{data.website.name} - Panduan Ulasan Makanan Terbaik Anda</title>
-  <meta name="description" content="Temui restoran, kafe, dan pengalaman kuliner terbaik di Kelantan. Panduan terbaik anda untuk ulasan makanan, resipi, dan pengembaraan makan." />
-</svelte:head>
+<!-- SEO Head Component -->
+<SEOHead 
+  {websiteId}
+  pageType="homepage"
+  customTitle="Panduan Kuliner Terbaik"
+  customDescription="Temukan restoran terbaik, resepi tradisional, dan acara kuliner. Panduan lengkap untuk makanan halal dan tempat makan enak."
+  customKeywords={['restoran terbaik', 'makanan tradisional', 'tempat makan halal', 'kuliner', 'resepi']}
+/>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
   <!-- Bahagian Banner Iklan -->

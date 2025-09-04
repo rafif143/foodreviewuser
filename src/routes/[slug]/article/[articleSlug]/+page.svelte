@@ -5,11 +5,16 @@
   import Footer from '$lib/components/Footer.svelte';
   import ArticleTags from '$lib/components/ArticleTags.svelte';
   import AdBanner from '$lib/components/AdBanner.svelte';
+  import SEOHead from '$lib/components/SEOHead.svelte';
+  import SEOTemplates from '$lib/components/SEOTemplates.svelte';
 
   import { addComment, getCommentsByArticle } from '$lib/comments';
 
   /** @type {import('./$types').PageData} */
   export let data;
+  
+  // SEO Configuration
+  $: websiteId = data.website.id || 1;
   
   // Artikel yang sedang dipaparkan
   const article = data.article;
