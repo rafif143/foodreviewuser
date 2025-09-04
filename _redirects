@@ -1,5 +1,5 @@
 # Netlify redirects file
-# This file will be copied to build/ directory
+# This file should be in project root, not in static/ folder
 
 # Sitemap and robots.txt are served from static/ folder
 # No redirects needed as they are static files
