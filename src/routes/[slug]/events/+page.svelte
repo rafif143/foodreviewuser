@@ -15,6 +15,12 @@
   let offset = 0;
   let limit = 10;
   let articles = [];
+  let allArticles = [];
+  
+  // Pagination
+  let currentPage = 1;
+  let articlesPerPage = 12;
+  let totalArticles = 0;
   
   // Search functionality
   let searchQuery = '';
@@ -45,25 +51,19 @@
     };
   }
   
+  // Pagination logic
+  $: {
+    if (allArticles.length > 0) {
+      const startIndex = (currentPage - 1) * articlesPerPage;
+      const endIndex = startIndex + articlesPerPage;
+      articles = allArticles.slice(startIndex, endIndex);
+    }
+  }
+
   onMount(() => {
     // Inisialisasi artikel dari data yang diambil di +page.js
-    articles = data.articles.map(mapArticleData);
-    
-    // Ensure all cards have consistent height
-    setTimeout(() => {
-      const cards = articlesContainer?.querySelectorAll('article');
-      if (cards) {
-        let maxHeight = 0;
-        cards.forEach(card => {
-          const height = card.offsetHeight;
-          if (height > maxHeight) maxHeight = height;
-        });
-        
-        cards.forEach(card => {
-          card.style.minHeight = `${maxHeight}px`;
-        });
-      }
-    }, 100);
+    allArticles = data.articles.map(mapArticleData);
+    totalArticles = allArticles.length;
   });
   
   // Fungsi untuk memuat artikel lebih banyak
@@ -74,7 +74,7 @@
     offset += limit;
     
     try {
-      const response = await fetch(`/api/articles?websiteId=${data.website.id}&category=events&offset=${offset}&limit=${limit}`);
+      const response = await fetch(`/api/articles?websiteId=${data.website.id}&category=things-to-do&offset=${offset}&limit=${limit}`);
       const newArticles = await response.json();
       
       if (newArticles.length > 0) {
@@ -115,8 +115,8 @@
 </script>
 
 <svelte:head>
-  <title>Events - {data.website.name}</title>
-  <meta name="description" content="Discover the best events and festivals in Kelantan. Cultural celebrations, food festivals, and entertainment events." />
+  <title>Things to Do - {data.website.name}</title>
+  <meta name="description" content="Temui aktiviti dan perkara terbaik untuk dilakukan di Kelantan. Panduan perjalanan, tarikan, dan tips petualangan." />
 </svelte:head>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
@@ -125,17 +125,18 @@
   
   <!-- Page Header -->
   <PageHeader 
-    title="Event & Festival"
-    description="Temukan event dan festival menarik di Kelantan dengan panduan lengkap dari tim kami"
-    icon="calendar"
+    title="Artikel Acara"
+    description="Temukan acara menarik dan festival terbaik di Kelantan untuk pengalaman yang tak terlupakan"
+    icon="book"
+    compact={true}
   />
 
   <!-- Search Section -->
   <section class="py-8 bg-gradient-to-r from-red-50 to-orange-50">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mx-auto text-center">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Cari Event & Festival</h2>
-        <p class="text-gray-600 mb-6">Temukan event, festival, dan acara menarik favorit Anda</p>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Cari Artikel Acara</h2>
+        <p class="text-gray-600 mb-6">Temukan artikel, acara, dan festival kegemaran anda</p>
         
         <div class="relative">
           <form on:submit|preventDefault={() => handleSearch()}>
@@ -143,7 +144,7 @@
               <input
                 type="text"
                 bind:value={searchQuery}
-                placeholder="Cari event, festival, atau acara..."
+                placeholder="Cari artikel acara, festival, atau event..."
                 class="w-full px-6 py-4 pl-14 pr-20 text-lg border-2 border-gray-200 rounded-2xl focus:border-red-500 focus:outline-none transition-all duration-300 shadow-lg hover:shadow-xl"
               />
               <div class="absolute left-5 top-1/2 transform -translate-y-1/2">
@@ -170,35 +171,84 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content -->
         <div class="lg:col-span-2">
-          <!-- Articles List -->
-          <div class="grid grid-cols-1 gap-8" bind:this={articlesContainer}>
+          <!-- Mobile Pinterest Grid -->
+          <div class="lg:hidden columns-2 gap-3" bind:this={articlesContainer}>
+            {#each articles as article, index}
+              <div class="break-inside-avoid mb-3">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden group">
+                  <a href="/{websiteSlug}/article/{article.slug || article.id}" class="block">
+                    <img 
+                      src={article.image} 
+                      alt={article.title}
+                      class="w-full {index % 3 === 0 ? 'h-40' : index % 3 === 1 ? 'h-32' : 'h-36'} object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </a>
+                  <div class="p-3">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="bg-gradient-to-r from-orange-100 to-red-100 text-orange-600 px-2 py-0.5 rounded-full text-[10px] font-semibold border border-orange-200">
+                        {article.category}
+                      </span>
+                    </div>
+                    <h3 class="text-sm font-bold text-gray-900 mb-2 leading-tight {index % 2 === 0 ? 'line-clamp-2' : 'line-clamp-3'} group-hover:text-red-600 transition-colors">
+                      <a href="/{websiteSlug}/article/{article.slug || article.id}" class="block">
+                        {article.title}
+                      </a>
+                    </h3>
+                    <p class="text-xs text-gray-600 {index % 2 === 0 ? 'line-clamp-2' : 'line-clamp-3'} leading-relaxed mb-2">
+                      {article.description}
+                    </p>
+                    <div class="flex items-center justify-between text-[10px] text-gray-500">
+                      <span class="truncate">{article.author || 'Pasukan Kelantan Food'}</span>
+                      <span class="ml-2 flex-shrink-0">{article.minute_read || 5} min</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {/each}
+          </div>
+
+          <!-- Desktop Grid -->
+          <div class="hidden lg:grid grid-cols-1 gap-8">
             {#each articles as article}
               <FoodCard {article} websiteSlug={websiteSlug} />
             {/each}
           </div>
           
-          <!-- Load More Button -->
-          <div class="text-center mt-12">
-            <button 
-              class="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl {loading ? 'opacity-70 cursor-not-allowed' : ''}" 
-              on:click={loadMoreArticles}
-              disabled={loading}
-            >
-              <span class="flex items-center justify-center">
-                {#if loading}
-                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Memuat...
-                {:else}
-                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                  Muat Event Lainnya
-                {/if}
-              </span>
-            </button>
+          <!-- Pagination -->
+          <div class="text-center mt-8 md:mt-10">
+            <div class="flex justify-center items-center space-x-2">
+              <button 
+                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                on:click={() => currentPage > 1 ? currentPage-- : null}
+                disabled={currentPage === 1}
+              >
+                Sebelumnya
+              </button>
+              
+              <div class="flex space-x-1">
+                {#each Array(Math.ceil(totalArticles / articlesPerPage)) as _, page}
+                  <button 
+                    class="px-3 py-2 text-sm font-medium rounded-lg transition-colors {currentPage === page + 1 ? 'bg-red-600 text-white' : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'}"
+                    on:click={() => currentPage = page + 1}
+                  >
+                    {page + 1}
+                  </button>
+                {/each}
+              </div>
+              
+              <button 
+                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                on:click={() => currentPage < Math.ceil(totalArticles / articlesPerPage) ? currentPage++ : null}
+                disabled={currentPage === Math.ceil(totalArticles / articlesPerPage)}
+              >
+                Seterusnya
+              </button>
+            </div>
+            
+            <p class="text-sm text-gray-500 mt-4">
+              Halaman {currentPage} dari {Math.ceil(totalArticles / articlesPerPage)} 
+              ({totalArticles} artikel)
+            </p>
           </div>
         </div>
         
@@ -208,16 +258,27 @@
           <AdBanner websiteSlug={data.website.slug} variant="vertical" />
           
           <!-- About Events Section -->
-          <AboutKelantanCard 
-            title="Tentang Event Kelantan"
-            description1="Kelantan adalah pusat budaya dan hiburan yang kaya dengan berbagai event dan festival sepanjang tahun. Setiap event menampilkan keragaman budaya dan tradisi lokal."
-            description2="Dari festival makanan hingga perayaan keagamaan, event di Kelantan memberikan pengalaman yang mendalam tentang kehidupan dan budaya masyarakat setempat."
-            tipsTitle="Tips Event"
-            tipsContent="Periksa jadwal event sebelum berkunjung. Event besar biasanya membutuhkan reservasi dan persiapan khusus untuk mendapatkan pengalaman terbaik."
-            icon="🎉"
-          />
+          <AboutKelantanCard category="events" />
         </div>
       </div>
     </div>
   </section>
 </main>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

@@ -1,7 +1,7 @@
 <script>
   import { page } from '$app/stores';
   import { DEFAULT_WEBSITE } from '$lib/tenant';
-  // ArticleLabels dihapus karena thumbnail terlalu kecil
+  // ArticleLabels dihapus kerana thumbnail terlalu kecil
   
   /** @type {import('./$types').PageData} */
   export let articles = [];
@@ -22,7 +22,7 @@
         slug: article.slug,
         title: article.title,
         category: article.category,
-        author: article.author || 'Tim Kelantan Food Review',
+        author: article.author || 'Pasukan Kelantan Food Review',
         date: formatDate(article.published_at),
         excerpt: article.summary,
         image: article.thumbnail_image || 'https://images.unsplash.com/10.6905925346-21bda4d32df4?w=300&h=200&fit=crop&crop=center'
@@ -39,7 +39,7 @@
     return date.toLocaleDateString('id-ID', options);
   }
   
-  // Data statis telah dihapus dan diganti dengan data dinamis dari database
+  // Data statis telah dihapus dan diganti dengan data dinamik dari pangkalan data
 </script>
 
 <div class="space-y-4 sm:space-y-6">
@@ -52,7 +52,7 @@
             alt={article.title}
             class="w-full h-40 sm:w-24 sm:h-24 object-cover rounded-t-2xl sm:rounded-l-2xl sm:rounded-t-none group-hover:scale-105 transition-transform duration-300"
           />
-          <!-- Labels dihapus karena thumbnail terlalu kecil -->
+          <!-- Labels dihapus kerana thumbnail terlalu kecil -->
         </a>
       </div>
       <div class="flex-1 p-3 sm:p-4">

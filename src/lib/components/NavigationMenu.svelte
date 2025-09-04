@@ -3,8 +3,20 @@
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
   import { DEFAULT_WEBSITE, createWebsiteUrl } from '$lib/tenant';
+  // SVG Icons untuk kategori
+  const icons = {
+    Food: `<path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/>`,
+    Coffee: `<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>`,
+    Cafe: `<path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 5h-2V5h2v3zM2 21h18v-2H2v2z"/>`,
+    MapPin: `<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>`,
+    ThingsToDo: `<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>`,
+    Calendar: `<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>`,
+    Events: `<path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>`,
+    ChefHat: `<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>`,
+    Recipe: `<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>`
+  };
 
-  // Format tanggal
+  // Format tarikh
   const today = new Date();
   const formattedDate = today.toLocaleDateString('id-ID', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
@@ -72,16 +84,16 @@ const iconSvgs = {
   }
 
   const foodCategories = [
-    { name: 'Food', href: '/food', count: '150+', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=128&h=128&fit=crop&crop=center&auto=format&dpr=2&q=80' },
-    { name: 'Cafe', href: '/cafe', count: '80+', image: 'https://images.unsplash.com/photo-1517705008128-361805f42e86?w=128&h=128&fit=crop&crop=center&auto=format&dpr=2&q=80' },
-    { name: 'Things To Do', href: '/things-to-do', count: '45+', image: 'https://images.unsplash.com/photo-1504714146340-959ca07b7bb1?w=128&h=128&fit=crop&crop=center&auto=format&dpr=2&q=80' },
-    { name: 'Events', href: '/events', count: '25+', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=128&h=128&fit=crop&crop=center&auto=format&dpr=2&q=80' },
-    { name: 'Recipe', href: '/recipe', count: '120+', image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=128&h=128&fit=crop&crop=center&auto=format&dpr=2&q=80' },
+    { name: 'Food', href: '/food', count: '150+', icon: 'Food', color: 'text-orange-500' },
+    { name: 'Cafe', href: '/cafe', count: '80+', icon: 'Cafe', color: 'text-amber-600' },
+    { name: 'Things To Do', href: '/things-to-do', count: '45+', icon: 'ThingsToDo', color: 'text-blue-500' },
+    { name: 'Events', href: '/events', count: '25+', icon: 'Events', color: 'text-purple-500' },
+    { name: 'Recipe', href: '/recipe', count: '120+', icon: 'Recipe', color: 'text-red-500' },
   ];
   
   let activeCategory = '/';
-  let isMobileSidebarOpen = false;
-  let isDesktopSidebarOpen = true;
+  let isMobileSidebarOpen = true; // Default open untuk mobile juga
+  let isDesktopSidebarOpen = true; // Default open
   let hasLoadedStorage = false;
   let isMobileNavOpen = false;
   
@@ -96,22 +108,17 @@ const iconSvgs = {
     activeCategory = '/' + pathParts.slice(2).join('/');
   }
 
-  // Helper untuk membuat URL dengan slug website
+  // Pembantu untuk membuat URL dengan slug laman web
   const getWebsiteUrl = (path) => {
     return createWebsiteUrl(website, path);
   };
 
-  // Persist desktop sidebar state across pages
+  // Selalu buka sidebar secara default ketika page di-reload atau dibuka
   onMount(() => {
     if (browser) {
-      const stored = localStorage.getItem('isDesktopSidebarOpen');
-      if (stored !== null) {
-        isDesktopSidebarOpen = stored === 'true';
-      }
-      const storedMobile = localStorage.getItem('isMobileSidebarOpen');
-      if (storedMobile !== null) {
-        isMobileSidebarOpen = storedMobile === 'true';
-      }
+      // Force open sidebar untuk desktop dan mobile
+      isDesktopSidebarOpen = true;
+      isMobileSidebarOpen = true;
       hasLoadedStorage = true;
     }
   });
@@ -122,111 +129,91 @@ const iconSvgs = {
   }
 </script>
 
-<!-- Header -->
-<header class="bg-white shadow-sm">
-  <!-- Top Header -->
-  <div class="bg-gray-50 py-4">
-    <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between">
-        <!-- Left: Date -->
-        <div class="hidden md:block text-sm text-gray-600 font-medium">
-          {formattedDate}
-        </div>
-        
-        <!-- Logo -->
-        <div class="text-center">
-          <h1 class="font-handwriting text-3xl font-bold text-gray-800 hidden md:block">
-            {website.name}
-          </h1>
-        </div>
-        
-        <!-- Social Media Links moved to right -->
-        <div class="hidden md:flex flex-col items-center space-y-2">
-          <span class="text-sm text-gray-600 font-medium">
-            {#if contactData && contactData.social_media && contactData.social_media.title}
-              {contactData.social_media.title}
-            {:else}
-              Follow me on
-            {/if}
-          </span>
-          <div class="flex space-x-3">
-            {#if contactData && contactData.social_media && contactData.social_media.platforms}
-              {#each contactData.social_media.platforms as platform}
-                {#if platform.is_active}
-                  <a 
-                    href={platform.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    aria-label="Follow us on {getPlatformDisplayName(platform.icon_name)}" 
-                    class="w-8 h-8 rounded-full flex items-center justify-center text-white transition-colors {getPlatformBgColor(platform.icon_name)}"
-                  >
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      {@html getIconSvg(platform.icon_name)}
-                    </svg>
-                  </a>
-                {/if}
-              {/each}
-            {:else}
-              <!-- Fallback to default social media links if no contact data -->
-              <a href="https://twitter.com/Kelantanfood" aria-label="Follow us on Twitter" class="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-              <a href="https://instagram.com/Kelantanfood" aria-label="Follow us on Instagram" class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white hover:from-purple-600 hover:to-pink-600 transition-colors">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              </a>
-              <a href="https://youtube.com/Kelantanfood" aria-label="Follow us on YouTube" class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white hover:bg-red-700 transition-colors">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-              </a>
-              <a href="https://facebook.com/Kelantanfood" aria-label="Follow us on Facebook" class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-              </a>
-            {/if}
-          </div>
+<!-- Top Header -->
+<div class="bg-gray-50 py-4">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between">
+      <!-- Left: Date -->
+      <div class="hidden md:block text-sm text-gray-600 font-medium">
+        {formattedDate}
+      </div>
+      
+      <!-- Social Media Links moved to right -->
+      <div class="hidden md:flex flex-col items-center space-y-2">
+        <span class="text-sm text-gray-600 font-medium">
+          {#if contactData && contactData.social_media && contactData.social_media.title}
+            {contactData.social_media.title}
+          {:else}
+            Ikuti saya di
+          {/if}
+        </span>
+        <div class="flex space-x-3">
+          {#if contactData && contactData.social_media && contactData.social_media.platforms}
+            {#each contactData.social_media.platforms as platform}
+              {#if platform.is_active}
+                <a 
+                  href={platform.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label="Ikuti kami di {getPlatformDisplayName(platform.icon_name)}" 
+                  class="w-8 h-8 rounded-full flex items-center justify-center text-white transition-colors {getPlatformBgColor(platform.icon_name)}"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    {@html getIconSvg(platform.icon_name)}
+                  </svg>
+                </a>
+              {/if}
+            {/each}
+          {:else}
+            <!-- Sandaran kepada pautan media sosial lalai jika tiada data hubungan -->
+            <a href="https://twitter.com/Kelantanfood" aria-label="Ikuti kami di Twitter" class="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+            <a href="https://instagram.com/Kelantanfood" aria-label="Ikuti kami di Instagram" class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white hover:from-purple-600 hover:to-pink-600 transition-colors">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </a>
+            <a href="https://youtube.com/Kelantanfood" aria-label="Langgan di YouTube" class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white hover:bg-red-700 transition-colors">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </a>
+            <a href="https://facebook.com/Kelantanfood" aria-label="Ikuti kami di Facebook" class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
+          {/if}
         </div>
       </div>
     </div>
   </div>
-  
-  <!-- Navigation Menu -->
-  <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+</div>
+
+<!-- Navigation Menu -->
+<nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm" style="position: sticky; top: 0; z-index: 50;">
     <div class="container mx-auto px-4">
       <div class="flex items-center justify-between">
-        <!-- Logo and Home -->
-        <div class="flex items-center space-x-8">
-          <h2 class="font-handwriting text-2xl font-bold text-gray-800 md:hidden">
-            {website.name}
-          </h2>
-          
-          <a
-            href={getWebsiteUrl('/')}
-            class="hidden md:flex items-center space-x-2 py-4 px-2 transition-colors relative {activeCategory === '/' ? 'text-primary-500' : 'text-gray-600 hover:text-primary-500'}"
-            on:click={() => setActiveCategory('/')}
-          >
-            <span class="font-medium">Home</span>
-            <div 
-              class="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-primary-500 transition-all duration-300 ease-in-out {activeCategory === '/' ? 'w-full' : 'w-0'}"
-            ></div>
-          </a>
+        <!-- Brand Name -->
+        <div class="flex items-center">
+          <h1 class="font-handwriting text-lg md:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+            Kelantan Food Review
+          </h1>
         </div>
         
         <!-- Top Navigation -->
         <div class="hidden md:flex items-center space-x-6">
           <a
-            href={getWebsiteUrl('/advertise')}
-            class="flex items-center space-x-2 py-4 px-2 transition-colors relative {activeCategory === '/advertise' ? 'text-primary-500' : 'text-gray-600 hover:text-primary-500'}"
-            on:click={() => setActiveCategory('/advertise')}
+            href={getWebsiteUrl('/')}
+            class="flex items-center space-x-2 py-4 px-2 transition-colors relative {activeCategory === '/' ? 'text-primary-500' : 'text-gray-600 hover:text-primary-500'}"
+            on:click={() => setActiveCategory('/')}
           >
-            <span class="font-medium">Advertise</span>
+            <span class="font-medium">Utama</span>
             <div 
-              class="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-primary-500 transition-all duration-300 ease-in-out {activeCategory === '/advertise' ? 'w-full' : 'w-0'}"
+              class="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-primary-500 transition-all duration-300 ease-in-out {activeCategory === '/' ? 'w-full' : 'w-0'}"
             ></div>
           </a>
           <a
@@ -234,34 +221,42 @@ const iconSvgs = {
             class="flex items-center space-x-2 py-4 px-2 transition-colors relative {activeCategory === '/about' ? 'text-primary-500' : 'text-gray-600 hover:text-primary-500'}"
             on:click={() => setActiveCategory('/about')}
           >
-            <span class="font-medium">About Us</span>
+            <span class="font-medium">Tentang Kami</span>
             <div 
               class="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-primary-500 transition-all duration-300 ease-in-out {activeCategory === '/about' ? 'w-full' : 'w-0'}"
             ></div>
           </a>
-          
-          
           <a
             href={getWebsiteUrl('/contact')}
             class="flex items-center space-x-2 py-4 px-2 transition-colors relative {activeCategory === '/contact' ? 'text-primary-500' : 'text-gray-600 hover:text-primary-500'}"
             on:click={() => setActiveCategory('/contact')}
           >
-            <span class="font-medium">Contact Us</span>
+            <span class="font-medium">Hubungi Kami</span>
             <div 
               class="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-primary-500 transition-all duration-300 ease-in-out {activeCategory === '/contact' ? 'w-full' : 'w-0'}"
             ></div>
           </a>
+          <a
+            href={getWebsiteUrl('/advertise')}
+            class="flex items-center space-x-2 py-4 px-2 transition-colors relative {activeCategory === '/advertise' ? 'text-primary-500' : 'text-gray-600 hover:text-primary-500'}"
+            on:click={() => setActiveCategory('/advertise')}
+          >
+            <span class="font-medium">Iklan</span>
+            <div 
+              class="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-primary-500 transition-all duration-300 ease-in-out {activeCategory === '/advertise' ? 'w-full' : 'w-0'}"
+            ></div>
+          </a>
         </div>
 
-        <!-- Mobile Hamburger (kanan) -->
+        <!-- Hamburger Mudah Alih (kanan) -->
         <div class="md:hidden relative">
           <button
-            class="inline-flex items-center justify-center w-10 h-10 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none"
+            class="mobile-menu-button inline-flex items-center justify-center w-12 h-12 rounded-xl text-gray-700 hover:text-primary-500 hover:bg-primary-50 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
             aria-label={isMobileNavOpen ? 'Tutup menu' : 'Buka menu'}
             aria-expanded={isMobileNavOpen}
             on:click={() => (isMobileNavOpen = !isMobileNavOpen)}
           >
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg class="w-6 h-6 transition-transform duration-300 {isMobileNavOpen ? 'rotate-90' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <line x1="3" y1="6" x2="21" y2="6" />
               <line x1="3" y1="12" x2="21" y2="12" />
               <line x1="3" y1="18" x2="21" y2="18" />
@@ -269,40 +264,49 @@ const iconSvgs = {
           </button>
 
           {#if isMobileNavOpen}
-            <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-              <a
-                href={getWebsiteUrl('/')}
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
-                on:click={() => {
-                  setActiveCategory('/');
-                  isMobileNavOpen = false;
-                }}
-              >Home</a>
-              <a
-                href={getWebsiteUrl('/advertise')}
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
-                on:click={() => {
-                  setActiveCategory('/advertise');
-                  isMobileNavOpen = false;
-                }}
-              >Advertise</a>
-              <a
-                href={getWebsiteUrl('/about')}
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
-                on:click={() => {
-                  setActiveCategory('/about');
-                  isMobileNavOpen = false;
-                }}
-              >About Us</a>
-              
-              <a
-                href={getWebsiteUrl('/contact')}
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
-                on:click={() => {
-                  setActiveCategory('/contact');
-                  isMobileNavOpen = false;
-                }}
-              >Contact Us</a>
+            <div class="mobile-menu-dropdown absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-md border border-gray-200/60 rounded-2xl shadow-2xl z-50 overflow-hidden">
+              <div class="py-2">
+                <a
+                  href={getWebsiteUrl('/')}
+                  class="mobile-menu-item block px-6 py-3 text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-primary-50 hover:to-transparent transition-all duration-300 ease-in-out transform hover:translate-x-1 border-l-4 border-transparent hover:border-primary-500"
+                  on:click={() => {
+                    setActiveCategory('/');
+                    isMobileNavOpen = false;
+                  }}
+                >
+                  <span class="font-medium">🏠 Utama</span>
+                </a>
+                <a
+                  href={getWebsiteUrl('/about')}
+                  class="mobile-menu-item block px-6 py-3 text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-primary-50 hover:to-transparent transition-all duration-300 ease-in-out transform hover:translate-x-1 border-l-4 border-transparent hover:border-primary-500"
+                  on:click={() => {
+                    setActiveCategory('/about');
+                    isMobileNavOpen = false;
+                  }}
+                >
+                  <span class="font-medium">ℹ️ Tentang Kami</span>
+                </a>
+                <a
+                  href={getWebsiteUrl('/contact')}
+                  class="mobile-menu-item block px-6 py-3 text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-primary-50 hover:to-transparent transition-all duration-300 ease-in-out transform hover:translate-x-1 border-l-4 border-transparent hover:border-primary-500"
+                  on:click={() => {
+                    setActiveCategory('/contact');
+                    isMobileNavOpen = false;
+                  }}
+                >
+                  <span class="font-medium">📞 Hubungi Kami</span>
+                </a>
+                <a
+                  href={getWebsiteUrl('/advertise')}
+                  class="mobile-menu-item block px-6 py-3 text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-primary-50 hover:to-transparent transition-all duration-300 ease-in-out transform hover:translate-x-1 border-l-4 border-transparent hover:border-primary-500"
+                  on:click={() => {
+                    setActiveCategory('/advertise');
+                    isMobileNavOpen = false;
+                  }}
+                >
+                  <span class="font-medium">📢 Iklan</span>
+                </a>
+              </div>
             </div>
           {/if}
         </div>
@@ -323,44 +327,45 @@ const iconSvgs = {
       }}
     ></div>
   {/if}
-</header>
 
-<!-- Desktop: Sidebar kategori dengan gambar bulat dan container rounded -->
-{#if isDesktopSidebarOpen}
-  <aside class="hidden md:flex fixed left-3 top-1/2 -translate-y-1/2 z-50">
-    <div class="bg-white/80 backdrop-blur-md text-gray-800 rounded-full border border-gray-200/60 shadow-xl px-3 py-4 flex flex-col items-center gap-2 relative">
-      
-      <!-- Tombol close di tengah atas container -->
-      <button
-        class="absolute top-1/2 -translate-y-1/2 -right-2 w-7 h-7 bg-white border border-gray-200 rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110 flex items-center justify-center text-gray-600 hover:text-gray-800"
-        on:click={() => (isDesktopSidebarOpen = false)}
-        aria-label="Tutup kategori"
-        title="Tutup kategori"
+<!-- Desktop: Sidebar kategori dengan gambar bulat dan bekas bulat -->
+<aside class="hidden md:flex fixed left-3 top-1/2 -translate-y-1/2 z-50 desktop-sidebar {isDesktopSidebarOpen ? 'open' : 'closed'}">
+  <div class="bg-white/80 backdrop-blur-md text-gray-800 rounded-full border border-gray-200/60 shadow-xl px-3 py-4 flex flex-col items-center gap-2 relative">
+    
+    <!-- Butang tutup di tengah atas bekas -->
+    <button
+      class="close-button absolute top-1/2 -translate-y-1/2 -right-2 w-7 h-7 bg-white border border-gray-200 rounded-full shadow-md hover:shadow-lg flex items-center justify-center text-gray-600 hover:text-gray-800"
+      on:click={() => (isDesktopSidebarOpen = false)}
+      aria-label="Tutup kategori"
+      title="Tutup kategori"
+    >
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+    
+    {#each foodCategories as category}
+      <a
+        href={getWebsiteUrl(category.href)}
+        aria-label={category.name}
+        class="category-item group flex flex-col items-center"
+        on:click={() => setActiveCategory(category.href)}
       >
-        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
-      
-      {#each foodCategories as category}
-        <a
-          href={getWebsiteUrl(category.href)}
-          aria-label={category.name}
-          class="group flex flex-col items-center"
-          on:click={() => setActiveCategory(category.href)}
-        >
-          <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-md ring-2 transition-all duration-200 {activeCategory === category.href ? 'ring-primary-500 scale-110' : 'ring-transparent group-hover:ring-white/60 group-hover:scale-105'}">
-            <img src={category.image} alt={category.name} loading="lazy" decoding="async" width="56" height="56" class="w-full h-full object-cover" />
-          </div>
-          <span class="mt-1 text-[9px] font-medium text-center w-14 truncate text-gray-700">{category.name}</span>
-        </a>
-      {/each}
-    </div>
-  </aside>
-{:else}
+        <div class="w-14 h-14 rounded-full bg-gray-50 border-2 border-white shadow-md ring-2 transition-all duration-200 flex items-center justify-center {activeCategory === category.href ? 'ring-primary-500 scale-110' : 'ring-transparent group-hover:ring-white/60 group-hover:scale-105'}">
+          <svg class="w-7 h-7 {category.color}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            {@html icons[category.icon]}
+          </svg>
+        </div>
+        <span class="mt-1 text-[9px] font-medium text-center w-14 truncate text-gray-700">{category.name}</span>
+      </a>
+    {/each}
+  </div>
+</aside>
+
+{#if !isDesktopSidebarOpen}
   <button
-    class="hidden md:flex fixed left-2 top-1/2 -translate-y-1/2 z-50 bg-white text-gray-700 w-9 h-9 rounded-full border border-gray-200 shadow-md hover:shadow-lg active:scale-95 items-center justify-center transition-all duration-200"
+    class="toggle-button hidden md:flex fixed left-2 top-1/2 -translate-y-1/2 z-50 bg-white text-gray-700 w-9 h-9 rounded-full border border-gray-200 shadow-md hover:shadow-lg items-center justify-center"
     on:click={() => (isDesktopSidebarOpen = true)}
     aria-label="Buka kategori"
     title="Buka kategori"
@@ -378,9 +383,9 @@ const iconSvgs = {
     </svg>
   </button>
 {/if}
-<!-- Mobile: tombol kecil untuk membuka sidebar kategori -->
+<!-- Mudah Alih: butang kecil untuk membuka sidebar kategori -->
 <button
-  class="md:hidden fixed left-3 top-1/2 -translate-y-1/2 z-50 bg-white text-gray-700 w-9 h-9 rounded-full border border-gray-200 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center transition-all duration-200"
+  class="toggle-button md:hidden fixed left-4 top-1/2 -translate-y-1/2 z-50 bg-white text-gray-700 w-9 h-9 rounded-full border border-gray-200 shadow-md hover:shadow-lg flex items-center justify-center"
   on:click={() => (isMobileSidebarOpen = !isMobileSidebarOpen)}
   aria-label={isMobileSidebarOpen ? 'Tutup kategori' : 'Buka kategori'}
   title={isMobileSidebarOpen ? 'Tutup kategori' : 'Buka kategori'}
@@ -398,7 +403,7 @@ const iconSvgs = {
   </svg>
 </button>
 
-<!-- Mobile slide-out sidebar dari kiri -->
+<!-- Sidebar gelongsor keluar Mudah Alih dari kiri -->
 <div class="md:hidden">
   {#if isMobileSidebarOpen}
     <div
@@ -415,19 +420,13 @@ const iconSvgs = {
     ></div>
   {/if}
   <div
-    class="fixed left-3 top-1/2 -translate-y-1/2 z-50 transform transition-all duration-300"
-    class:translate-x-0={isMobileSidebarOpen}
-    class:-translate-x-6={!isMobileSidebarOpen}
-    class:opacity-100={isMobileSidebarOpen}
-    class:opacity-0={!isMobileSidebarOpen}
-    class:pointer-events-auto={isMobileSidebarOpen}
-    class:pointer-events-none={!isMobileSidebarOpen}
+    class="mobile-sidebar fixed left-4 top-1/2 -translate-y-1/2 z-50 {isMobileSidebarOpen ? 'open' : 'closed'}"
   >
     <div class="bg-white/90 backdrop-blur-md rounded-full shadow-xl border border-gray-100 p-2 flex flex-col items-center justify-center gap-2 relative">
       
-      <!-- Tombol close di tengah atas container mobile -->
+      <!-- Butang tutup di tengah atas bekas mudah alih -->
       <button
-        class="absolute top-1/2 -translate-y-1/2 -right-2 w-6 h-6 bg-white border border-gray-200 rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110 flex items-center justify-center text-gray-600 hover:text-gray-800"
+        class="close-button absolute top-1/2 -translate-y-1/2 -right-2 w-6 h-6 bg-white border border-gray-200 rounded-full shadow-md hover:shadow-lg flex items-center justify-center text-gray-600 hover:text-gray-800"
         on:click={() => (isMobileSidebarOpen = false)}
         aria-label="Tutup kategori"
         title="Tutup kategori"
@@ -442,14 +441,16 @@ const iconSvgs = {
         <a
           href={getWebsiteUrl(category.href)}
           aria-label={category.name}
-          class="group flex flex-col items-center"
+          class="category-item group flex flex-col items-center"
           on:click={() => {
             setActiveCategory(category.href);
             isMobileSidebarOpen = false;
           }}
         >
-          <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-md ring-2 transition-all duration-200 {activeCategory === category.href ? 'ring-primary-500 scale-110' : 'ring-transparent group-hover:ring-gray-300 group-hover:scale-105'}">
-            <img src={category.image} alt={category.name} loading="lazy" decoding="async" width="48" height="48" class="w-full h-full object-cover" />
+          <div class="w-12 h-12 rounded-full bg-gray-50 border-2 border-white shadow-md ring-2 transition-all duration-200 flex items-center justify-center {activeCategory === category.href ? 'ring-primary-500 scale-110' : 'ring-transparent group-hover:ring-gray-300 group-hover:scale-105'}">
+            <svg class="w-6 h-6 {category.color}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              {@html icons[category.icon]}
+            </svg>
           </div>
           <span class="mt-1 text-[8px] font-medium text-center w-16 truncate text-gray-700">{category.name}</span>
         </a>
@@ -457,3 +458,146 @@ const iconSvgs = {
     </div>
   </div>
 </div>
+
+<style>
+  /* Animasi untuk desktop sidebar */
+  .desktop-sidebar {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(-50%);
+  }
+  
+  .desktop-sidebar.closed {
+    transform: translateY(-50%) translateX(-100%);
+    opacity: 0;
+  }
+  
+  .desktop-sidebar.open {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+  
+  /* Animasi untuk mobile sidebar */
+  .mobile-sidebar {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(-50%);
+  }
+  
+  .mobile-sidebar.closed {
+    transform: translateY(-50%) translateX(-100%);
+    opacity: 0;
+  }
+  
+  .mobile-sidebar.open {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+  
+  /* Animasi untuk butang toggle */
+  .toggle-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .toggle-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .toggle-button:active {
+    transform: scale(0.95);
+  }
+  
+  /* Animasi untuk kategori items */
+  .category-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .category-item:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Animasi untuk close button */
+  .close-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .close-button:hover {
+    transform: scale(1.1) rotate(90deg);
+  }
+  
+  .close-button:active {
+    transform: scale(0.9) rotate(90deg);
+  }
+  
+  /* Memastikan sticky header berfungsi dengan baik */
+  nav {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+    background-color: white !important;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  
+  /* Mobile Menu Button Animations */
+  .mobile-menu-button {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .mobile-menu-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s;
+  }
+  
+  .mobile-menu-button:hover::before {
+    left: 100%;
+  }
+  
+  /* Mobile Menu Dropdown Animations */
+  .mobile-menu-dropdown {
+    animation: slideInFade 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top right;
+  }
+  
+  @keyframes slideInFade {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  /* Mobile Menu Item Animations */
+  .mobile-menu-item {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .mobile-menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.4s ease-in-out;
+  }
+  
+  .mobile-menu-item:hover::before {
+    left: 100%;
+  }
+  
+  .mobile-menu-item:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02));
+  }
+</style>

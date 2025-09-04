@@ -21,7 +21,7 @@
 
       if (websiteError) {
         console.error('Error fetching website:', websiteError);
-        error = 'Website tidak ditemukan';
+        error = 'Laman web tidak dijumpai';
         loading = false;
         return;
       }
@@ -38,21 +38,21 @@
           // Use default data
           contactData = {
             page_title: "Hubungi Kami",
-            page_description: "Kami siap membantu Anda. Hubungi kami untuk pertanyaan, saran, atau kolaborasi.",
+            page_description: "Kami siap membantu anda. Hubungi kami untuk pertanyaan, cadangan, atau kerjasama.",
             email: "info@kelantanfood.com",
             form: {
               subject_options: [
                 { label: "Pilih subjek", value: "" },
                 { label: "Pertanyaan Umum", value: "general" },
-                { label: "Saran Review", value: "review" },
-                { label: "Kolaborasi", value: "collaboration" },
+                { label: "Cadangan Ulasan", value: "review" },
+                { label: "Kerjasama", value: "collaboration" },
                 { label: "Iklan", value: "advertising" },
-                { label: "Masalah Teknis", value: "technical" },
+                { label: "Masalah Teknikal", value: "technical" },
                 { label: "Lainnya", value: "other" }
               ]
             },
             contact_info: {
-              title: "Informasi Kontak",
+              title: "Maklumat Hubungan",
               items: [
                 {
                   type: "Alamat",
@@ -60,7 +60,7 @@
                   icon_name: "location"
                 },
                 {
-                  type: "Telepon",
+                  type: "Telefon",
                   value: ["+60 4-123 4567", "+60 12-345 6789"],
                   icon_name: "phone"
                 },
@@ -70,15 +70,15 @@
                   icon_name: "email"
                 },
                 {
-                  type: "Jam Kerja",
-                  value: ["Senin - Jumat: 9:00 AM - 6:00 PM", "Sabtu: 10:00 AM - 4:00 PM", "Minggu: Tutup"],
+                  type: "Waktu Operasi",
+                  value: ["Isnin - Jumaat: 9:00 AM - 6:00 PM", "Sabtu: 10:00 AM - 4:00 PM", "Ahad: Tutup"],
                   icon_name: "clock"
                 }
               ]
             },
                          social_media: {
                title: "Ikuti Kami",
-               description: "Ikuti kami di media sosial untuk mendapatkan update terbaru tentang review makanan, resep, dan acara kuliner.",
+               description: "Ikuti kami di media sosial untuk mendapatkan kemas kini terkini tentang ulasan makanan, resepi, dan acara kuliner.",
                platforms: [
                  {
                    url: "#",
@@ -118,24 +118,24 @@
                ]
              },
             faq: {
-              title: "Pertanyaan Umum",
-              description: "Jawaban untuk pertanyaan yang sering diajukan oleh pengunjung kami",
+              title: "Soalan Lazim",
+              description: "Jawapan untuk soalan yang sering ditanya oleh pengunjung kami",
               items: [
                 {
-                  question: "Bagaimana cara submit review restoran?",
-                  answer: "Anda dapat mengirimkan review melalui form kontak di atas atau email kami langsung. Tim kami akan menghubungi Anda untuk langkah selanjutnya.",
+                  question: "Bagaimana cara menghantar ulasan restoran?",
+                  answer: "Anda boleh menghantar ulasan melalui borang hubungan di atas atau emel kami terus. Pasukan kami akan menghubungi anda untuk langkah seterusnya.",
                   gradient: { from: "red-600", to: "red-700" },
                   icon_name: "question"
                 },
                 {
-                  question: "Apakah Anda menerima kolaborasi?",
-                  answer: "Ya, kami terbuka untuk berbagai jenis kolaborasi. Silakan hubungi kami untuk membicarakan detail lebih lanjut.",
+                  question: "Adakah anda menerima kerjasama?",
+                  answer: "Ya, kami terbuka untuk pelbagai jenis kerjasama. Sila hubungi kami untuk membincangkan butiran lanjut.",
                   gradient: { from: "orange-600", to: "red-600" },
                   icon_name: "collaboration"
                 },
                 {
-                  question: "Berapa lama waktu respons email?",
-                  answer: "Kami biasanya merespons dalam 24-48 jam kerja. Untuk pertanyaan mendesak, silakan hubungi kami via telepon.",
+                  question: "Berapa lama masa respons emel?",
+                  answer: "Kami biasanya membalas dalam 24-48 jam bekerja. Untuk soalan mendesak, sila hubungi kami melalui telefon.",
                   gradient: { from: "red-600", to: "orange-600" },
                   icon_name: "clock"
                 }
@@ -143,13 +143,13 @@
             },
             map: {
               title: "Lokasi Kami",
-              description: "Kunjungi kantor kami di Georgetown, Kelantan untuk bertemu langsung dengan tim kami",
+              description: "Lawati pejabat kami di Georgetown, Kelantan untuk bertemu terus dengan pasukan kami",
               iframe_src: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8199999999997!2d100.3354!3d5.4164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac3c49ce76e31%3A0xfccd80681e2ab7d0!2sGeorgetown%2C%20Kelantan%2C%20Malaysia!5e0!3m2!1sen!2sid!4v1234567890"
             }
           };
         } else {
           console.error('Error fetching contact data:', contactError);
-          error = 'Gagal memuat data kontak';
+          error = 'Gagal memuatkan data hubungan';
         }
       } else {
         contactData = data;
@@ -158,7 +158,7 @@
       loading = false;
     } catch (err) {
       console.error('Error:', err);
-      error = 'Terjadi kesalahan saat memuat halaman';
+      error = 'Berlaku ralat semasa memuatkan halaman';
       loading = false;
     }
   });
@@ -220,34 +220,34 @@
     
     <!-- Header -->
     <div class="bg-white shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
         <div class="text-center">
-          <h1 class="text-4xl font-bold text-gray-900 mb-4">{contactData.page_title}</h1>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">{contactData.page_description}</p>
+          <h1 class="text-2xl md:text-4xl font-bold text-gray-900 mb-3 md:mb-4 text-center">{contactData.page_title}</h1>
+          <p class="text-base md:text-xl text-gray-600 max-w-3xl mx-auto text-center">{contactData.page_description}</p>
         </div>
       </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12">
         <!-- Contact Form -->
-        <div class="bg-white rounded-lg shadow-lg p-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-6">Kirim Pesan</h2>
-          <form class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow-lg p-4 md:p-8">
+          <h2 class="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">Hantar Mesej</h2>
+          <form class="space-y-4 md:space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
-                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <label for="contact-name" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Nama</label>
+                <input type="text" id="contact-name" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <label for="contact-email" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Email</label>
+                <input type="email" id="contact-email" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
               </div>
             </div>
             
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Subjek</label>
-              <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+              <label for="contact-subject" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Subjek</label>
+              <select id="contact-subject" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                 {#each contactData.form.subject_options || [] as option}
                   <option value={option.value}>{option.label}</option>
                 {/each}
@@ -255,33 +255,33 @@
             </div>
             
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Pesan</label>
-              <textarea rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+              <label for="contact-message" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Pesan</label>
+              <textarea id="contact-message" rows="4" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
             </div>
             
-            <button type="submit" class="w-full bg-red-600 text-white py-3 px-6 rounded-md hover:bg-red-700 transition-colors">
-              Kirim Pesan
+            <button type="submit" class="w-full bg-red-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-md hover:bg-red-700 transition-colors text-sm md:text-base">
+              Hantar Mesej
             </button>
           </form>
         </div>
 
         <!-- Contact Info -->
-        <div class="space-y-8">
-          <div class="bg-white rounded-lg shadow-lg p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">{contactData.contact_info.title}</h2>
-            <div class="space-y-6">
+        <div class="space-y-4 md:space-y-8">
+          <div class="bg-white rounded-lg shadow-lg p-4 md:p-8">
+            <h2 class="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">{contactData.contact_info.title}</h2>
+            <div class="space-y-4 md:space-y-6">
               {#each contactData.contact_info.items || [] as item}
-                <div class="flex items-start space-x-4">
-                  <div class="flex-shrink-0 w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-start space-x-3 md:space-x-4">
+                  <div class="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 md:w-5 md:h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
                       {@html getIconSvg(item.icon_name)}
                     </svg>
                   </div>
                   <div>
-                    <h3 class="font-semibold text-gray-900">{item.type}</h3>
+                    <h3 class="text-sm md:text-base font-semibold text-gray-900">{item.type}</h3>
                     <div class="mt-1 space-y-1">
                       {#each item.value || [] as value}
-                        <p class="text-gray-600">{value}</p>
+                        <p class="text-xs md:text-sm text-gray-600">{value}</p>
                       {/each}
                     </div>
                   </div>
@@ -291,20 +291,20 @@
           </div>
 
                      <!-- Social Media -->
-           <div class="bg-white rounded-lg shadow-lg p-8">
-             <h2 class="text-2xl font-bold text-gray-900 mb-2">{contactData.social_media.title}</h2>
-             <p class="text-gray-600 mb-6">{contactData.social_media.description}</p>
-             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+           <div class="bg-white rounded-lg shadow-lg p-4 md:p-8">
+             <h2 class="text-lg md:text-2xl font-bold text-gray-900 mb-2 text-center">{contactData.social_media.title}</h2>
+             <p class="text-xs md:text-sm text-gray-600 mb-4 md:mb-6 text-center">{contactData.social_media.description}</p>
+             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                {#each contactData.social_media.platforms || [] as platform}
                  {#if platform.is_active}
                    <a href={platform.url} target="_blank" rel="noopener noreferrer" 
-                      class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition-colors">
-                     <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mb-2">
-                       <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      class="flex flex-col items-center p-3 md:p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                     <div class="w-10 h-10 md:w-12 md:h-12 bg-red-600 rounded-lg flex items-center justify-center mb-2">
+                       <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                          {@html getIconSvg(platform.icon_name)}
                        </svg>
                      </div>
-                     <span class="text-sm font-medium text-gray-900">{getPlatformDisplayName(platform.icon_name)}</span>
+                     <span class="text-xs md:text-sm font-medium text-gray-900">{getPlatformDisplayName(platform.icon_name)}</span>
                    </a>
                  {/if}
                {/each}
@@ -315,24 +315,24 @@
 
       <!-- FAQ Section -->
       {#if contactData.faq && contactData.faq.items && contactData.faq.items.length > 0}
-        <div class="mt-16">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">{contactData.faq.title}</h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">{contactData.faq.description}</p>
+        <div class="mt-8 md:mt-16">
+          <div class="text-center mb-8 md:mb-12">
+            <h2 class="text-xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">{contactData.faq.title}</h2>
+            <p class="text-sm md:text-xl text-gray-600 max-w-3xl mx-auto">{contactData.faq.description}</p>
           </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {#each contactData.faq.items as item}
-              <div class="bg-white rounded-lg shadow-lg p-6">
-                <div class="flex items-start space-x-4">
-                  <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-{item.gradient.from} to-{item.gradient.to} rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <div class="bg-white rounded-lg shadow-lg p-4 md:p-6">
+                <div class="flex items-start space-x-3 md:space-x-4">
+                  <div class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-{item.gradient.from} to-{item.gradient.to} rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                       {@html getIconSvg(item.icon_name)}
                     </svg>
                   </div>
                   <div class="flex-1">
-                    <h3 class="font-semibold text-gray-900 mb-2">{item.question}</h3>
-                    <p class="text-gray-600">{item.answer}</p>
+                    <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-2">{item.question}</h3>
+                    <p class="text-xs md:text-sm text-gray-600">{item.answer}</p>
                   </div>
                 </div>
               </div>
@@ -343,21 +343,22 @@
 
       <!-- Map Section -->
       {#if contactData.map && contactData.map.iframe_src}
-        <div class="mt-16">
-          <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">{contactData.map.title}</h2>
-            <p class="text-xl text-gray-600">{contactData.map.description}</p>
+        <div class="mt-8 md:mt-16">
+          <div class="text-center mb-6 md:mb-8">
+            <h2 class="text-xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">{contactData.map.title}</h2>
+            <p class="text-sm md:text-xl text-gray-600">{contactData.map.description}</p>
           </div>
           
           <div class="bg-white rounded-lg shadow-lg overflow-hidden">
             <iframe 
               src={contactData.map.iframe_src}
               width="100%" 
-              height="450" 
+              height="300" 
               style="border:0;" 
               allowfullscreen="" 
               loading="lazy" 
-              referrerpolicy="no-referrer-when-downgrade">
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Peta lokasi">
             </iframe>
           </div>
         </div>

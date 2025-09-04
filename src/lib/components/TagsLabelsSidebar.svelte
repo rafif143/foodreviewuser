@@ -20,7 +20,7 @@
       popularTags = tags;
       popularLabels = labels;
     } catch (error) {
-      console.error('Error fetching popular tags and labels:', error);
+      console.error('Ralat mengambil tag dan label popular:', error);
     } finally {
       loading = false;
     }
@@ -34,7 +34,7 @@
 <div class="space-y-6">
   <!-- Popular Tags -->
   <div class="bg-white sm:bg-gradient-to-br sm:from-white sm:to-blue-50 p-4 sm:p-6 rounded-xl sm:rounded-[2.5rem] shadow-none sm:shadow-xl border border-gray-100 sm:border-blue-100">
-    <h3 class="text-xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent mb-4">🏷️ Popular Tags</h3>
+    <h3 class="text-lg md:text-xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent mb-4">🏷️ Tag Popular</h3>
     
     {#if loading}
       <div class="space-y-2">
@@ -55,13 +55,13 @@
         {/each}
       </div>
     {:else}
-      <p class="text-gray-500 text-sm">Belum ada tags populer</p>
+      <p class="text-gray-500 text-sm">Belum ada tag popular</p>
     {/if}
   </div>
   
   <!-- Popular Labels -->
   <div class="bg-white sm:bg-gradient-to-br sm:from-white sm:to-red-50 p-4 sm:p-6 rounded-xl sm:rounded-[2.5rem] shadow-none sm:shadow-xl border border-gray-100 sm:border-red-100">
-    <h3 class="text-xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">🏅 Popular Labels</h3>
+    <h3 class="text-lg md:text-xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">🏅 Label Popular</h3>
     
     {#if loading}
       <div class="space-y-2">
@@ -81,7 +81,7 @@
         {/each}
       </div>
     {:else}
-      <p class="text-gray-500 text-sm">Belum ada labels populer</p>
+      <p class="text-gray-500 text-sm">Belum ada label popular</p>
     {/if}
   </div>
 </div>

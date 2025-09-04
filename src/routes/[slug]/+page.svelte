@@ -10,39 +10,39 @@
   /** @type {import('./$types').PageData} */
   export let data;
   
-  // Search functionality
+  // Fungsi carian
   let searchQuery = '';
   
   function handleSearch() {
     if (searchQuery.trim()) {
-      // Redirect ke halaman search dengan query
+      // Alihkan ke halaman carian dengan query
       goto(`/${data.website.slug}/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   }
 </script>
 
 <svelte:head>
-  <title>{data.website.name} - Your Ultimate Food Review Guide</title>
-  <meta name="description" content="Discover the best restaurants, cafes, and culinary experiences in Kelantan. Your ultimate guide to food reviews, recipes, and dining adventures." />
+  <title>{data.website.name} - Panduan Ulasan Makanan Terbaik Anda</title>
+  <meta name="description" content="Temui restoran, kafe, dan pengalaman kuliner terbaik di Kelantan. Panduan terbaik anda untuk ulasan makanan, resipi, dan pengembaraan makan." />
 </svelte:head>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
-  <!-- Ad Banner Section -->
+  <!-- Bahagian Banner Iklan -->
   <AdBanner websiteSlug={data.website.slug} />
   
-  <!-- Featured Articles Section -->
+  <!-- Bahagian Artikel Pilihan -->
   <PageHeader 
     title="Artikel Terpopuler"
-    description="Artikel terbaik yang sedang trending di komunitas kuliner Kelantan"
+    description="Artikel terbaik yang sedang trending dalam komuniti kuliner Kelantan"
     icon="book"
   />
 
-  <!-- Search Section -->
+  <!-- Bahagian Carian -->
   <section class="py-12 bg-gradient-to-r from-red-50 to-orange-50">
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-3xl font-bold text-gray-800 mb-4">Cari Artikel Kuliner</h2>
-        <p class="text-gray-600 mb-8">Temukan artikel, resep, dan review kuliner favorit Anda</p>
+        <h2 class="text-xl md:text-3xl font-bold text-gray-800 mb-4">Cari Artikel Kuliner</h2>
+        <p class="text-gray-600 mb-8 text-sm md:text-base">Temui artikel, resipi, dan ulasan kuliner kegemaran anda</p>
         
         <div class="relative max-w-2xl mx-auto">
           <form on:submit|preventDefault={() => handleSearch()}>
@@ -50,7 +50,7 @@
               <input
                 type="text"
                 bind:value={searchQuery}
-                placeholder="Cari artikel, resep, atau kategori..."
+                placeholder="Cari artikel, resipi, atau kategori..."
                 class="w-full px-6 py-4 pl-14 pr-20 text-lg border-2 border-gray-200 rounded-2xl focus:border-red-500 focus:outline-none transition-all duration-300 shadow-lg hover:shadow-xl"
               />
               <div class="absolute left-5 top-1/2 transform -translate-y-1/2">
@@ -73,18 +73,67 @@
     </div>
   </section>
 
-  <!-- Popular Articles -->
+  <!-- Artikel Popular -->
   <section class="py-16 bg-white">
     <div class="container mx-auto px-4">
-             <FeaturedArticles articles={data.popularArticles} websiteSlug={data.website.slug} />
+      <!-- Desktop Layout -->
+      <div class="hidden lg:block">
+        <FeaturedArticles articles={data.popularArticles} websiteSlug={data.website.slug} />
+      </div>
+
+      <!-- Mobile Pinterest Layout -->
+      <div class="lg:hidden">
+        <div class="columns-2 gap-3">
+          {#each data.popularArticles as article, index}
+            <div class="break-inside-avoid mb-3">
+              <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden transform hover:scale-105 transition-all duration-300">
+                <!-- Image -->
+                <div class="relative">
+                  <img 
+                    src={article.thumbnail_image || 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop'} 
+                    alt={article.title}
+                    class="w-full h-32 object-cover"
+                    loading="lazy"
+                  />
+                  <div class="absolute top-2 left-2">
+                    <span class="px-2 py-1 text-[10px] font-semibold text-white bg-red-600 rounded-full">
+                      {article.category?.toUpperCase() || 'ARTIKEL'}
+                    </span>
+                  </div>
+                </div>
+                
+                <!-- Content -->
+                <div class="p-3">
+                  <h3 class="text-sm font-bold text-gray-900 mb-2 line-clamp-2 leading-tight">
+                    <a href="/{data.website.slug}/article/{article.slug || article.id}" class="hover:text-red-600 transition-colors">
+                      {article.title}
+                    </a>
+                  </h3>
+                  
+                  {#if article.summary}
+                    <p class="text-gray-600 text-xs mb-2 line-clamp-2 leading-relaxed">
+                      {article.summary}
+                    </p>
+                  {/if}
+                  
+                  <div class="flex items-center justify-between text-[10px] text-gray-500">
+                    <span class="truncate">{article.author || 'Pasukan Kelantan Food'}</span>
+                    <span class="ml-2 flex-shrink-0">{article.minute_read || 5} min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </div>
     </div>
   </section>
   
-  <!-- Video Random -->
+  <!-- Video Rawak -->
   <section class="py-16 bg-gradient-to-br from-red-50 to-orange-50">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <!-- Main Content -->
+        <!-- Kandungan Utama -->
         <div class="lg:col-span-3">
           <div class="text-center mb-12">
             <div class="inline-block p-2 bg-gradient-to-r from-orange-100 to-red-100 rounded-full mb-6">
@@ -94,18 +143,18 @@
                 </svg>
               </div>
             </div>
-            <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent mb-4">
-              Food Review
+            <h2 class="text-2xl md:text-4xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent mb-4">
+              Ulasan Makanan
             </h2>
             <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto rounded-full mb-6"></div>
-            <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
+            <p class="text-gray-600 max-w-3xl mx-auto text-sm md:text-lg leading-relaxed">
               Tonton video-video menarik tentang kuliner dan tempat makan terbaik di Kelantan
             </p>
           </div>
           <VideoShowcase videos={data.randomVideos} websiteSlug={data.website.slug} />
         </div>
         
-        <!-- Sidebar Ad -->
+        <!-- Iklan Sidebar -->
         <div class="lg:col-span-1">
           <div class="sticky top-4">
             <AdBanner websiteSlug={data.website.slug} variant="vertical" />
@@ -115,7 +164,7 @@
     </div>
   </section>
   
-  <!-- Main Content Area -->
+  <!-- Kawasan Kandungan Utama -->
   <section class="py-16 bg-white">
     <div class="container mx-auto px-4">
       <div class="text-center mb-12">
@@ -126,34 +175,89 @@
             </svg>
           </div>
         </div>
-        <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">
-          Konten Terbaru
+        <h2 class="text-2xl md:text-4xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">
+          Kandungan Terbaru
         </h2>
         <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-6"></div>
-        <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
-          Artikel dan review terbaru dari tim {data.website.name}
+        <p class="text-gray-600 max-w-3xl mx-auto text-sm md:text-lg leading-relaxed">
+          Artikel dan ulasan terbaru dari pasukan {data.website.name}
         </p>
       </div>
       
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main Content -->
-        <div class="lg:col-span-2">
+      <!-- Desktop Layout -->
+      <div class="hidden lg:grid grid-cols-3 gap-8">
+        <!-- Kandungan Utama -->
+        <div class="col-span-2">
           <div class="bg-gradient-to-br from-white to-red-50 p-8 rounded-2xl shadow-xl border border-red-100 transform hover:scale-105 transition-all duration-300">
                          <RecentPost articles={data.latestArticles} websiteSlug={data.website.slug} />
           </div>
         </div>
         
-        <!-- Sidebar -->
-        <div class="lg:col-span-1">
+        <!-- Bar Sisi -->
+        <div class="col-span-1">
           <div class="bg-gradient-to-br from-white to-orange-50 p-8 rounded-2xl shadow-xl border border-orange-100 transform hover:scale-105 transition-all duration-300">
                          <TrendingSidebar articles={data.trendingArticles} websiteSlug={data.website.slug} />
           </div>
         </div>
       </div>
+
+      <!-- Mobile Pinterest Layout -->
+      <div class="lg:hidden">
+        <!-- Trending Sidebar untuk Mobile -->
+        <div class="mb-8">
+          <div class="bg-gradient-to-br from-white to-orange-50 p-6 rounded-2xl shadow-xl border border-orange-100">
+            <TrendingSidebar articles={data.trendingArticles} websiteSlug={data.website.slug} />
+          </div>
+        </div>
+        
+        <!-- Pinterest Style Grid untuk Recent Posts -->
+        <div class="columns-2 gap-3">
+          {#each data.latestArticles as article, index}
+            <div class="break-inside-avoid mb-3">
+              <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden transform hover:scale-105 transition-all duration-300">
+                <!-- Image -->
+                <div class="relative">
+                  <img 
+                    src={article.thumbnail_image || 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop'} 
+                    alt={article.title}
+                    class="w-full h-32 object-cover"
+                    loading="lazy"
+                  />
+                  <div class="absolute top-2 left-2">
+                    <span class="px-2 py-1 text-[10px] font-semibold text-white bg-red-600 rounded-full">
+                      {article.category?.toUpperCase() || 'ARTIKEL'}
+                    </span>
+                  </div>
+                </div>
+                
+                <!-- Content -->
+                <div class="p-3">
+                  <h3 class="text-sm font-bold text-gray-900 mb-2 line-clamp-2 leading-tight">
+                    <a href="/{data.website.slug}/article/{article.slug || article.id}" class="hover:text-red-600 transition-colors">
+                      {article.title}
+                    </a>
+                  </h3>
+                  
+                  {#if article.summary}
+                    <p class="text-gray-600 text-xs mb-2 line-clamp-2 leading-relaxed">
+                      {article.summary}
+                    </p>
+                  {/if}
+                  
+                  <div class="flex items-center justify-between text-[10px] text-gray-500">
+                    <span class="truncate">{article.author || 'Pasukan Kelantan Food'}</span>
+                    <span class="ml-2 flex-shrink-0">{article.minute_read || 5} min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Call to Action Section -->
+  <!-- Bahagian Seruan Tindakan -->
   <section class="py-20 bg-gradient-to-br from-red-600 to-orange-600">
     <div class="container mx-auto px-4">
       <div class="text-center">
@@ -164,19 +268,19 @@
             </svg>
           </div>
         </div>
-        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
-          Bergabung dengan Komunitas Kami
+        <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+          Sertai Komuniti Kami
         </h2>
         <div class="w-32 h-1 bg-white mx-auto rounded-full mb-6"></div>
-        <p class="text-white/90 max-w-3xl mx-auto text-xl leading-relaxed mb-8">
-          Dapatkan update terbaru tentang review makanan, resep, dan acara kuliner eksklusif. 
-          Bergabunglah dengan ribuan pecinta kuliner lainnya!
+        <p class="text-white/90 max-w-3xl mx-auto text-sm md:text-lg lg:text-xl leading-relaxed mb-8">
+          Dapatkan kemas kini terbaru tentang ulasan makanan, resipi, dan acara kuliner eksklusif. 
+          Sertailah beribu-ribu pencinta kuliner yang lain!
         </p>
-        <div class="flex flex-wrap justify-center gap-4">
-          <a href="/{data.website.slug}/about" class="bg-white hover:bg-gray-100 text-red-600 font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+        <div class="flex flex-wrap justify-center gap-3 md:gap-4">
+          <a href="/{data.website.slug}/about" class="bg-white hover:bg-gray-100 text-red-600 font-bold py-2 px-4 md:py-4 md:px-8 rounded-lg md:rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-xs md:text-base">
             Pelajari Lebih Lanjut
           </a>
-          <a href="/{data.website.slug}/contact" class="bg-transparent hover:bg-white/10 text-white font-bold py-4 px-8 rounded-xl border-2 border-white hover:border-white/80 transition-all duration-300 transform hover:scale-105">
+          <a href="/{data.website.slug}/contact" class="bg-transparent hover:bg-white/10 text-white font-bold py-2 px-4 md:py-4 md:px-8 rounded-lg md:rounded-xl border-2 border-white hover:border-white/80 transition-all duration-300 transform hover:scale-105 text-xs md:text-base">
             Hubungi Kami
           </a>
         </div>
@@ -184,3 +288,13 @@
     </div>
   </section>
 </main>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

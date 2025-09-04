@@ -11,11 +11,11 @@
   /** @type {import('./$types').PageData} */
   export let data;
   
-  // Artikel yang sedang ditampilkan
+  // Artikel yang sedang dipaparkan
   const article = data.article;
-  // Artikel terkait
+  // Artikel berkaitan
   const relatedArticles = data.relatedArticles;
-  // Komentar awal dari load
+  // Komen awal dari muat
   let comments = data.comments || [];
   let commenterName = '';
   let commentContent = '';
@@ -23,7 +23,7 @@
   let submitError = '';
   let submitSuccess = '';
   
-  // Format tanggal dari ISO string ke format yang diinginkan
+  // Format tarikh dari ISO string ke format yang dikehendaki
   function formatDate(isoString) {
     const date = new Date(isoString);
     const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
@@ -32,7 +32,7 @@
     return `${month} ${day}, ${year}`;
   }
   
-  // Kategori yang diformat untuk tampilan
+  // Kategori yang diformat untuk paparan
   function formatCategory(category) {
     return category.toUpperCase();
   }
@@ -40,11 +40,11 @@
   // Ambil slug dari URL
   $: websiteSlug = $page.params.slug || 'food';
 
-  // Fungsi untuk memvalidasi URL gambar
+  // Fungsi untuk mengesahkan URL gambar
   const validateImageUrl = (url) => {
     return url && typeof url === 'string' && url.startsWith('https://') 
       ? url 
-      : 'https://via.placeholder.com/800x500'; // Fallback image
+      : 'https://via.placeholder.com/800x500'; // Gambar sandaran
   };
   
   // Fungsi untuk merender konten dari database dengan support untuk format TipTap HTML dan JSON blocks
@@ -316,11 +316,11 @@
     const name = commenterName?.trim();
     const content = commentContent?.trim();
     if (!name || !content) {
-      submitError = 'Nama dan komentar wajib diisi.';
+      submitError = 'Nama dan komen wajib diisi.';
       return;
     }
     if (content.length > 1000) {
-      submitError = 'Komentar terlalu panjang (maksimal 1000 karakter).';
+      submitError = 'Komen terlalu panjang (maksimum 1000 aksara).';
       return;
     }
 
@@ -329,20 +329,20 @@
     isSubmitting = false;
 
     if (!ok) {
-      submitError = 'Gagal mengirim komentar. Coba lagi.';
+      submitError = 'Gagal menghantar komen. Cuba lagi.';
       return;
     }
 
     commenterName = '';
     commentContent = '';
-    submitSuccess = 'Komentar terkirim!';
+    submitSuccess = 'Komen dihantar!';
     await refreshComments();
   }
 </script>
 
 <svelte:head>
-  <title>{article?.title || 'Article Not Found'} - {websiteSlug.charAt(0).toUpperCase() + websiteSlug.slice(1)}</title>
-  <meta name="description" content="{article?.summary || `Read the full article: ${article?.title || 'Article Not Found'}`}" />
+  <title>{article?.title || 'Artikel Tidak Ditemui'} - {websiteSlug.charAt(0).toUpperCase() + websiteSlug.slice(1)}</title>
+  <meta name="description" content="{article?.summary || `Baca artikel penuh: ${article?.title || 'Artikel Tidak Ditemui'}`}" />
 </svelte:head>
 
 
@@ -359,7 +359,7 @@
       <!-- Breadcrumb -->
       <nav class="mb-6">
         <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-gray-600">
-          <li><a href="/" class="hover:text-primary-500 transition-colors">Home</a></li>
+          <li><a href="/" class="hover:text-primary-500 transition-colors">Utama</a></li>
           <li class="text-gray-400">/</li>
           <li>
             <a href="/{websiteSlug}" class="hover:text-primary-500 transition-colors">
@@ -419,13 +419,13 @@
               
               <!-- Article Meta -->
               <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs sm:text-sm text-gray-600">
-                <span class="font-medium">BY {article.author}</span>
+                <span class="font-medium">OLEH {article.author}</span>
                 <span class="text-gray-400 hidden sm:inline">•</span>
                 <span>{formatDate(article.published_at)}</span>
                 <span class="text-gray-400 hidden sm:inline">•</span>
                 <span class="tag">{formatCategory(article.category)}</span>
                 <span class="text-gray-400 hidden sm:inline">•</span>
-                <span>{article.minute_read} min read</span>
+                <span>{article.minute_read} min baca</span>
               </div>
               
 
@@ -463,14 +463,14 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
-                <span>Back to Articles</span>
+                <span>Kembali ke Artikel</span>
               </a>
             </div>
           </article>
           
           <!-- Comments Section -->
           <section class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Komentar</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Komen</h2>
             <!-- Comment List -->
             {#if comments && comments.length > 0}
               <ul class="space-y-4 mb-8">
@@ -485,7 +485,7 @@
                 {/each}
               </ul>
             {:else}
-              <p class="text-gray-600 mb-8">Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+              <p class="text-gray-600 mb-8">Belum ada komen. Jadilah yang pertama berkomentar!</p>
             {/if}
 
             <!-- Comment Form -->
@@ -503,7 +503,7 @@
                     type="text"
                     id="commenter-name"
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="Nama Anda"
+                    placeholder="Nama anda"
                     bind:value={commenterName}
                     maxlength="100"
                     required
@@ -511,12 +511,12 @@
                 </div>
               </div>
               <div class="mb-4">
-                <label for="comment-content" class="block text-sm font-medium text-gray-700 mb-1">Komentar</label>
+                <label for="comment-content" class="block text-sm font-medium text-gray-700 mb-1">Komen</label>
                 <textarea
                   id="comment-content"
                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                   rows="4"
-                  placeholder="Tulis komentar Anda di sini..."
+                  placeholder="Tulis komen anda di sini..."
                   bind:value={commentContent}
                   maxlength="1000"
                   required
@@ -533,9 +533,9 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                   </svg>
-                  Mengirim...
+                  Menghantar...
                 {:else}
-                  Kirim Komentar
+                  Hantar Komen
                 {/if}
               </button>
             </form>
@@ -543,7 +543,7 @@
           
           <!-- Related Articles -->
           <section class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Artikel Terkait</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Artikel Berkaitan</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {#each relatedArticles as relatedArticle}
                 <a href="/{websiteSlug}/article/{relatedArticle.slug || relatedArticle.id}" class="group">
@@ -565,7 +565,7 @@
                         <span class="mx-2">•</span>
                         <span>{formatDate(relatedArticle.published_at)}</span>
                         <span class="mx-2">•</span>
-                        <span>{relatedArticle.minute_read} min read</span>
+                        <span>{relatedArticle.minute_read} min baca</span>
                       </div>
                     </div>
                   </article>
@@ -589,8 +589,8 @@
   {:else}
     <div class="container mx-auto px-4 py-8">
       <div class="bg-white rounded-lg shadow-sm p-8 text-center">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">Article Not Found</h1>
-        <p class="text-gray-600 mb-6">Sorry, the article you're looking for doesn't exist.</p>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Artikel Tidak Ditemui</h1>
+        <p class="text-gray-600 mb-6">Maaf, artikel yang anda cari tidak wujud.</p>
         <a 
           href="/{websiteSlug}" 
           class="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
@@ -598,7 +598,7 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
-          <span>Back to Articles</span>
+          <span>Kembali ke Artikel</span>
         </a>
       </div>
     </div>

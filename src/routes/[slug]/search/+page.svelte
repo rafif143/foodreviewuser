@@ -1,8 +1,8 @@
 <script>
   import { page } from '$app/stores';
-  import NavigationMenu from '$lib/components/NavigationMenu.svelte';
+  
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
-  import Footer from '$lib/components/Footer.svelte';
+  
   import AdBanner from '$lib/components/AdBanner.svelte';
   import { goto } from '$app/navigation';
 
@@ -14,7 +14,7 @@
   const websiteSlug = data.websiteSlug;
   const totalResults = data.totalResults;
   
-  // Format tanggal dari ISO string ke format yang diinginkan
+  // Format tarikh dari ISO string ke format yang dikehendaki
   function formatDate(isoString) {
     const date = new Date(isoString);
     const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
@@ -23,26 +23,26 @@
     return `${month} ${day}, ${year}`;
   }
   
-  // Kategori yang diformat untuk tampilan
+  // Kategori yang diformat untuk paparan
   function formatCategory(category) {
     return category.toUpperCase();
   }
   
-  // Fungsi untuk memvalidasi URL gambar
+  // Fungsi untuk mengesahkan URL gambar
   const validateImageUrl = (url) => {
     return url && typeof url === 'string' && url.startsWith('https://') 
       ? url 
       : 'https://via.placeholder.com/800x500';
   };
   
-  // Fungsi untuk highlight search query dalam teks
+  // Fungsi untuk menyerlahkan query carian dalam teks
   function highlightText(text, query) {
     if (!query || !text) return text;
     const regex = new RegExp(`(${query})`, 'gi');
     return text.replace(regex, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>');
   }
   
-  // Fungsi untuk melakukan pencarian baru
+  // Fungsi untuk melakukan carian baru
   function performNewSearch(event) {
     event.preventDefault();
     const newQuery = event.target.search.value.trim();
@@ -57,7 +57,7 @@
   <meta name="description" content="Hasil pencarian untuk '{searchQuery}' di {websiteSlug.charAt(0).toUpperCase() + websiteSlug.slice(1)}" />
 </svelte:head>
 
-<NavigationMenu />
+
 
 <main class="bg-gray-50 min-h-screen">
   <div class="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
@@ -67,7 +67,7 @@
     <!-- Breadcrumb -->
     <nav class="mb-6">
       <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-gray-600">
-        <li><a href="/" class="hover:text-primary-500 transition-colors">Home</a></li>
+        <li><a href="/" class="hover:text-primary-500 transition-colors">Utama</a></li>
         <li class="text-gray-400">/</li>
         <li>
           <a href="/{websiteSlug}" class="hover:text-primary-500 transition-colors">
@@ -75,7 +75,7 @@
           </a>
         </li>
         <li class="text-gray-400">/</li>
-        <li class="text-gray-800 font-medium">Search: {searchQuery}</li>
+        <li class="text-gray-800 font-medium">Carian: {searchQuery}</li>
       </ol>
     </nav>
 
@@ -88,7 +88,7 @@
             Hasil Pencarian: <span class="text-primary-500">"{searchQuery}"</span>
           </h1>
           <p class="text-gray-600 text-lg mb-6">
-            {totalResults} artikel ditemukan
+            {totalResults} artikel ditemui
           </p>
           
           <!-- Search Form -->
@@ -153,7 +153,7 @@
                         <span class="mx-2">•</span>
                         <span>{formatDate(article.published_at)}</span>
                         <span class="mx-2">•</span>
-                        <span>{article.minute_read} min read</span>
+                        <span>{article.minute_read} min baca</span>
                       </div>
 
 
@@ -171,9 +171,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tidak Ada Hasil</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tiada Hasil</h2>
             <p class="text-gray-600 mb-6">
-              Maaf, tidak ada artikel yang ditemukan untuk pencarian "{searchQuery}"
+              Maaf, tiada artikel yang ditemui untuk carian "{searchQuery}"
             </p>
 
           </div>
@@ -185,9 +185,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Mulai Pencarian</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Mula Carian</h2>
             <p class="text-gray-600 mb-6">
-              Masukkan kata kunci untuk mencari artikel kuliner favorit Anda
+              Masukkan kata kunci untuk mencari artikel kuliner kegemaran anda
             </p>
           </div>
         {/if}
@@ -206,7 +206,7 @@
   </div>
 </main>
 
-<Footer />
+
 
 <style>
   .line-clamp-2 {

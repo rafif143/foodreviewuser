@@ -5,7 +5,7 @@
   import { DEFAULT_WEBSITE } from '$lib/tenant';
   import ArticleLabels from './ArticleLabels.svelte';
   
-  // State untuk "Read more"
+  // State untuk "Baca lagi"
   const articlesPerLoad = 12;
   let visibleCount = articlesPerLoad;
   let isLoadingMore = false;
@@ -41,7 +41,7 @@
         image: article.thumbnail_image || 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&h=300&fit=crop',
         category: article.category.toUpperCase(),
         title: article.title,
-        author: article.author ? `BY ${article.author.toUpperCase()}` : 'BY TIM KELANTAN FOOD REVIEW',
+        author: article.author ? `OLEH ${article.author.toUpperCase()}` : 'OLEH PASUKAN KELANTAN FOOD REVIEW',
         excerpt: article.summary,
         height: height,
         labels: article.labels || []
@@ -49,9 +49,9 @@
     });
   }
   
-  // Data statis telah dihapus dan diganti dengan data dinamis dari database
+  // Data statis telah dihapus dan diganti dengan data dinamik dari pangkalan data
 
-  // Artikel yang terlihat saat ini
+  // Artikel yang kelihatan pada masa ini
   $: visibleArticles = featuredArticles.slice(0, visibleCount);
   $: hasMore = visibleCount < featuredArticles.length;
   $: hasLess = visibleCount > articlesPerLoad;
@@ -276,10 +276,10 @@
     {#if isLoadingLess}
       <span class="inline-flex items-center gap-2">
         <span class="w-4 h-4 border-2 border-gray-600/60 border-t-transparent rounded-full animate-spin"></span>
-        Mengurangi...
+        Mengurangkan...
       </span>
     {:else}
-      Tampilkan Lebih Sedikit
+      Tunjukkan Lebih Sedikit
     {/if}
   </button>
   {/if}
@@ -293,7 +293,7 @@
     {#if isLoadingMore}
       <span class="inline-flex items-center gap-2">
         <span class="w-4 h-4 border-2 border-white/70 border-t-transparent rounded-full animate-spin"></span>
-        Memuat...
+        Memuatkan...
       </span>
     {:else}
       Muat Lebih Banyak

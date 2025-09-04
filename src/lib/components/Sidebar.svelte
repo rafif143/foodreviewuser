@@ -35,7 +35,7 @@
     });
   }
   
-  // Fetch about us data from Supabase
+  // Ambil data tentang kami dari Supabase
   async function fetchAboutUs() {
     try {
       loading = true;
@@ -48,10 +48,10 @@
       
       if (error) {
         console.error('Error fetching about us data:', error);
-        // Fallback ke data default jika tidak ada data
+        // Fallback ke data default jika tiada data
         aboutUsData = {
           name: 'Dean Mel',
-          description: 'Passionate food blogger and culinary enthusiast. Exploring the world one dish at a time.',
+          description: 'Blogger makanan yang bersemangat dan penggemar kuliner. Meneroka dunia satu hidangan pada satu masa.',
           profile_image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop&crop=face',
           twitter_url: 'https://x.com/kelantanfoodreview',
           pinterest_url: 'https://pinterest.com/kelantanfoodreview',
@@ -66,7 +66,7 @@
       // Fallback data
       aboutUsData = {
         name: 'Dean Mel',
-        description: 'Passionate food blogger and culinary enthusiast. Exploring the world one dish at a time.',
+        description: 'Blogger makanan yang bersemangat dan penggemar kuliner. Meneroka dunia satu hidangan pada satu masa.',
         profile_image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop&crop=face',
         twitter_url: 'https://x.com/kelantanfoodreview',
         pinterest_url: 'https://pinterest.com/kelantanfoodreview',
@@ -78,12 +78,12 @@
     }
   }
   
-  // Fetch data saat komponen dimount
+  // Ambil data semasa komponen dimount
   onMount(() => {
     fetchAboutUs();
   });
   
-  // Re-fetch jika website ID berubah
+  // Ambil semula jika ID laman web berubah
   $: if (currentWebsiteId) {
     fetchAboutUs();
   }
@@ -157,7 +157,7 @@
     {:else}
       <div class="text-center py-6">
         <div class="text-gray-400 text-3xl mb-2">👤</div>
-        <p class="text-gray-500 text-sm">Data profil tidak ditemukan</p>
+        <p class="text-gray-500 text-sm">Data profil tidak ditemui</p>
       </div>
     {/if}
   </div>

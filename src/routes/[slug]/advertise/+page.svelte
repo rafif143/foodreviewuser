@@ -9,9 +9,11 @@
 
   let advertiseData = {};
   let loading = true;
+  let currentSlide = 0;
+  let sliderContainer;
 
   onMount(async () => {
-    // Fetch Advertise page content
+    // Ambil kandungan halaman Advertise
     const { data: advertiseContent, error } = await supabase
       .from('advertise')
       .select('*')
@@ -19,14 +21,14 @@
       .single();
     
     if (error) {
-      console.error('Error fetching advertise content:', error);
-      // Use default data if no data in database
+      console.error('Ralat mengambil kandungan advertise:', error);
+      // Gunakan data default jika tiada data dalam pangkalan data
       advertiseData = {
         page_title: "Iklan & Promosi",
-        page_description: "Promosikan bisnis kuliner Anda dengan jangkauan luas di Kelantan",
+        page_description: "Promosikan perniagaan kuliner anda dengan jangkauan luas di Kelantan",
         introduction: {
           title: "Mengapa Memilih Kami?",
-          content: "Dengan jutaan reach di Facebook dan ratusan ribu followers di Instagram, kami adalah partner terpercaya untuk mempromosikan bisnis kuliner Anda ke audiens yang tepat di Kelantan dan seluruh Malaysia."
+          content: "Dengan jutaan reach di Facebook dan ratusan ribu pengikut di Instagram, kami adalah rakan kongsi yang dipercayai untuk mempromosikan perniagaan kuliner anda kepada audiens yang tepat di Kelantan dan seluruh Malaysia."
         },
         packages: [
           {
@@ -97,7 +99,27 @@
     loading = false;
   });
 
-  // Map icon names to SVG paths
+  // Function to handle scroll and update current slide
+  function handleScroll() {
+    if (sliderContainer) {
+      const scrollLeft = sliderContainer.scrollLeft;
+      const cardWidth = 320 + 16; // w-80 (320px) + gap-4 (16px)
+      currentSlide = Math.round(scrollLeft / cardWidth);
+    }
+  }
+
+  // Function to scroll to specific slide
+  function goToSlide(slideIndex) {
+    if (sliderContainer) {
+      const cardWidth = 320 + 16; // w-80 (320px) + gap-4 (16px)
+      sliderContainer.scrollTo({
+        left: slideIndex * cardWidth,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  // Peta nama ikon kepada laluan SVG
   const iconSvgs = {
     'tiktok': '<path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-.88-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>',
     'facebook': '<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>',
@@ -110,11 +132,21 @@
   };
 </script>
 
+<style>
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
 <svelte:head>
-  <title>{advertiseData.page_title || 'Advertise'} - {data.website.name}</title>
+  <title>{advertiseData.page_title || 'Iklan'} - {data.website.name}</title>
   <meta
     name="description"
-    content={advertiseData.page_description || 'Promosikan bisnis kuliner Anda dengan paket video promosi di berbagai platform sosial media.'}
+    content={advertiseData.page_description || 'Promosikan perniagaan kuliner anda dengan pakej video promosi di pelbagai platform media sosial.'}
   />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 </svelte:head>
@@ -125,14 +157,14 @@
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
     </div>
   {:else}
-    <!-- Ad Banner Section -->
+    <!-- Bahagian Banner Iklan -->
     <div class="py-4 bg-gray-50">
       <div class="container mx-auto px-4">
         <AdBanner websiteSlug={data.website.slug} />
       </div>
     </div>
 
-    <!-- Page Header -->
+    <!-- Tajuk Halaman -->
     {#if advertiseData.page_title}
       <PageHeader 
         title={advertiseData.page_title}
@@ -140,61 +172,125 @@
       />
     {/if}
 
-    <!-- Main Content -->
-    <section class="py-16 bg-gradient-to-br from-red-50 to-orange-50">
+    <!-- Kandungan Utama -->
+    <section class="py-8 md:py-16 bg-gradient-to-br from-red-50 to-orange-50">
       <div class="container mx-auto px-4">
-        <!-- Introduction -->
+        <!-- Pengenalan -->
         {#if advertiseData.introduction}
-          <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">
+          <div class="text-center mb-8 md:mb-16">
+            <h2 class="text-2xl md:text-4xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-3 md:mb-4">
               {advertiseData.introduction.title}
             </h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-6"></div>
-            <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
+            <div class="w-16 md:w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-4 md:mb-6"></div>
+            <p class="text-gray-600 max-w-3xl mx-auto text-sm md:text-lg leading-relaxed">
               {advertiseData.introduction.content}
             </p>
           </div>
         {/if}
 
-        <!-- Pricing Packages -->
+        <!-- Pakej Harga -->
         {#if advertiseData.packages}
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+          <!-- Mobile Slider -->
+          <div class="md:hidden mb-12">
+            <div 
+              bind:this={sliderContainer}
+              on:scroll={handleScroll}
+              class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide" 
+              style="scroll-snap-type: x mandatory;"
+            >
+              {#each (advertiseData.packages || []).sort((a, b) => a.order_index - b.order_index) as pkg}
+                <div class="flex-shrink-0 w-80 bg-gradient-to-br from-white to-{pkg.order_index % 2 === 0 ? 'red-50' : 'orange-50'} p-4 rounded-xl shadow-lg border border-{pkg.order_index % 2 === 0 ? 'red-100' : 'orange-100'} transform hover:scale-105 transition-all duration-300 relative overflow-hidden" style="scroll-snap-align: start;">
+                  <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-{pkg.order_index % 2 === 0 ? 'red-600/10' : 'orange-600/10'} to-{pkg.order_index % 2 === 0 ? 'orange-500/10' : 'red-500/10'} rounded-full -translate-y-16 translate-x-16"></div>
+                  {#if pkg.label}
+                    <div class="absolute top-2 right-2 bg-gradient-to-r from-red-600 to-red-700 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg border-2 border-white z-20">
+                      {pkg.label}
+                    </div>
+                  {/if}
+                  <div class="relative z-10">
+                    <div class="text-center mb-6">
+                      <h3 class="text-lg font-bold text-gray-900 mb-3 drop-shadow-sm">{pkg.name}</h3>
+                      <div class="w-12 h-1 bg-gradient-to-r from-{pkg.order_index % 2 === 0 ? 'red-600' : 'orange-500'} to-{pkg.order_index % 2 === 0 ? 'orange-500' : 'red-600'} mx-auto rounded-full mb-4"></div>
+                      <div class="mb-4">
+                        <span class="text-2xl font-black bg-gradient-to-r from-{pkg.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{pkg.order_index % 2 === 0 ? 'red-700' : 'red-600'} bg-clip-text text-transparent drop-shadow-sm">{pkg.price}</span>
+                      </div>
+                    </div>
+                    <div class="space-y-3 mb-6">
+                      <h4 class="font-bold text-gray-900 mb-3 text-sm">Video promosi di:</h4>
+                      <div class="space-y-2">
+                        {#each pkg.platforms || [] as platform}
+                          <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-gradient-to-br from-black to-gray-900 rounded-lg flex items-center justify-center shadow-lg">
+                              {#if platform.icon_name === 'threads'}
+                                <i class="bi bi-threads text-white text-sm leading-none"></i>
+                              {:else}
+                                <svg class="w-4 h-4 text-white drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24">
+                                  {@html iconSvgs[platform.icon_name]}
+                                </svg>
+                              {/if}
+                            </div>
+                            <span class="text-gray-800 font-semibold text-xs">{platform.name}</span>
+                          </div>
+                        {/each}
+                      </div>
+                    </div>
+                    <button class="w-full bg-gradient-to-r from-{pkg.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{pkg.order_index % 2 === 0 ? 'red-700' : 'red-600'} text-white font-bold py-3 px-4 rounded-lg hover:from-{pkg.order_index % 2 === 0 ? 'red-700' : 'orange-700'} hover:to-{pkg.order_index % 2 === 0 ? 'red-800' : 'red-700'} transform hover:scale-105 transition-all duration-300 shadow-lg text-sm">
+                      Pilih Pakej
+                    </button>
+                  </div>
+                </div>
+              {/each}
+            </div>
+            
+            <!-- Dot Indicators -->
+            <div class="flex justify-center mt-4 space-x-2">
+              {#each (advertiseData.packages || []).sort((a, b) => a.order_index - b.order_index) as _, index}
+                <button
+                  on:click={() => goToSlide(index)}
+                  class="w-2 h-2 rounded-full transition-all duration-300 {currentSlide === index ? 'bg-red-600 scale-125' : 'bg-gray-300 hover:bg-gray-400'}"
+                  aria-label="Go to slide {index + 1}"
+                ></button>
+              {/each}
+            </div>
+          </div>
+          
+          <!-- Desktop Grid -->
+          <div class="hidden md:grid grid-cols-3 gap-8 mb-20">
             {#each (advertiseData.packages || []).sort((a, b) => a.order_index - b.order_index) as pkg}
-              <div class="bg-gradient-to-br from-white to-{pkg.order_index % 2 === 0 ? 'red-50' : 'orange-50'} p-8 rounded-2xl shadow-xl border border-{pkg.order_index % 2 === 0 ? 'red-100' : 'orange-100'} transform hover:scale-105 transition-all duration-300 relative overflow-hidden">
+              <div class="bg-gradient-to-br from-white to-{pkg.order_index % 2 === 0 ? 'red-50' : 'orange-50'} p-4 md:p-8 rounded-xl md:rounded-2xl shadow-lg md:shadow-xl border border-{pkg.order_index % 2 === 0 ? 'red-100' : 'orange-100'} transform hover:scale-105 transition-all duration-300 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-{pkg.order_index % 2 === 0 ? 'red-600/10' : 'orange-600/10'} to-{pkg.order_index % 2 === 0 ? 'orange-500/10' : 'red-500/10'} rounded-full -translate-y-16 translate-x-16"></div>
                 {#if pkg.label}
-                  <div class="absolute top-4 right-4 bg-gradient-to-r from-red-600 to-red-700 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg border-2 border-white z-20">
+                  <div class="absolute top-2 md:top-4 right-2 md:right-4 bg-gradient-to-r from-red-600 to-red-700 text-white text-xs md:text-sm font-bold px-2 md:px-4 py-1 md:py-2 rounded-full shadow-lg border-2 border-white z-20">
                     {pkg.label}
                   </div>
                 {/if}
                 <div class="relative z-10">
-                  <div class="text-center mb-8">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4 drop-shadow-sm">{pkg.name}</h3>
-                    <div class="w-16 h-1 bg-gradient-to-r from-{pkg.order_index % 2 === 0 ? 'red-600' : 'orange-500'} to-{pkg.order_index % 2 === 0 ? 'orange-500' : 'red-600'} mx-auto rounded-full mb-6"></div>
-                    <div class="mb-6">
-                      <span class="text-4xl font-black bg-gradient-to-r from-{pkg.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{pkg.order_index % 2 === 0 ? 'red-700' : 'red-600'} bg-clip-text text-transparent drop-shadow-sm">{pkg.price}</span>
+                  <div class="text-center mb-6 md:mb-8">
+                    <h3 class="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 drop-shadow-sm">{pkg.name}</h3>
+                    <div class="w-12 md:w-16 h-1 bg-gradient-to-r from-{pkg.order_index % 2 === 0 ? 'red-600' : 'orange-500'} to-{pkg.order_index % 2 === 0 ? 'orange-500' : 'red-600'} mx-auto rounded-full mb-4 md:mb-6"></div>
+                    <div class="mb-4 md:mb-6">
+                      <span class="text-2xl md:text-4xl font-black bg-gradient-to-r from-{pkg.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{pkg.order_index % 2 === 0 ? 'red-700' : 'red-600'} bg-clip-text text-transparent drop-shadow-sm">{pkg.price}</span>
                     </div>
                   </div>
-                  <div class="space-y-4 mb-8">
-                    <h4 class="font-bold text-gray-900 mb-4 text-lg">Video promosi di:</h4>
-                    <div class="space-y-3">
+                  <div class="space-y-3 md:space-y-4 mb-6 md:mb-8">
+                    <h4 class="font-bold text-gray-900 mb-3 md:mb-4 text-sm md:text-lg">Video promosi di:</h4>
+                    <div class="space-y-2 md:space-y-3">
                       {#each pkg.platforms || [] as platform}
-                        <div class="flex items-center space-x-3">
-                          <div class="w-10 h-10 bg-gradient-to-br from-black to-gray-900 rounded-xl flex items-center justify-center shadow-lg">
+                        <div class="flex items-center space-x-2 md:space-x-3">
+                          <div class="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-black to-gray-900 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg">
                             {#if platform.icon_name === 'threads'}
-                              <i class="bi bi-threads text-white text-xl leading-none"></i>
+                              <i class="bi bi-threads text-white text-sm md:text-xl leading-none"></i>
                             {:else}
-                              <svg class="w-5 h-5 text-white drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24">
+                              <svg class="w-4 h-4 md:w-5 md:h-5 text-white drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24">
                                 {@html iconSvgs[platform.icon_name]}
                               </svg>
                             {/if}
                           </div>
-                          <span class="text-gray-800 font-semibold text-sm">{platform.name}</span>
+                          <span class="text-gray-800 font-semibold text-xs md:text-sm">{platform.name}</span>
                         </div>
                       {/each}
                     </div>
                   </div>
-                  <button class="w-full bg-gradient-to-r from-{pkg.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{pkg.order_index % 2 === 0 ? 'red-700' : 'red-600'} text-white font-bold py-4 px-6 rounded-xl hover:from-{pkg.order_index % 2 === 0 ? 'red-700' : 'orange-700'} hover:to-{pkg.order_index % 2 === 0 ? 'red-800' : 'red-700'} transform hover:scale-105 transition-all duration-300 shadow-xl text-lg">
+                  <button class="w-full bg-gradient-to-r from-{pkg.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{pkg.order_index % 2 === 0 ? 'red-700' : 'red-600'} text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-lg md:rounded-xl hover:from-{pkg.order_index % 2 === 0 ? 'red-700' : 'orange-700'} hover:to-{pkg.order_index % 2 === 0 ? 'red-800' : 'red-700'} transform hover:scale-105 transition-all duration-300 shadow-lg md:shadow-xl text-sm md:text-lg">
                     Pilih Pakej
                   </button>
                 </div>
@@ -203,51 +299,51 @@
           </div>
         {/if}
 
-        <!-- Contact Section -->
+        <!-- Bahagian Hubungi -->
         {#if advertiseData.contact_info}
-          <div class="bg-gradient-to-br from-white to-gray-50 p-10 rounded-3xl shadow-2xl border border-gray-100 mb-20">
-            <div class="text-center mb-12">
-              <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">
+          <div class="bg-gradient-to-br from-white to-gray-50 p-4 md:p-10 rounded-2xl md:rounded-3xl shadow-lg md:shadow-2xl border border-gray-100 mb-12 md:mb-20">
+            <div class="text-center mb-8 md:mb-12">
+              <h2 class="text-2xl md:text-4xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-3 md:mb-4">
                 {advertiseData.contact_info.title}
               </h2>
-              <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-6"></div>
-              <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+              <div class="w-16 md:w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-4 md:mb-6"></div>
+              <p class="text-gray-600 max-w-2xl mx-auto text-sm md:text-lg">
                 {advertiseData.contact_info.description}
               </p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              <div class="space-y-4 md:space-y-6">
                 {#each (advertiseData.contact_info.items || []) as item}
-                  <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-{item.icon_name === 'email' ? 'orange-600' : 'red-600'} to-{item.icon_name === 'email' ? 'red-600' : 'red-700'} rounded-xl flex items-center justify-center">
-                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div class="flex items-center space-x-3 md:space-x-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-{item.icon_name === 'email' ? 'orange-600' : 'red-600'} to-{item.icon_name === 'email' ? 'red-600' : 'red-700'} rounded-lg md:rounded-xl flex items-center justify-center">
+                      <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         {@html iconSvgs[item.icon_name]}
                       </svg>
                     </div>
                     <div>
-                      <h3 class="text-lg font-bold text-gray-800">{item.type}</h3>
-                      <p class="text-gray-600">{item.value}</p>
+                      <h3 class="text-sm md:text-lg font-bold text-gray-800">{item.type}</h3>
+                      <p class="text-xs md:text-sm text-gray-600">{item.value}</p>
                     </div>
                   </div>
                 {/each}
               </div>
-              <div class="bg-gradient-to-br from-red-50 to-orange-50 p-8 rounded-2xl border border-red-100">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6">{advertiseData.contact_info.form.title}</h3>
-                <form class="space-y-4">
+              <div class="bg-gradient-to-br from-red-50 to-orange-50 p-4 md:p-8 rounded-xl md:rounded-2xl border border-red-100">
+                <h3 class="text-lg md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">{advertiseData.contact_info.form.title}</h3>
+                <form class="space-y-3 md:space-y-4">
                   <div>
-                    <label class="block text-gray-700 font-medium mb-2">Nama</label>
-                    <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Masukkan nama Anda">
+                    <label for="nama" class="block text-gray-700 font-medium mb-1 md:mb-2 text-xs md:text-sm">Nama</label>
+                    <input id="nama" type="text" class="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Masukkan nama anda">
                   </div>
                   <div>
-                    <label class="block text-gray-700 font-medium mb-2">Email</label>
-                    <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Masukkan email Anda">
+                    <label for="email" class="block text-gray-700 font-medium mb-1 md:mb-2 text-xs md:text-sm">Email</label>
+                    <input id="email" type="email" class="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Masukkan email anda">
                   </div>
                   <div>
-                    <label class="block text-gray-700 font-medium mb-2">Pesan</label>
-                    <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Tulis pesan Anda di sini..."></textarea>
+                    <label for="pesan" class="block text-gray-700 font-medium mb-1 md:mb-2 text-xs md:text-sm">Pesan</label>
+                    <textarea id="pesan" rows="3" class="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Tulis pesan anda di sini..."></textarea>
                   </div>
-                  <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-3 px-6 rounded-xl hover:from-red-700 hover:to-red-800 transform hover:scale-105 transition-all duration-300 shadow-lg">
-                    Kirim Pesan
+                  <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-2 md:py-3 px-4 md:px-6 rounded-lg md:rounded-xl hover:from-red-700 hover:to-red-800 transform hover:scale-105 transition-all duration-300 shadow-lg text-sm md:text-base">
+                    Hantar Pesan
                   </button>
                 </form>
               </div>

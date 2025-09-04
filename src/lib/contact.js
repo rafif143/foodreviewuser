@@ -1,9 +1,9 @@
 import { supabase } from './supabase';
 
 /**
- * Mendapatkan data contact untuk website tertentu
+ * Mendapatkan data hubungan untuk laman web tertentu
  * @param {number} websiteId - ID website
- * @returns {Promise<Object|null>} - Data contact atau null jika tidak ditemukan
+ * @returns {Promise<Object|null>} - Data hubungan atau null jika tidak ditemui
  */
 export async function getContactData(websiteId) {
   try {
@@ -17,21 +17,21 @@ export async function getContactData(websiteId) {
       if (error.code === 'PGRST116') { // No rows returned
         return null;
       }
-      console.error('Error fetching contact data:', error);
+      console.error('Ralat mengambil data hubungan:', error);
       return null;
     }
 
     return data;
   } catch (error) {
-    console.error('Error fetching contact data:', error);
+    console.error('Ralat mengambil data hubungan:', error);
     return null;
   }
 }
 
 /**
- * Update atau insert data contact
+ * Kemas kini atau masukkan data hubungan
  * @param {number} websiteId - ID website
- * @param {Object} contactData - Data contact yang akan disimpan
+ * @param {Object} contactData - Data hubungan yang akan disimpan
  * @returns {Promise<boolean>} - true jika berhasil, false jika gagal
  */
 export async function updateContactData(websiteId, contactData) {
@@ -44,7 +44,7 @@ export async function updateContactData(websiteId, contactData) {
       .single();
 
     if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows returned
-      console.error('Error checking existing contact data:', checkError);
+      console.error('Ralat memeriksa data hubungan sedia ada:', checkError);
       return false;
     }
 
@@ -71,7 +71,7 @@ export async function updateContactData(websiteId, contactData) {
         .eq('website_id', websiteId);
 
       if (error) {
-        console.error('Error updating contact data:', error);
+        console.error('Ralat mengemas kini data hubungan:', error);
         return false;
       }
     } else {
@@ -96,21 +96,21 @@ export async function updateContactData(websiteId, contactData) {
         });
 
       if (error) {
-        console.error('Error creating contact data:', error);
+        console.error('Ralat mencipta data hubungan:', error);
         return false;
       }
     }
 
     return true;
   } catch (error) {
-    console.error('Error updating contact data:', error);
+    console.error('Ralat mengemas kini data hubungan:', error);
     return false;
   }
 }
 
 /**
- * Mendapatkan data default untuk contact
- * @returns {Object} - Data default contact
+ * Mendapatkan data lalai untuk hubungan
+ * @returns {Object} - Data lalai hubungan
  */
 export function getDefaultContactData() {
   return {

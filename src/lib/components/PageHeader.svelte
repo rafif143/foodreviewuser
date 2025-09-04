@@ -1,6 +1,6 @@
 <script>
-  export let title = "Judul Halaman";
-  export let description = "Deskripsi halaman";
+  export let title = "Tajuk Halaman";
+  export let description = "Penerangan halaman";
   export let icon = "default";
   export let bgColor = "from-red-100 to-orange-100";
   export let iconBgColor = "from-red-600 to-red-700";
@@ -47,11 +47,11 @@
           {/if}
         </div>
       </div>
-      <h1 class={compact ? `text-3xl font-bold bg-gradient-to-r ${titleGradient} bg-clip-text text-transparent mb-3` : `text-5xl font-bold bg-gradient-to-r ${titleGradient} bg-clip-text text-transparent mb-4`}>
+      <h1 class={compact ? `text-lg md:text-3xl font-bold bg-gradient-to-r ${titleGradient} bg-clip-text text-transparent mb-2 md:mb-3` : `text-xl md:text-5xl font-bold bg-gradient-to-r ${titleGradient} bg-clip-text text-transparent mb-3 md:mb-4`}>
         {title}
       </h1>
-      <div class={compact ? `w-20 h-1 bg-gradient-to-r ${lineGradient} mx-auto rounded-full mb-4` : `w-32 h-1 bg-gradient-to-r ${lineGradient} mx-auto rounded-full mb-6`}></div>
-      <p class={compact ? "text-gray-600 max-w-3xl mx-auto text-base leading-relaxed" : "text-gray-600 max-w-6xl mx-auto text-lg leading-relaxed"}>
+      <div class={compact ? `w-16 md:w-20 h-1 bg-gradient-to-r ${lineGradient} mx-auto rounded-full mb-3 md:mb-4` : `w-24 md:w-32 h-1 bg-gradient-to-r ${lineGradient} mx-auto rounded-full mb-4 md:mb-6`}></div>
+      <p class={compact ? "text-gray-600 max-w-3xl mx-auto text-sm md:text-base leading-relaxed" : "text-gray-600 max-w-6xl mx-auto text-base md:text-lg leading-relaxed"}>
         {description}
       </p>
     </div>

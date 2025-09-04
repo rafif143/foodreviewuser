@@ -1,21 +1,21 @@
 <script>
   export let labels = [];
-  export let maxLabels = 3; // Maksimal jumlah label yang akan ditampilkan
+  export let maxLabels = 3; // Maksimum jumlah label yang akan dipaparkan
   
-  // Filter labels yang akan ditampilkan
+  // Tapis label yang akan dipaparkan
   $: displayLabels = labels.slice(0, maxLabels);
   $: hasMoreLabels = labels.length > maxLabels;
   $: remainingCount = labels.length - maxLabels;
   
-  // Fungsi untuk mendapatkan warna random berdasarkan nama label
+  // Fungsi untuk mendapatkan warna rawak berdasarkan nama label
   function getLabelColor(labelName) {
-    // Generate hash dari nama label untuk konsistensi warna
+    // Jana hash dari nama label untuk konsistensi warna
     let hash = 0;
     for (let i = 0; i < labelName.length; i++) {
       hash = labelName.charCodeAt(i) + ((hash << 5) - hash);
     }
     
-    // Konversi hash ke warna yang menarik
+    // Tukar hash kepada warna yang menarik
     const hue = Math.abs(hash) % 360;
     const saturation = 75 + (Math.abs(hash) % 20); // 75-95%
     const lightness = 40 + (Math.abs(hash) % 20); // 40-60%
@@ -26,7 +26,7 @@
 
 {#if labels && Array.isArray(labels) && labels.length > 0}
   <div class="absolute top-4 right-4 flex flex-col gap-1 z-10">
-    <!-- Tampilkan maksimal 3 label pertama -->
+    <!-- Paparkan maksimum 3 label pertama -->
     {#each displayLabels as labelName}
       <span 
         class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold shadow-lg border border-white/20 backdrop-blur-sm"
@@ -37,11 +37,11 @@
       </span>
     {/each}
     
-    <!-- Tampilkan "+ lainnya" jika ada lebih dari 3 label -->
+    <!-- Paparkan "+ lain" jika ada lebih dari 3 label -->
     {#if hasMoreLabels}
       <span 
         class="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold bg-gray-600 text-white shadow-lg border border-white/20 backdrop-blur-sm"
-        title="+{remainingCount} label lainnya"
+        title="+{remainingCount} label lain"
       >
         +{remainingCount}
       </span>

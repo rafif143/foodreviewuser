@@ -9,12 +9,12 @@
   const itemsPerPage = 4;
   let loading = true;
   
-  // Load semua video dari database
+  // Muat semua video dari pangkalan data
   async function loadAllVideos() {
     try {
       loading = true;
       
-      // Query langsung ke Supabase (sesuaikan dengan setup Anda)
+      // Query terus ke Supabase (sesuaikan dengan setup anda)
       const response = await fetch(`/api/videos?website_id=${websiteId}`);
       const data = await response.json();
       
@@ -27,7 +27,7 @@
     }
   }
   
-  // Pisahkan video berdasarkan tipe
+  // Pisahkan video berdasarkan jenis
   $: youtubeVideos = allVideos.filter(video => 
     video.video_type === 'youtube'
   );
@@ -36,7 +36,7 @@
     video.video_type === 'tiktok'
   );
   
-  // Video yang ditampilkan berdasarkan tab aktif
+  // Video yang dipaparkan berdasarkan tab aktif
   $: displayVideos = activeTab === 'youtube' ? youtubeVideos : tiktokVideos;
   
   // Pagination
@@ -44,7 +44,7 @@
   $: startIndex = (currentPage - 1) * itemsPerPage;
   $: currentVideos = displayVideos.slice(startIndex, startIndex + itemsPerPage);
   
-  // Reset halaman saat ganti tab
+  // Reset halaman semasa tukar tab
   function switchTab(tab) {
     activeTab = tab;
     currentPage = 1;
@@ -104,7 +104,7 @@
   {#if loading}
     <div class="flex justify-center items-center py-12">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
-      <span class="ml-2">Memuat video...</span>
+      <span class="ml-2">Memuatkan video...</span>
     </div>
   {:else}
     
@@ -165,7 +165,7 @@
                           </svg>
                         </div>
                         <p class="text-red-600 text-sm font-medium">YouTube Video</p>
-                        <p class="text-red-400 text-xs">URL tidak valid</p>
+                        <p class="text-red-400 text-xs">URL tidak sah</p>
                       </div>
                     </div>
                   {/if}
@@ -231,7 +231,7 @@
                         </svg>
                       </div>
                       <p class="text-pink-600 text-sm font-medium">TikTok Video</p>
-                      <p class="text-pink-400 text-xs">URL tidak valid</p>
+                      <p class="text-pink-400 text-xs">URL tidak sah</p>
                     </div>
                   </div>
                 {/if}
@@ -252,7 +252,7 @@
           </button>
           
           <span class="text-sm text-gray-600">
-            Halaman {currentPage} dari {totalPages}
+            Halaman {currentPage} daripada {totalPages}
           </span>
           
           <button 
@@ -260,7 +260,7 @@
             disabled={currentPage === totalPages}
             class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Berikutnya →
+            Seterusnya →
           </button>
         </div>
       {/if}
@@ -277,7 +277,7 @@
           Belum ada video {activeTab === 'youtube' ? 'YouTube' : 'TikTok'}
         </h3>
         <p class="text-gray-500">
-          Video akan ditampilkan di sini setelah ditambahkan
+          Video akan dipaparkan di sini selepas ditambah
         </p>
       </div>
     {/if}

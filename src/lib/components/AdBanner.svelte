@@ -2,12 +2,12 @@
   export let websiteSlug = '';
   export let variant = 'horizontal';
   
-  // Data iklan yang bisa di-customize
+  // Data iklan yang boleh disesuaikan
   let adData = {
     title: "Promosi Spesial",
     subtitle: "Dapatkan diskon hingga 50%",
-    description: "Temukan restoran dan cafe terbaik di Kelantan dengan harga spesial",
-    ctaText: "Lihat Promo",
+    description: "Temui restoran dan kafe terbaik di Kelantan dengan harga istimewa",
+    ctaText: "Lihat Promosi",
     ctaUrl: `/${websiteSlug}/advertise`,
     image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=600&fit=crop"
   };
@@ -15,11 +15,11 @@
 
 {#if variant === 'horizontal'}
   <!-- Ad Banner Section - Horizontal Version -->
-  <section class="py-4 bg-gray-50">
+  <section class="py-2 md:py-4 bg-gray-50">
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto">
         <!-- Ad Banner -->
-        <div class="relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="relative overflow-hidden rounded-lg md:rounded-xl border border-gray-200 bg-white shadow-sm">
           <!-- Background Image with Overlay -->
           <div class="absolute inset-0">
             <img 
@@ -31,27 +31,27 @@
           </div>
           
           <!-- Content -->
-          <div class="relative z-10 p-6">
-            <div class="flex flex-col md:flex-row items-center gap-4">
+          <div class="relative z-10 p-3 md:p-6">
+            <div class="flex flex-col md:flex-row items-center gap-3 md:gap-4">
               <!-- Text Content -->
-              <div class="flex-1 space-y-2">
+              <div class="flex-1 space-y-1 md:space-y-2">
                 <!-- Badge -->
-                <div class="inline-flex items-center bg-yellow-400 px-3 py-1 rounded-full">
+                <div class="inline-flex items-center bg-yellow-400 px-2 md:px-3 py-1 rounded-full">
                   <span class="text-black text-xs font-medium">PROMOSI</span>
                 </div>
                 
                 <!-- Title -->
-                <h2 class="text-xl md:text-2xl font-bold text-white">
+                <h2 class="text-lg md:text-2xl font-bold text-white">
                   {adData.title}
                 </h2>
                 
                 <!-- Subtitle -->
-                <h3 class="text-lg text-yellow-200 font-medium">
+                <h3 class="text-xs md:text-lg text-yellow-200 font-medium">
                   {adData.subtitle}
                 </h3>
                 
                 <!-- Description -->
-                <p class="text-white/90 text-sm max-w-md">
+                <p class="text-white/90 text-xs md:text-sm max-w-md">
                   {adData.description}
                 </p>
               </div>
@@ -60,10 +60,10 @@
               <div class="flex-shrink-0">
                 <a 
                   href={adData.ctaUrl}
-                  class="inline-flex items-center px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold text-sm rounded-lg transition-colors duration-200"
+                  class="inline-flex items-center px-4 md:px-6 py-2 md:py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold text-xs md:text-sm rounded-lg transition-colors duration-200"
                 >
                   {adData.ctaText}
-                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-3 h-3 md:w-4 md:h-4 ml-1 md:ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                   </svg>
                 </a>
@@ -84,7 +84,7 @@
               </svg>
               Iklan
             </span>
-            • Konten promosi dari mitra kami
+            • Kandungan promosi dari rakan kongsi kami
           </p>
         </div>
       </div>

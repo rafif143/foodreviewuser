@@ -10,17 +10,17 @@
   let aboutData = {};
 
   onMount(async () => {
-    // Fetch About page content
+    // Ambil kandungan halaman About
     const { data: aboutContent, error } = await supabase
       .from('about')
       .select('*')
       .eq('website_id', data.website.id)
       .single();
-    if (error) console.error('Error fetching about content:', error);
+    if (error) console.error('Ralat mengambil kandungan about:', error);
     else aboutData = aboutContent || {};
   });
 
-  // Map icon names to SVG paths
+  // Peta nama ikon kepada laluan SVG
   const iconSvgs = {
     'check-circle': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>',
     'eye': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>',
@@ -37,7 +37,7 @@
 </script>
 
 <svelte:head>
-  <title>{aboutData.tentang_kami?.title || 'About Us'} - {data.website.name}</title>
+  <title>{aboutData.tentang_kami?.title || 'Tentang Kami'} - {data.website.name}</title>
   <meta
     name="description"
     content={aboutData.tentang_kami?.description || 'Tentang Kami'}
@@ -45,10 +45,10 @@
 </svelte:head>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
-  <!-- Ad Banner Section -->
+  <!-- Bahagian Banner Iklan -->
   <AdBanner websiteSlug={data.website.slug} />
   
-  <!-- Page Header -->
+  <!-- Tajuk Halaman -->
   {#if aboutData.tentang_kami}
     <PageHeader 
       title={aboutData.tentang_kami.title}
@@ -56,171 +56,177 @@
     />
   {/if}
 
-  <!-- Main Content -->
-  <section class="py-16 bg-gradient-to-br from-red-50 to-orange-50">
+  <!-- Kandungan Utama -->
+  <section class="py-8 md:py-16 bg-gradient-to-br from-red-50 to-orange-50">
     <div class="container mx-auto px-4">
-      <!-- Story Section -->
+      <!-- Bahagian Cerita -->
       {#if aboutData.cerita_kami && aboutData.image}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-20">
-          <div class="space-y-8">
-            <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 transform hover:scale-105 transition-all duration-300">
-              <h2 class="text-3xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="text-lg md:text-2xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-3 md:mb-4">
+            Cerita Kami
+          </h2>
+          <div class="w-16 md:w-20 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-4 md:mb-6"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-20">
+          <div class="space-y-4 md:space-y-8">
+            <div class="bg-white p-4 md:p-8 rounded-xl md:rounded-2xl shadow-lg md:shadow-xl border border-gray-100 transform hover:scale-105 transition-all duration-300">
+              <h3 class="text-base md:text-xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-3 md:mb-4 text-center">
                 {aboutData.cerita_kami.title}
-              </h2>
-              <div class="w-20 h-1 bg-gradient-to-r from-red-600 to-orange-500 rounded-full mb-6"></div>
-              <div class="space-y-4">
+              </h3>
+              <div class="w-16 md:w-20 h-1 bg-gradient-to-r from-red-600 to-orange-500 rounded-full mb-4 md:mb-6 mx-auto"></div>
+              <div class="space-y-3 md:space-y-4">
                 {#each (aboutData.cerita_kami.content || '').split('\n\n') as paragraph}
-                  <p class="text-gray-600 leading-relaxed">{paragraph}</p>
+                  <p class="text-sm md:text-base text-gray-600 leading-relaxed text-center">{paragraph}</p>
                 {/each}
               </div>
             </div>
           </div>
           <div class="relative group">
-            <div class="absolute inset-0 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-300"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-xl md:rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-300"></div>
             <img
               src={aboutData.image.url}
               alt={aboutData.image.title}
-              class="w-full h-96 object-cover rounded-2xl shadow-2xl transform -rotate-3 group-hover:-rotate-6 transition-transform duration-300"
+              class="w-full h-64 md:h-96 object-cover rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl transform -rotate-3 group-hover:-rotate-6 transition-transform duration-300"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-2xl"></div>
-            <div class="absolute bottom-6 left-6 text-white">
-              <h3 class="text-xl font-bold mb-2">{aboutData.image.title}</h3>
-              <p class="text-sm opacity-90">{aboutData.image.subtitle}</p>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-xl md:rounded-2xl"></div>
+            <div class="absolute bottom-4 md:bottom-6 left-4 md:left-6 text-white">
+              <h3 class="text-lg md:text-xl font-bold mb-1 md:mb-2">{aboutData.image.title}</h3>
+              <p class="text-xs md:text-sm opacity-90">{aboutData.image.subtitle}</p>
             </div>
           </div>
         </div>
       {/if}
 
-      <!-- Mission & Vision -->
+      <!-- Misi & Visi -->
       {#if aboutData.misi || aboutData.visi}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="text-lg md:text-2xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-3 md:mb-4">
+            Visi & Misi Kami
+          </h2>
+          <div class="w-16 md:w-20 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-4 md:mb-6"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-20">
           {#if aboutData.misi}
-            <div class="bg-gradient-to-br from-white to-red-50 p-8 rounded-2xl shadow-xl border border-red-100 transform hover:scale-105 transition-all duration-300">
+            <div class="bg-gradient-to-br from-white to-red-50 p-4 md:p-8 rounded-xl md:rounded-2xl shadow-lg md:shadow-xl border border-red-100 transform hover:scale-105 transition-all duration-300">
               {#if aboutData.misi.icon_name}
-                <div class="w-20 h-20 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                  <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-red-600 to-red-700 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto">
+                  <svg class="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     {@html iconSvgs[aboutData.misi.icon_name]}
                   </svg>
                 </div>
               {/if}
-              <h3 class="text-2xl font-bold text-gray-800 mb-3">{aboutData.misi.title}</h3>
-              <div class="w-16 h-1 bg-gradient-to-r from-red-600 to-orange-500 rounded-full mb-6"></div>
-              <p class="text-gray-600 leading-relaxed">{aboutData.misi.content}</p>
+              <h3 class="text-sm md:text-lg font-bold text-gray-800 mb-2 md:mb-3 text-center">{aboutData.misi.title}</h3>
+              <div class="w-12 md:w-16 h-1 bg-gradient-to-r from-red-600 to-orange-500 rounded-full mb-4 md:mb-6 mx-auto"></div>
+              <p class="text-sm md:text-base text-gray-600 leading-relaxed text-center">{aboutData.misi.content}</p>
             </div>
           {/if}
           {#if aboutData.visi}
-            <div class="bg-gradient-to-br from-white to-orange-50 p-8 rounded-2xl shadow-xl border border-orange-100 transform hover:scale-105 transition-all duration-300">
+            <div class="bg-gradient-to-br from-white to-orange-50 p-4 md:p-8 rounded-xl md:rounded-2xl shadow-lg md:shadow-xl border border-orange-100 transform hover:scale-105 transition-all duration-300">
               {#if aboutData.visi.icon_name}
-                <div class="w-20 h-20 bg-gradient-to-br from-orange-600 to-red-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                  <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-orange-600 to-red-600 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto">
+                  <svg class="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     {@html iconSvgs[aboutData.visi.icon_name]}
                   </svg>
                 </div>
               {/if}
-              <h3 class="text-2xl font-bold text-gray-800 mb-3">{aboutData.visi.title}</h3>
-              <div class="w-16 h-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-full mb-6"></div>
-              <p class="text-gray-600 leading-relaxed">{aboutData.visi.content}</p>
+              <h3 class="text-sm md:text-lg font-bold text-gray-800 mb-2 md:mb-3 text-center">{aboutData.visi.title}</h3>
+              <div class="w-12 md:w-16 h-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-full mb-4 md:mb-6 mx-auto"></div>
+              <p class="text-sm md:text-base text-gray-600 leading-relaxed text-center">{aboutData.visi.content}</p>
             </div>
           {/if}
         </div>
       {/if}
 
-      <!-- Values -->
+      <!-- Nilai-nilai -->
       {#if aboutData.nilai_nilai}
-        <div class="bg-gradient-to-br from-white to-gray-50 p-10 rounded-3xl shadow-2xl border border-gray-100 mb-20">
-          <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">
-              {aboutData.nilai_nilai.title}
-            </h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-6"></div>
-            <p class="text-gray-600 max-w-2xl mx-auto">{aboutData.nilai_nilai.description}</p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {#each (aboutData.nilai_nilai.items || []).sort((a, b) => a.order_index - b.order_index) as value}
-              <div class="text-center group">
-                {#if value.icon_name}
-                  <div class="w-20 h-20 bg-gradient-to-br from-{value.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{value.order_index % 2 === 0 ? 'red-700' : 'red-600'} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      {@html iconSvgs[value.icon_name]}
-                    </svg>
-                  </div>
-                {/if}
-                <h3 class="text-xl font-bold text-gray-800 mb-3">{value.title}</h3>
-                <p class="text-gray-600 leading-relaxed">{value.description}</p>
-              </div>
-            {/each}
-          </div>
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="text-lg md:text-2xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-3 md:mb-4">
+            {aboutData.nilai_nilai.title}
+          </h2>
+          <div class="w-16 md:w-20 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-4 md:mb-6"></div>
+          <p class="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">{aboutData.nilai_nilai.description}</p>
         </div>
-      {/if}
-
-      <!-- Team -->
-      {#if aboutData.tim}
-        <div class="text-center mb-20">
-          <div class="mb-12">
-            <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">
-              {aboutData.tim.title}
-            </h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-6"></div>
-            <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
-              {aboutData.tim.description}
-            </p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {#each (aboutData.tim.members || []).sort((a, b) => a.order_index - b.order_index) as member}
-              <div class="text-center group">
-                {#if member.image_url}
-                  <div class="relative mb-6">
-                    <div class="absolute inset-0 bg-gradient-to-br from-{member.order_index % 2 === 0 ? 'red-600' : 'orange-500'}/20 to-{member.order_index % 2 === 0 ? 'orange-500' : 'red-600'}/20 rounded-full transform {member.order_index % 2 === 0 ? 'rotate-3' : '-rotate-3'} group-hover:{member.order_index % 2 === 0 ? 'rotate-6' : '-rotate-6'} transition-transform duration-300"></div>
-                    <img
-                      src={member.image_url}
-                      alt={member.name}
-                      class="w-28 h-28 rounded-full mx-auto object-cover shadow-xl transform {member.order_index % 2 === 0 ? '-rotate-3' : 'rotate-3'} group-hover:{member.order_index % 2 === 0 ? '-rotate-6' : 'rotate-6'} transition-transform duration-300"
-                    />
-                  </div>
-                {/if}
-                <h3 class="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
-                <p class="text-gray-600 font-medium">{member.position}</p>
-              </div>
-            {/each}
-          </div>
-        </div>
-      {/if}
-
-      <!-- Key Stats -->
-      {#if aboutData.key_stats}
-        <div class="mb-16">
-          <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-4">
-              {aboutData.key_stats.title}
-            </h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-6"></div>
-            <p class="text-gray-600 text-lg">{aboutData.key_stats.description}</p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {#each (aboutData.key_stats.items || []).sort((a, b) => a.order_index - b.order_index) as stat}
-              <div class="bg-gradient-to-br from-white to-{stat.order_index % 2 === 0 ? 'red-50' : 'orange-50'} p-8 rounded-2xl text-center transform hover:scale-105 transition-all duration-300 shadow-xl border border-{stat.order_index % 2 === 0 ? 'red-100' : 'orange-100'}">
-                {#if stat.icon_name}
-                  <div class="w-20 h-20 bg-gradient-to-br from-{stat.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{stat.order_index % 2 === 0 ? 'red-700' : 'red-600'} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                    <svg class="w-10 h-10 text-white" fill={['facebook', 'youtube', 'instagram', 'twitter', 'tiktok'].includes(stat.icon_name) ? 'currentColor' : 'none'} stroke={['facebook', 'youtube', 'instagram', 'twitter', 'tiktok'].includes(stat.icon_name) ? 'none' : 'currentColor'} viewBox={['facebook', 'youtube', 'instagram', 'twitter', 'tiktok'].includes(stat.icon_name) ? '0 0 24 24' : '0 0 24 24'}>
-                      {@html iconSvgs[stat.icon_name]}
-                    </svg>
-                  </div>
-                {/if}
-                <h3 class="text-lg font-bold text-gray-800 mb-3">{stat.title}</h3>
-                <p class="text-4xl font-black bg-gradient-to-r from-{stat.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{stat.order_index % 2 === 0 ? 'red-700' : 'red-600'} bg-clip-text text-transparent mb-2">{stat.value}</p>
-                <p class="text-xs text-gray-500 font-medium">{stat.unit}</p>
-              </div>
-            {/each}
-          </div>
-          {#if aboutData.last_updated}
-            <div class="text-center mt-12">
-              <div class="inline-flex items-center bg-gradient-to-r from-red-100 to-orange-100 px-8 py-4 rounded-full border-2 border-red-300 shadow-xl">
-                <div class="w-4 h-4 bg-gradient-to-r from-red-600 to-orange-600 rounded-full mr-4 animate-pulse shadow-sm"></div>
-                <p class="text-red-800 text-lg font-bold">Last updated on {aboutData.last_updated}</p>
-              </div>
+        <div class="grid grid-cols-2 gap-4 md:gap-8 mb-12 md:mb-20 max-w-4xl mx-auto">
+          {#each (aboutData.nilai_nilai.items || []).sort((a, b) => a.order_index - b.order_index) as value}
+            <div class="text-center group bg-gradient-to-br from-white to-gray-50 p-3 md:p-6 rounded-lg md:rounded-2xl shadow-md md:shadow-xl border border-gray-100 transform hover:scale-105 transition-all duration-300">
+              {#if value.icon_name}
+                <div class="w-12 h-12 md:w-20 md:h-20 bg-gradient-to-br from-{value.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{value.order_index % 2 === 0 ? 'red-700' : 'red-600'} rounded-lg md:rounded-2xl flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                  <svg class="w-6 h-6 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {@html iconSvgs[value.icon_name]}
+                  </svg>
+                </div>
+              {/if}
+              <h3 class="text-xs md:text-lg font-bold text-gray-800 mb-2 md:mb-3">{value.title}</h3>
+              <p class="text-[10px] md:text-base text-gray-600 leading-tight md:leading-relaxed">{value.description}</p>
             </div>
-          {/if}
+          {/each}
         </div>
+      {/if}
+
+      <!-- Pasukan -->
+      {#if aboutData.tim}
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="text-lg md:text-2xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-3 md:mb-4">
+            {aboutData.tim.title}
+          </h2>
+          <div class="w-16 md:w-20 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-4 md:mb-6"></div>
+          <p class="text-sm md:text-base text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            {aboutData.tim.description}
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-4 md:gap-8 mb-12 md:mb-20 max-w-4xl mx-auto">
+          {#each (aboutData.tim.members || []).sort((a, b) => a.order_index - b.order_index) as member}
+            <div class="text-center group bg-gradient-to-br from-white to-gray-50 p-3 md:p-6 rounded-lg md:rounded-2xl shadow-md md:shadow-xl border border-gray-100 transform hover:scale-105 transition-all duration-300">
+              {#if member.image_url}
+                <div class="relative mb-3 md:mb-6">
+                  <div class="absolute inset-0 bg-gradient-to-br from-{member.order_index % 2 === 0 ? 'red-600' : 'orange-500'}/20 to-{member.order_index % 2 === 0 ? 'orange-500' : 'red-600'}/20 rounded-full transform {member.order_index % 2 === 0 ? 'rotate-3' : '-rotate-3'} group-hover:{member.order_index % 2 === 0 ? 'rotate-6' : '-rotate-6'} transition-transform duration-300"></div>
+                  <img
+                    src={member.image_url}
+                    alt={member.name}
+                    class="w-16 h-16 md:w-20 md:h-20 rounded-full mx-auto object-cover shadow-lg md:shadow-xl transform {member.order_index % 2 === 0 ? '-rotate-3' : 'rotate-3'} group-hover:{member.order_index % 2 === 0 ? '-rotate-6' : 'rotate-6'} transition-transform duration-300"
+                  />
+                </div>
+              {/if}
+              <h3 class="text-xs md:text-lg font-bold text-gray-800 mb-2 md:mb-2">{member.name}</h3>
+              <p class="text-[10px] md:text-base text-gray-600 font-medium">{member.position}</p>
+            </div>
+          {/each}
+        </div>
+      {/if}
+
+      <!-- Statistik Utama -->
+      {#if aboutData.key_stats}
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="text-lg md:text-2xl font-bold bg-gradient-to-r from-gray-800 to-red-600 bg-clip-text text-transparent mb-3 md:mb-4">
+            {aboutData.key_stats.title}
+          </h2>
+          <div class="w-16 md:w-20 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mb-4 md:mb-6"></div>
+          <p class="text-sm md:text-base text-gray-600">{aboutData.key_stats.description}</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4 md:gap-8 mb-12 md:mb-16 max-w-4xl mx-auto">
+          {#each (aboutData.key_stats.items || []).sort((a, b) => a.order_index - b.order_index) as stat}
+            <div class="bg-gradient-to-br from-white to-{stat.order_index % 2 === 0 ? 'red-50' : 'orange-50'} p-3 md:p-6 rounded-lg md:rounded-2xl text-center transform hover:scale-105 transition-all duration-300 shadow-md md:shadow-xl border border-{stat.order_index % 2 === 0 ? 'red-100' : 'orange-100'}">
+              {#if stat.icon_name}
+                <div class="w-12 h-12 md:w-20 md:h-20 bg-gradient-to-br from-{stat.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{stat.order_index % 2 === 0 ? 'red-700' : 'red-600'} rounded-lg md:rounded-2xl flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-lg">
+                  <svg class="w-6 h-6 md:w-10 md:h-10 text-white" fill={['facebook', 'youtube', 'instagram', 'twitter', 'tiktok'].includes(stat.icon_name) ? 'currentColor' : 'none'} stroke={['facebook', 'youtube', 'instagram', 'twitter', 'tiktok'].includes(stat.icon_name) ? 'none' : 'currentColor'} viewBox={['facebook', 'youtube', 'instagram', 'twitter', 'tiktok'].includes(stat.icon_name) ? '0 0 24 24' : '0 0 24 24'}>
+                    {@html iconSvgs[stat.icon_name]}
+                  </svg>
+                </div>
+              {/if}
+              <h3 class="text-xs md:text-base font-bold text-gray-800 mb-2 md:mb-3">{stat.title}</h3>
+              <p class="text-sm md:text-2xl font-black bg-gradient-to-r from-{stat.order_index % 2 === 0 ? 'red-600' : 'orange-600'} to-{stat.order_index % 2 === 0 ? 'red-700' : 'red-600'} bg-clip-text text-transparent mb-1 md:mb-2">{stat.value}</p>
+              <p class="text-[8px] md:text-xs text-gray-500 font-medium">{stat.unit}</p>
+            </div>
+          {/each}
+        </div>
+        {#if aboutData.last_updated}
+          <div class="text-center mt-8 md:mt-12">
+            <div class="inline-flex items-center bg-gradient-to-r from-red-100 to-orange-100 px-4 md:px-8 py-3 md:py-4 rounded-full border-2 border-red-300 shadow-lg md:shadow-xl">
+              <div class="w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-red-600 to-orange-600 rounded-full mr-3 md:mr-4 animate-pulse shadow-sm"></div>
+              <p class="text-red-800 text-sm md:text-lg font-bold">Kemas kini terakhir pada {aboutData.last_updated}</p>
+            </div>
+          </div>
+        {/if}
       {/if}
     </div>
   </section>

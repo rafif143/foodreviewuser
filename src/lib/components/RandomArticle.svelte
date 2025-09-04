@@ -24,7 +24,7 @@
         image: article.thumbnail_image || 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop',
         category: article.category.toUpperCase(),
         title: article.title,
-        author: article.author ? `BY ${article.author.toUpperCase()}` : 'BY TIM KELANTAN FOOD REVIEW',
+        author: article.author ? `OLEH ${article.author.toUpperCase()}` : 'OLEH PASUKAN KELANTAN FOOD REVIEW',
         excerpt: article.summary,
         labels: article.labels || []
       };
@@ -205,7 +205,7 @@
     class="overflow-x-hidden"
     bind:this={scroller}
     role="region"
-    aria-label="Carousel artikel acak"
+    aria-label="Carousel artikel rawak"
     on:mouseenter={handleMouseEnter}
     on:mouseleave={handleMouseLeave}
   >
@@ -266,9 +266,9 @@
     <button 
       class="px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" 
       on:click={next}
-      aria-label="Artikel berikutnya"
+      aria-label="Artikel seterusnya"
     >
-      Berikutnya →
+      Seterusnya →
     </button>
   </div>
 </div>

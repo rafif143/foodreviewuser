@@ -15,6 +15,12 @@
   let offset = 0;
   let limit = 10;
   let articles = [];
+  let allArticles = [];
+  
+  // Pagination
+  let currentPage = 1;
+  let articlesPerPage = 12;
+  let totalArticles = 0;
   
   // Search functionality
   let searchQuery = '';
@@ -45,25 +51,19 @@
     };
   }
   
+  // Pagination logic
+  $: {
+    if (allArticles.length > 0) {
+      const startIndex = (currentPage - 1) * articlesPerPage;
+      const endIndex = startIndex + articlesPerPage;
+      articles = allArticles.slice(startIndex, endIndex);
+    }
+  }
+
   onMount(() => {
     // Inisialisasi artikel dari data yang diambil di +page.js
-    articles = data.articles.map(mapArticleData);
-    
-    // Ensure all cards have consistent height
-    setTimeout(() => {
-      const cards = articlesContainer?.querySelectorAll('article');
-      if (cards) {
-        let maxHeight = 0;
-        cards.forEach(card => {
-          const height = card.offsetHeight;
-          if (height > maxHeight) maxHeight = height;
-        });
-        
-        cards.forEach(card => {
-          card.style.minHeight = `${maxHeight}px`;
-        });
-      }
-    }, 100);
+    allArticles = data.articles.map(mapArticleData);
+    totalArticles = allArticles.length;
   });
   
   // Search functionality
@@ -116,7 +116,7 @@
 
 <svelte:head>
   <title>Food - {data.website.name}</title>
-  <meta name="description" content="Discover the best local food in Kelantan. Reviews, recommendations, and culinary adventures." />
+  <meta name="description" content="Temui makanan tempatan terbaik di Kelantan. Ulasan, cadangan, dan pengembaraan kuliner." />
 </svelte:head>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
@@ -126,7 +126,7 @@
   <!-- Page Header -->
   <PageHeader 
     title="Artikel Makanan"
-    description="Temukan artikel terbaik tentang makanan lokal Kelantan dan review restoran terpercaya"
+    description="Temui artikel terbaik tentang makanan tempatan Kelantan dan ulasan restoran yang dipercayai"
     icon="book"
     compact={true}
   />
@@ -136,7 +136,7 @@
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mx-auto text-center">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Cari Artikel Makanan</h2>
-        <p class="text-gray-600 mb-6">Temukan artikel, resep, dan review makanan favorit Anda</p>
+        <p class="text-gray-600 mb-6">Temui artikel, resipi, dan ulasan makanan kegemaran anda</p>
         
         <div class="relative">
           <form on:submit|preventDefault={() => handleSearch()}>
@@ -144,7 +144,7 @@
               <input
                 type="text"
                 bind:value={searchQuery}
-                placeholder="Cari artikel makanan, resep, atau restoran..."
+                placeholder="Cari artikel makanan, resipi, atau restoran..."
                 class="w-full px-6 py-4 pl-14 pr-20 text-lg border-2 border-gray-200 rounded-2xl focus:border-red-500 focus:outline-none transition-all duration-300 shadow-lg hover:shadow-xl"
               />
               <div class="absolute left-5 top-1/2 transform -translate-y-1/2">
@@ -171,31 +171,84 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <!-- Main Content -->
         <div class="lg:col-span-2">
-          <!-- Articles List -->
-          <div class="grid grid-cols-1 gap-5 md:gap-6" bind:this={articlesContainer}>
+          <!-- Mobile Pinterest Grid -->
+          <div class="lg:hidden columns-2 gap-3" bind:this={articlesContainer}>
+            {#each articles as article, index}
+              <div class="break-inside-avoid mb-3">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden group">
+                  <a href="/{websiteSlug}/article/{article.slug || article.id}" class="block">
+                    <img 
+                      src={article.image} 
+                      alt={article.title}
+                      class="w-full {index % 3 === 0 ? 'h-40' : index % 3 === 1 ? 'h-32' : 'h-36'} object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </a>
+                  <div class="p-3">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="bg-gradient-to-r from-orange-100 to-red-100 text-orange-600 px-2 py-0.5 rounded-full text-[10px] font-semibold border border-orange-200">
+                        {article.category}
+                      </span>
+                    </div>
+                    <h3 class="text-sm font-bold text-gray-900 mb-2 leading-tight {index % 2 === 0 ? 'line-clamp-2' : 'line-clamp-3'} group-hover:text-red-600 transition-colors">
+                      <a href="/{websiteSlug}/article/{article.slug || article.id}" class="block">
+                        {article.title}
+                      </a>
+                    </h3>
+                    <p class="text-xs text-gray-600 {index % 2 === 0 ? 'line-clamp-2' : 'line-clamp-3'} leading-relaxed mb-2">
+                      {article.description}
+                    </p>
+                    <div class="flex items-center justify-between text-[10px] text-gray-500">
+                      <span class="truncate">{article.author || 'Pasukan Kelantan Food'}</span>
+                      <span class="ml-2 flex-shrink-0">{article.minute_read || 5} min</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {/each}
+          </div>
+
+          <!-- Desktop Grid -->
+          <div class="hidden lg:grid grid-cols-1 gap-5 md:gap-6">
             {#each articles as article}
               <FoodCard {article} websiteSlug={websiteSlug} />
             {/each}
           </div>
           
-          <!-- Load More Button -->
+          <!-- Pagination -->
           <div class="text-center mt-8 md:mt-10">
-            <button 
-              class="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 shadow"
-              on:click={loadMoreArticles}
-              disabled={loading}
-            >
-              <span class="flex items-center justify-center">
-                {#if loading}
-                  Memuat...
-                {:else}
-                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                  Muat Artikel Lainnya
-                {/if}
-              </span>
-            </button>
+            <div class="flex justify-center items-center space-x-2">
+              <button 
+                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                on:click={() => currentPage > 1 ? currentPage-- : null}
+                disabled={currentPage === 1}
+              >
+                Sebelumnya
+              </button>
+              
+              <div class="flex space-x-1">
+                {#each Array(Math.ceil(totalArticles / articlesPerPage)) as _, page}
+                  <button 
+                    class="px-3 py-2 text-sm font-medium rounded-lg transition-colors {currentPage === page + 1 ? 'bg-red-600 text-white' : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'}"
+                    on:click={() => currentPage = page + 1}
+                  >
+                    {page + 1}
+                  </button>
+                {/each}
+              </div>
+              
+              <button 
+                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                on:click={() => currentPage < Math.ceil(totalArticles / articlesPerPage) ? currentPage++ : null}
+                disabled={currentPage === Math.ceil(totalArticles / articlesPerPage)}
+              >
+                Seterusnya
+              </button>
+            </div>
+            
+            <p class="text-sm text-gray-500 mt-4">
+              Halaman {currentPage} dari {Math.ceil(totalArticles / articlesPerPage)} 
+              ({totalArticles} artikel)
+            </p>
           </div>
         </div>
         
@@ -211,3 +264,21 @@
     </div>
   </section>
 </main>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

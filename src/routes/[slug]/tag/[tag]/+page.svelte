@@ -13,7 +13,7 @@
   const tag = data.tag;
   const websiteSlug = data.websiteSlug;
 
-  // Format tanggal dari ISO string ke format yang diinginkan
+  // Format tarikh dari ISO string ke format yang dikehendaki
   function formatDate(isoString) {
     const date = new Date(isoString);
     const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
@@ -22,16 +22,16 @@
     return `${month} ${day}, ${year}`;
   }
 
-  // Kategori yang diformat untuk tampilan
+  // Kategori yang diformat untuk paparan
   function formatCategory(category) {
     return category.toUpperCase();
   }
 
-  // Fungsi untuk memvalidasi URL gambar
+  // Fungsi untuk mengesahkan URL gambar
   const validateImageUrl = (url) => {
     return url && typeof url === 'string' && url.startsWith('https://') 
       ? url 
-      : 'https://via.placeholder.com/800x500'; // Fallback image
+      : 'https://via.placeholder.com/800x500'; // Gambar sandaran
   };
 </script>
 
@@ -52,7 +52,7 @@
     <!-- Breadcrumb -->
     <nav class="mb-6">
       <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-gray-600">
-        <li><a href="/" class="hover:text-primary-500 transition-colors">Home</a></li>
+        <li><a href="/" class="hover:text-primary-500 transition-colors">Utama</a></li>
         <li class="text-gray-400">/</li>
         <li>
           <a href="/{websiteSlug}" class="hover:text-primary-500 transition-colors">
@@ -73,7 +73,7 @@
             Artikel dengan Tag: <span class="text-primary-500">{tag}</span>
           </h1>
           <p class="text-gray-600 text-lg">
-            {articles.length} artikel ditemukan dengan tag "{tag}"
+            {articles.length} artikel ditemui dengan tag "{tag}"
           </p>
         </div>
 
@@ -109,7 +109,7 @@
                       <span class="mx-2">•</span>
                       <span>{formatDate(article.published_at)}</span>
                       <span class="mx-2">•</span>
-                      <span>{article.minute_read} min read</span>
+                      <span>{article.minute_read} min baca</span>
                     </div>
 
                     <!-- Tags -->
@@ -139,9 +139,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">Tidak Ada Artikel</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Tiada Artikel</h2>
             <p class="text-gray-600 mb-6">
-              Tidak ada artikel yang ditemukan dengan tag "{tag}"
+              Tiada artikel yang ditemui dengan tag "{tag}"
             </p>
             <a 
               href="/{websiteSlug}" 

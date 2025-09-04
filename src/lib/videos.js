@@ -1,16 +1,16 @@
 import { supabase } from './supabase.js';
 
 /**
- * Mendapatkan video random untuk ditampilkan di homepage
+ * Mendapatkan video rawak untuk dipaparkan di halaman utama
  * @param {number} websiteId - ID website
  * @param {number} count - Jumlah video yang akan diambil (default: 6)
- * @returns {Promise<Array>} - Array berisi video random
+ * @returns {Promise<Array>} - Array berisi video rawak
  */
 export async function getRandomVideos(websiteId, count = 6) {
   try {
     
     
-    // Ambil lebih banyak lalu acak di sisi klien agar campuran YouTube & TikTok
+    // Ambil lebih banyak lalu rawak di sisi klien agar campuran YouTube & TikTok
     const { data: videosRaw, error } = await supabase
       .from('videos')
       .select('id, title, url, description, video_type, created_at')
@@ -20,7 +20,7 @@ export async function getRandomVideos(websiteId, count = 6) {
       .limit(count * 4);
 
     if (error) {
-      console.error('Error fetching videos:', error);
+      console.error('Ralat mengambil video:', error);
       return [];
     }
 
@@ -30,7 +30,7 @@ export async function getRandomVideos(websiteId, count = 6) {
       video_type: typeof v.video_type === 'string' ? v.video_type.toLowerCase().trim() : v.video_type
     }));
 
-    // Acak hasil agar tidak hanya yang terbaru saja, lalu ambil sejumlah 'count'
+    // Rawak hasil agar tidak hanya yang terbaru saja, lalu ambil sejumlah 'count'
     const shuffled = normalized.sort(() => Math.random() - 0.5).slice(0, count);
 
     // Pastikan campuran minimal jika memungkinkan
@@ -63,7 +63,7 @@ export async function getRandomVideos(websiteId, count = 6) {
 
     return shuffled;
   } catch (error) {
-    console.error('Error in getRandomVideos:', error);
+    console.error('Ralat dalam getRandomVideos:', error);
     return [];
   }
 }
@@ -85,13 +85,13 @@ export async function getAllVideos(websiteId) {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching all videos:', error);
+      console.error('Ralat mengambil semua video:', error);
       return [];
     }
 
     return videos || [];
   } catch (error) {
-    console.error('Error in getAllVideos:', error);
+    console.error('Ralat dalam getAllVideos:', error);
     return [];
   }
 }
@@ -122,22 +122,22 @@ export async function addVideo(websiteId, title, url, description, videoType = '
       .single();
 
     if (error) {
-      console.error('Error adding video:', error);
+      console.error('Ralat menambah video:', error);
       return null;
     }
 
     return video;
   } catch (error) {
-    console.error('Error in addVideo:', error);
+    console.error('Ralat dalam addVideo:', error);
     return null;
   }
 }
 
 /**
- * Mengupdate video yang sudah ada
+ * Mengemas kini video yang sudah ada
  * @param {number} videoId - ID video
- * @param {Object} updates - Data yang akan diupdate
- * @returns {Promise<Object|null>} - Data video yang sudah diupdate
+ * @param {Object} updates - Data yang akan dikemas kini
+ * @returns {Promise<Object|null>} - Data video yang sudah dikemas kini
  */
 export async function updateVideo(videoId, updates) {
   try {
@@ -154,19 +154,19 @@ export async function updateVideo(videoId, updates) {
       .single();
 
     if (error) {
-      console.error('Error updating video:', error);
+      console.error('Ralat mengemas kini video:', error);
       return null;
     }
 
     return video;
   } catch (error) {
-    console.error('Error in updateVideo:', error);
+    console.error('Ralat dalam updateVideo:', error);
     return null;
   }
 }
 
 /**
- * Menghapus video (soft delete)
+ * Memadam video (soft delete)
  * @param {number} videoId - ID video
  * @returns {Promise<boolean>} - Status berhasil atau tidak
  */
@@ -183,13 +183,13 @@ export async function deleteVideo(videoId) {
       .eq('id', videoId);
 
     if (error) {
-      console.error('Error deleting video:', error);
+      console.error('Ralat memadam video:', error);
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error('Error in deleteVideo:', error);
+    console.error('Ralat dalam deleteVideo:', error);
     return false;
   }
 }
@@ -213,13 +213,13 @@ export async function getVideosByType(websiteId, videoType) {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching videos by type:', error);
+      console.error('Ralat mengambil video mengikut jenis:', error);
       return [];
     }
 
     return videos || [];
   } catch (error) {
-    console.error('Error in getVideosByType:', error);
+    console.error('Ralat dalam getVideosByType:', error);
     return [];
   }
 }

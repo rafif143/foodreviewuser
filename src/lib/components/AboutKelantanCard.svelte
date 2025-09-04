@@ -30,7 +30,7 @@
         aboutContent = getDefaultAboutContent(category);
       }
     } catch (error) {
-      console.error('Error fetching about content:', error);
+      console.error('Ralat mengambil kandungan tentang:', error);
       // Fallback ke konten default
       aboutContent = getDefaultAboutContent(category);
     } finally {
@@ -62,18 +62,18 @@
 {:else if aboutContent}
   <div class="bg-gradient-to-br from-orange-50 to-red-50 p-8 rounded-2xl shadow-xl border border-orange-100 transform hover:scale-105 transition-all duration-300">
     <!-- Title -->
-    <h2 class="text-3xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent mb-6">
+    <h2 class="text-xl md:text-3xl font-bold bg-gradient-to-r from-gray-800 to-orange-600 bg-clip-text text-transparent mb-6">
       {aboutContent.title}
     </h2>
     
     <!-- Description -->
-    <div class="text-gray-700 leading-relaxed text-lg mb-8 whitespace-pre-line">
+    <div class="text-gray-700 leading-relaxed text-sm md:text-lg mb-8 whitespace-pre-line">
       {aboutContent.description}
     </div>
     
     <!-- Tips Section -->
     <div class="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-orange-200">
-      <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+      <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
         {aboutContent.tips_title}
       </h3>
       <p class="text-gray-700 leading-relaxed">
@@ -85,8 +85,8 @@
   <!-- Fallback jika tidak ada konten -->
   <div class="bg-gradient-to-br from-orange-50 to-red-50 p-8 rounded-2xl shadow-xl border border-orange-100">
     <div class="text-center py-12">
-      <div class="text-gray-400 text-6xl mb-4">🍽️</div>
-      <p class="text-gray-500 text-lg">Konten tidak tersedia</p>
+      <div class="text-gray-400 text-4xl md:text-6xl mb-4">🍽️</div>
+      <p class="text-gray-500 text-sm md:text-lg">Kandungan tidak tersedia</p>
     </div>
   </div>
 {/if}
