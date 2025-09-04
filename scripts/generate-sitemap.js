@@ -9,9 +9,12 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
 // Check if environment variables are set
 if (!supabaseUrl || !supabaseKey) {
-  console.error('❌ Supabase environment variables not set!');
-  console.error('Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
-  process.exit(1);
+  console.warn('⚠️ Supabase environment variables not set!');
+  console.warn('Creating fallback sitemap with static content...');
+  
+  // Create fallback sitemap
+  createFallbackSitemap();
+  process.exit(0);
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -170,6 +173,56 @@ async function generateSitemap() {
   } catch (error) {
     console.error('❌ Error generating sitemap:', error);
   }
+}
+
+// Fallback sitemap function
+function createFallbackSitemap() {
+  const WEBSITE_CONFIG = {
+    domain: 'https://foodreviewuser.netlify.app',
+    websiteId: 1,
+    name: 'Kelantan Food Review'
+  };
+  
+  // Static pages
+  const staticPages = [
+    { url: '', priority: '1.0', changefreq: 'daily' },
+    { url: '/about', priority: '0.8', changefreq: 'monthly' },
+    { url: '/contact', priority: '0.8', changefreq: 'monthly' },
+    { url: '/advertise', priority: '0.7', changefreq: 'monthly' },
+    { url: '/food', priority: '0.9', changefreq: 'weekly' },
+    { url: '/cafe', priority: '0.9', changefreq: 'weekly' },
+    { url: '/events', priority: '0.8', changefreq: 'weekly' },
+    { url: '/recipe', priority: '0.8', changefreq: 'weekly' },
+    { url: '/things-to-do', priority: '0.8', changefreq: 'weekly' },
+    { url: '/search', priority: '0.6', changefreq: 'monthly' }
+  ];
+  
+  // Generate fallback sitemap
+  let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+  
+  staticPages.forEach(page => {
+    const lastmod = new Date().toISOString();
+    sitemap += `
+  <url>
+    <loc>${WEBSITE_CONFIG.domain}${page.url}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`;
+  });
+  
+  sitemap += `
+</urlset>`;
+  
+  // Save fallback sitemap
+  const sitemapPath = path.join(process.cwd(), 'static', 'sitemap.xml');
+  fs.writeFileSync(sitemapPath, sitemap);
+  
+  console.log('✅ Fallback sitemap created successfully!');
+  console.log(`📁 Saved to: ${sitemapPath}`);
+  console.log(`🌐 URL: ${WEBSITE_CONFIG.domain}/sitemap.xml`);
+  console.log(`📊 Total URLs: ${staticPages.length}`);
 }
 
 // Run the script
