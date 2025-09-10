@@ -125,8 +125,8 @@
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": articleData.title || pageTitle,
-        "description": articleData.description || metaDescription,
-        "image": articleData.image || ogImage,
+        "description": articleData.summary || metaDescription,
+        "image": articleData.mainImage || articleData.thumbnailImage || ogImage,
         "author": {
           "@type": "Organization",
           "name": config.name,
