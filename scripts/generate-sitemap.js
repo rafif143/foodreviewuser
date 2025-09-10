@@ -76,9 +76,10 @@ async function generateSitemap() {
     // Add static pages
     staticPages.forEach(page => {
       const lastmod = new Date().toISOString();
+      const url = page.url === '' ? '/kelantan' : `/kelantan${page.url}`;
       sitemap += `
   <url>
-    <loc>${WEBSITE_CONFIG.domain}${page.url}</loc>
+    <loc>${WEBSITE_CONFIG.domain}${url}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
@@ -92,7 +93,7 @@ async function generateSitemap() {
         const lastmod = article.updated_at ? new Date(article.updated_at).toISOString() : new Date().toISOString();
         sitemap += `
   <url>
-    <loc>${WEBSITE_CONFIG.domain}/article/${article.slug}</loc>
+    <loc>${WEBSITE_CONFIG.domain}/kelantan/article/${article.slug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -107,7 +108,7 @@ async function generateSitemap() {
         const lastmod = restaurant.updated_at ? new Date(restaurant.updated_at).toISOString() : new Date().toISOString();
         sitemap += `
   <url>
-    <loc>${WEBSITE_CONFIG.domain}/restaurant/${restaurant.slug}</loc>
+    <loc>${WEBSITE_CONFIG.domain}/kelantan/restaurant/${restaurant.slug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -120,7 +121,7 @@ async function generateSitemap() {
     categories.forEach(category => {
       sitemap += `
   <url>
-    <loc>${WEBSITE_CONFIG.domain}/${category}</loc>
+    <loc>${WEBSITE_CONFIG.domain}/kelantan/${category}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -139,7 +140,7 @@ async function generateSitemap() {
       tags.forEach(tag => {
         sitemap += `
   <url>
-    <loc>${WEBSITE_CONFIG.domain}/tag/${tag.slug}</loc>
+    <loc>${WEBSITE_CONFIG.domain}/kelantan/tag/${tag.slug}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

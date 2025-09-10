@@ -49,9 +49,10 @@ export async function generateSitemap(websiteId, supabase) {
     
     // Add static pages
     staticPages.forEach(page => {
+      const url = page.url === '' ? `/${config.slug}` : `/${config.slug}${page.url}`;
       sitemap += `
   <url>
-    <loc>${baseUrl}${page.url}</loc>
+    <loc>${baseUrl}${url}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
@@ -64,7 +65,7 @@ export async function generateSitemap(websiteId, supabase) {
         const lastmod = article.updated_at ? new Date(article.updated_at).toISOString() : new Date().toISOString();
         sitemap += `
   <url>
-    <loc>${baseUrl}/article/${article.slug}</loc>
+    <loc>${baseUrl}/${config.slug}/article/${article.slug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -78,7 +79,7 @@ export async function generateSitemap(websiteId, supabase) {
         const lastmod = restaurant.updated_at ? new Date(restaurant.updated_at).toISOString() : new Date().toISOString();
         sitemap += `
   <url>
-    <loc>${baseUrl}/restaurant/${restaurant.slug}</loc>
+    <loc>${baseUrl}/${config.slug}/restaurant/${restaurant.slug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -91,7 +92,7 @@ export async function generateSitemap(websiteId, supabase) {
     categories.forEach(category => {
       sitemap += `
   <url>
-    <loc>${baseUrl}/${category}</loc>
+    <loc>${baseUrl}/${config.slug}/${category}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>

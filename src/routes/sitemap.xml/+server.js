@@ -13,15 +13,26 @@ export async function GET({ url }) {
     if (sitemap) {
       return new Response(sitemap, {
         headers: {
-          'Content-Type': 'application/xml',
-          'Cache-Control': 'public, max-age=3600' // Cache for 1 hour
+          'Content-Type': 'application/xml; charset=utf-8',
+          'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+          'X-Robots-Tag': 'index, follow'
         }
       });
     } else {
-      return new Response('Error generating sitemap', { status: 500 });
+      return new Response('Error generating sitemap', { 
+        status: 500,
+        headers: {
+          'Content-Type': 'text/plain'
+        }
+      });
     }
   } catch (error) {
     console.error('Sitemap generation error:', error);
-    return new Response('Internal Server Error', { status: 500 });
+    return new Response('Internal Server Error', { 
+      status: 500,
+      headers: {
+        'Content-Type': 'text/plain'
+      }
+    });
   }
 }
