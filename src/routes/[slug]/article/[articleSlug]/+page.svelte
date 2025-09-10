@@ -18,6 +18,21 @@
   
   // Artikel yang sedang dipaparkan
   const article = data.article;
+  
+  // SEO Data untuk artikel
+  $: articleData = article ? {
+    title: article.title,
+    summary: article.summary,
+    publishedDate: article.published_at || article.created_at,
+    modifiedDate: article.updated_at,
+    author: article.author,
+    tags: article.tags || [],
+    labels: article.labels || [],
+    category: article.category,
+    minuteRead: article.minute_read,
+    thumbnailImage: article.thumbnail_image,
+    mainImage: article.main_image
+  } : {};
   // Artikel berkaitan
   const relatedArticles = data.relatedArticles;
   // Komen awal dari muat
@@ -345,10 +360,16 @@
   }
 </script>
 
-<svelte:head>
-  <title>{article?.title || 'Artikel Tidak Ditemui'} - {websiteSlug.charAt(0).toUpperCase() + websiteSlug.slice(1)}</title>
-  <meta name="description" content="{article?.summary || `Baca artikel penuh: ${article?.title || 'Artikel Tidak Ditemui'}`}" />
-</svelte:head>
+<!-- SEO Head Component untuk artikel -->
+<SEOHead 
+  {websiteId}
+  pageType="article"
+  customTitle={article?.title}
+  customDescription={article?.summary}
+  customImage={article?.main_image || article?.thumbnail_image}
+  customUrl={`https://foodreviewuser.netlify.app/${websiteSlug}/article/${article?.slug}`}
+  {articleData}
+/>
 
 
 <main class="bg-gray-50 min-h-screen">

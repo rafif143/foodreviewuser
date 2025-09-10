@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { getPopularTags, getPopularLabels } from '$lib/tagsLabels';
-  import { DEFAULT_WEBSITE } from '$lib/tenant';
+  import { DEFAULT_WEBSITE_ID } from '$lib/tenant';
   
   export let websiteSlug = '';
   
@@ -13,8 +13,8 @@
     try {
       loading = true;
       const [tags, labels] = await Promise.all([
-        getPopularTags(DEFAULT_WEBSITE.id, 10),
-        getPopularLabels(DEFAULT_WEBSITE.id, 10)
+        getPopularTags(DEFAULT_WEBSITE_ID, 10),
+        getPopularLabels(DEFAULT_WEBSITE_ID, 10)
       ]);
       
       popularTags = tags;
@@ -46,7 +46,7 @@
       <div class="flex flex-wrap gap-2">
         {#each popularTags as tag}
           <a 
-            href="/{websiteSlug || DEFAULT_WEBSITE.slug}/tag/{tag.slug}" 
+            href="/{websiteSlug || 'kelantan'}/tag/{tag.slug}" 
             class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105"
             style="background-color: {tag.color}; color: white;"
           >

@@ -1,6 +1,6 @@
 <script>
   import { page } from '$app/stores';
-  import { DEFAULT_WEBSITE } from '$lib/tenant';
+  import { DEFAULT_WEBSITE_ID } from '$lib/tenant';
   import { supabase } from '$lib/supabase';
   import { onMount } from 'svelte';
   
@@ -12,7 +12,7 @@
   let loading = true;
   
   // Get current website ID
-  $: currentWebsiteId = $page.data.website?.id || DEFAULT_WEBSITE.id;
+  $: currentWebsiteId = $page.data.website?.id || DEFAULT_WEBSITE_ID;
   
   // Menggunakan data dari prop jika tersedia, jika tidak gunakan data dari halaman
   $: trendingArticles = articles && articles.length > 0 ? 
@@ -173,7 +173,7 @@
       {#each trendingArticles.slice(0, 4) as article, index}
         <article class="flex items-start space-x-3 group">
           <div class="flex-shrink-0 relative">
-            <a href="/{websiteSlug || DEFAULT_WEBSITE.slug}/article/{article.slug || article.id}" class="block">
+            <a href="/{websiteSlug || 'kelantan'}/article/{article.slug || article.id}" class="block">
               <img 
                 src={article.image} 
                 alt={article.title}
@@ -194,7 +194,7 @@
               <span class="text-xs text-gray-400">👁️ {article.visitCount}</span>
             </div>
             <h4 class="text-sm font-semibold text-gray-800 group-hover:text-red-600 transition-colors line-clamp-2">
-              <a href="/{websiteSlug || DEFAULT_WEBSITE.slug}/article/{article.slug || article.id}" class="block">
+              <a href="/{websiteSlug || 'kelantan'}/article/{article.slug || article.id}" class="block">
                 {article.title}
               </a>
             </h4>

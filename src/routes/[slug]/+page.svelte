@@ -160,7 +160,7 @@
               Tonton video-video menarik tentang kuliner dan tempat makan terbaik di Kelantan
             </p>
           </div>
-          <VideoShowcase videos={data.randomVideos} websiteSlug={data.website.slug} />
+          <VideoShowcase videos={data.randomVideos} websiteSlug={data.website.slug} websiteId={data.website.id} />
         </div>
         
         <!-- Iklan Sidebar -->

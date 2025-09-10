@@ -3,12 +3,16 @@
   import AboutKelantanCard from '$lib/components/AboutKelantanCard.svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
   import AdBanner from '$lib/components/AdBanner.svelte';
+  import SEOHead from '$lib/components/SEOHead.svelte';
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   
   /** @type {import('./$types').PageData} */
   export let data;
+  
+  // SEO Configuration
+  $: websiteId = data.website.id || 1;
   
   let articlesContainer;
   let loading = false;
@@ -114,10 +118,15 @@
   $: websiteSlug = $page.params.slug;
 </script>
 
-<svelte:head>
-  <title>Things to Do - {data.website.name}</title>
-  <meta name="description" content="Temui aktiviti dan perkara terbaik untuk dilakukan di Kelantan. Panduan perjalanan, tarikan, dan tips petualangan." />
-</svelte:head>
+<!-- SEO Head Component untuk halaman kategori -->
+<SEOHead 
+  {websiteId}
+  pageType="category"
+  customTitle={`Aktivitas Terbaik di ${data.website.name}`}
+  customDescription={`Temukan aktivitas dan tempat menarik terbaik di ${data.website.name}. Panduan perjalanan lengkap dengan rekomendasi aktivitas.`}
+  customKeywords={['aktivitas menarik', 'tempat wisata', 'panduan perjalanan', data.website.name.toLowerCase()]}
+  customUrl={`https://foodreviewuser.netlify.app/${data.website.slug}/things-to-do`}
+/>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
   <!-- Ad Banner Section -->
@@ -259,12 +268,8 @@
           
           <!-- About Activities Section -->
           <AboutKelantanCard 
-            title="Tentang Aktivitas Kelantan"
-            description1="Kelantan menawarkan berbagai aktivitas menarik dari wisata budaya hingga petualangan outdoor. Setiap aktivitas memberikan pengalaman unik tentang kehidupan di Kelantan."
-            description2="Dari mengunjungi museum bersejarah hingga menikmati sunset di pantai, aktivitas di Kelantan cocok untuk semua jenis wisatawan dengan berbagai minat."
-            tipsTitle="Tips Aktivitas"
-            tipsContent="Rencanakan aktivitas sesuai musim dan cuaca. Aktivitas outdoor sebaiknya dilakukan di pagi atau sore hari untuk menghindari panas terik."
-            icon="🎯"
+            category="things-to-do"
+            websiteId={data.website.id}
           />
         </div>
       </div>

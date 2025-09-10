@@ -2,7 +2,7 @@
   import { fly } from 'svelte/transition';
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  import { DEFAULT_WEBSITE } from '$lib/tenant';
+  import { DEFAULT_WEBSITE_ID } from '$lib/tenant';
   import ArticleLabels from './ArticleLabels.svelte';
   
   // State untuk "Baca lagi"
@@ -248,7 +248,7 @@
                         {article.author}
                       </span>
                     </div>
-                    <a href="/{websiteSlug || DEFAULT_WEBSITE.slug}/article/{article.slug || article.id}" class="text-white text-xs font-semibold hover:text-red-300 transition-colors duration-300 flex items-center gap-1 group/btn">
+                    <a href="/{websiteSlug || 'kelantan'}/article/{article.slug || article.id}" class="text-white text-xs font-semibold hover:text-red-300 transition-colors duration-300 flex items-center gap-1 group/btn">
                       Baca Selengkapnya
                       <svg class="w-3 h-3 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

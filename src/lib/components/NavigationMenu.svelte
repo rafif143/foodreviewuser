@@ -2,7 +2,7 @@
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
-  import { DEFAULT_WEBSITE, createWebsiteUrl } from '$lib/tenant';
+  import { DEFAULT_WEBSITE_ID, createWebsiteUrl } from '$lib/tenant';
   // SVG Icons untuk kategori
   const icons = {
     Food: `<path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/>`,
@@ -22,7 +22,7 @@
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
   });
 
-  export let website = DEFAULT_WEBSITE;
+  export let website = { id: DEFAULT_WEBSITE_ID, slug: 'kelantan' };
   export let contactData = null;
 
   // Icon SVGs for social media platforms

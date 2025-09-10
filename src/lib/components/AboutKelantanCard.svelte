@@ -1,10 +1,11 @@
 <script>
   import { onMount } from 'svelte';
-  import { getAboutSection, getDefaultAboutContent } from '$lib/aboutSections';
-  import { DEFAULT_WEBSITE } from '$lib/tenant';
+  import { getAboutSection } from '$lib/aboutSections';
+  import { DEFAULT_WEBSITE_ID } from '$lib/tenant';
   
   export let category = 'food'; // food, cafe, events, recipe, things-to-do
   export let content = null; // Jika ada content dari parent component
+  export let websiteId = null; // Website ID untuk multi-tenant
   
   let aboutContent = null;
   let loading = true;
@@ -21,18 +22,20 @@
   async function fetchAboutContent() {
     try {
       loading = true;
-      const data = await getAboutSection(DEFAULT_WEBSITE.id, category);
+      // Gunakan websiteId yang diberikan atau fallback ke DEFAULT_WEBSITE_ID
+      const currentWebsiteId = websiteId || DEFAULT_WEBSITE_ID;
+      const data = await getAboutSection(currentWebsiteId, category);
       
       if (data) {
         aboutContent = data;
       } else {
-        // Gunakan konten default jika tidak ada data di database
-        aboutContent = getDefaultAboutContent(category);
+        // Biarkan kosong jika tidak ada data di database
+        aboutContent = null;
       }
     } catch (error) {
       console.error('Ralat mengambil kandungan tentang:', error);
-      // Fallback ke konten default
-      aboutContent = getDefaultAboutContent(category);
+      // Biarkan kosong jika error
+      aboutContent = null;
     } finally {
       loading = false;
     }

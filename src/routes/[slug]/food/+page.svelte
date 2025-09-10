@@ -3,12 +3,16 @@
   import AboutKelantanCard from '$lib/components/AboutKelantanCard.svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
   import AdBanner from '$lib/components/AdBanner.svelte';
+  import SEOHead from '$lib/components/SEOHead.svelte';
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   
   /** @type {import('./$types').PageData} */
   export let data;
+  
+  // SEO Configuration
+  $: websiteId = data.website.id || 1;
   
   let articlesContainer;
   let loading = false;
@@ -114,10 +118,15 @@
   $: websiteSlug = $page.params.slug;
 </script>
 
-<svelte:head>
-  <title>Food - {data.website.name}</title>
-  <meta name="description" content="Temui makanan tempatan terbaik di Kelantan. Ulasan, cadangan, dan pengembaraan kuliner." />
-</svelte:head>
+<!-- SEO Head Component untuk halaman kategori -->
+<SEOHead 
+  {websiteId}
+  pageType="category"
+  customTitle={`Makanan Terbaik di ${data.website.name}`}
+  customDescription={`Temukan makanan terbaik, restoran halal, dan kuliner tradisional di ${data.website.name}. Ulasan lengkap dengan rekomendasi terbaik.`}
+  customKeywords={['makanan terbaik', 'restoran halal', 'kuliner tradisional', data.website.name.toLowerCase()]}
+  customUrl={`https://foodreviewuser.netlify.app/${data.website.slug}/food`}
+/>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
   <!-- Ad Banner Section -->
@@ -258,7 +267,7 @@
           <AdBanner websiteSlug={data.website.slug} variant="vertical" />
           
           <!-- About Food Section -->
-          <AboutKelantanCard category="food" />
+          <AboutKelantanCard category="food" websiteId={data.website.id} />
         </div>
       </div>
     </div>

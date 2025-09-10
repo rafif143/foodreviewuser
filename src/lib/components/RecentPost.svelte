@@ -1,6 +1,6 @@
 <script>
   import { page } from '$app/stores';
-  import { DEFAULT_WEBSITE } from '$lib/tenant';
+  import { DEFAULT_WEBSITE_ID } from '$lib/tenant';
   // ArticleLabels dihapus kerana thumbnail terlalu kecil
   
   /** @type {import('./$types').PageData} */
@@ -46,7 +46,7 @@
   {#each latestArticles as article, index}
     <article class="flex flex-col sm:flex-row gap-3 sm:gap-4 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 sm:transform sm:hover:scale-105 overflow-hidden group">
       <div class="flex-shrink-0 relative">
-        <a href="/{websiteSlug || DEFAULT_WEBSITE.slug}/article/{article.slug || article.id}" class="block">
+        <a href="/{websiteSlug || 'kelantan'}/article/{article.slug || article.id}" class="block">
           <img 
             src={article.image} 
             alt={article.title}
@@ -67,7 +67,7 @@
           {/if}
         </div>
         <h3 class="text-base sm:text-sm font-bold text-gray-900 mb-2 leading-snug line-clamp-2 group-hover:text-red-600 transition-colors">
-          <a href="/{websiteSlug || DEFAULT_WEBSITE.slug}/article/{article.slug || article.id}" class="block">
+          <a href="/{websiteSlug || 'kelantan'}/article/{article.slug || article.id}" class="block">
             {article.title}
           </a>
         </h3>
@@ -83,7 +83,7 @@
             </span>
           </div>
           <a 
-            href="/{websiteSlug || DEFAULT_WEBSITE.slug}/article/{article.slug || article.id}" 
+            href="/{websiteSlug || 'kelantan'}/article/{article.slug || article.id}" 
             class="text-red-600 text-xs font-semibold hover:text-red-700 transition-colors shrink-0"
           >
             Baca Selengkapnya →
@@ -96,7 +96,7 @@
 
 <div class="text-center mt-8">
   <a 
-    href="/{websiteSlug || DEFAULT_WEBSITE.slug}/food" 
+    href="/{websiteSlug || 'kelantan'}/food" 
     class="inline-block w-full sm:w-auto bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 sm:transform hover:scale-105 shadow-lg hover:shadow-xl"
   >
     Lihat Semua Artikel

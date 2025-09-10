@@ -59,10 +59,10 @@ export async function generateSitemap(websiteId, supabase) {
   </url>`;
     });
     
-    // Add articles
-    if (articles) {
+    // Add articles from database
+    if (articles && articles.length > 0) {
       articles.forEach(article => {
-        const lastmod = article.updated_at ? new Date(article.updated_at).toISOString() : new Date().toISOString();
+        const lastmod = new Date(article.updated_at).toISOString();
         sitemap += `
   <url>
     <loc>${baseUrl}/${config.slug}/article/${article.slug}</loc>
@@ -72,6 +72,7 @@ export async function generateSitemap(websiteId, supabase) {
   </url>`;
       });
     }
+    
     
     // Add restaurants
     if (restaurants) {

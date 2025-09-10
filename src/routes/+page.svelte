@@ -1,16 +1,17 @@
 <script>
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { DEFAULT_WEBSITE } from '$lib/tenant';
+  import { DEFAULT_WEBSITE_ID } from '$lib/tenant';
   import SEOHead from '$lib/components/SEOHead.svelte';
   
   // SEO Configuration untuk halaman root
-  $: websiteId = DEFAULT_WEBSITE.id || 1;
+  $: websiteId = DEFAULT_WEBSITE_ID;
   
   onMount(() => {
     // Redirect ke halaman default website setelah 2 detik
     setTimeout(() => {
-      goto(`/${DEFAULT_WEBSITE.slug}`);
+      // Fallback langsung ke kelantan untuk sementara
+      goto('/kelantan');
     }, 2000);
   });
 </script>

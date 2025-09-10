@@ -1,7 +1,7 @@
 <script>
   import { onDestroy, onMount, tick } from 'svelte';
   import { page } from '$app/stores';
-  import { DEFAULT_WEBSITE } from '$lib/tenant';
+  import { DEFAULT_WEBSITE_ID } from '$lib/tenant';
   import ArticleLabels from './ArticleLabels.svelte';
   
   /** @type {import('./$types').PageData} */
@@ -243,7 +243,7 @@
                 </span>
               </div>
               <a 
-                href="/{websiteSlug || DEFAULT_WEBSITE.slug}/article/{article.slug || article.id}" 
+                href="/{websiteSlug || 'kelantan'}/article/{article.slug || article.id}" 
                 class="text-red-600 text-sm font-semibold hover:text-red-700 transition-colors"
               >
                 Baca Selengkapnya
