@@ -5,7 +5,6 @@
   import RecentPost from '$lib/components/RecentPost.svelte';
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
-  import AdBanner from '$lib/components/AdBanner.svelte';
   import SEOHead from '$lib/components/SEOHead.svelte';
   import SEOTemplates from '$lib/components/SEOTemplates.svelte';
 
@@ -36,8 +35,6 @@
 />
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
-  <!-- Bahagian Banner Iklan -->
-  <AdBanner websiteSlug={data.website.slug} />
   
   <!-- Bahagian Artikel Pilihan -->
   <PageHeader 
@@ -163,12 +160,6 @@
           <VideoShowcase videos={data.randomVideos} websiteSlug={data.website.slug} websiteId={data.website.id} />
         </div>
         
-        <!-- Iklan Sidebar -->
-        <div class="lg:col-span-1">
-          <div class="sticky top-4">
-            <AdBanner websiteSlug={data.website.slug} variant="vertical" />
-          </div>
-        </div>
       </div>
     </div>
   </section>

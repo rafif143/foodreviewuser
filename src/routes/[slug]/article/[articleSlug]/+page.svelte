@@ -4,7 +4,6 @@
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import ArticleTags from '$lib/components/ArticleTags.svelte';
-  import AdBanner from '$lib/components/AdBanner.svelte';
   import SEOHead from '$lib/components/SEOHead.svelte';
   import SEOTemplates from '$lib/components/SEOTemplates.svelte';
 
@@ -374,12 +373,6 @@
 
 <main class="bg-gray-50 min-h-screen">
   {#if article}
-    <!-- Ad Banner Section -->
-    <div class="py-4 bg-gray-50">
-      <div class="container mx-auto px-4">
-        <AdBanner websiteSlug={websiteSlug} />
-      </div>
-    </div>
 
     <div class="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
       <!-- Breadcrumb -->
@@ -603,10 +596,6 @@
         
         <!-- Sidebar -->
         <div class="lg:col-span-1">
-          <!-- Ad Banner Vertical -->
-          <div class="mb-6">
-            <AdBanner websiteSlug={websiteSlug} variant="vertical" />
-          </div>
           
           <TrendingSidebar articles={data.trendingArticles} />
         </div>

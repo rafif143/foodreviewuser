@@ -203,7 +203,6 @@ export async function saveSitemapToFile(websiteId, sitemap, robots) {
     const robotsPath = path.join(process.cwd(), 'static', 'robots.txt');
     fs.writeFileSync(robotsPath, robots);
     
-    console.log(`Sitemap saved for ${config.name}: ${sitemapPath}`);
     return true;
   } catch (error) {
     console.error(`Error saving sitemap for ${config.name}:`, error);

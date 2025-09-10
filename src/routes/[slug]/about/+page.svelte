@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
-  import AdBanner from '$lib/components/AdBanner.svelte';
   import { supabase } from '$lib/supabase.js';
 
   /** @type {import('./$types').PageData} */
@@ -45,8 +44,6 @@
 </svelte:head>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
-  <!-- Bahagian Banner Iklan -->
-  <AdBanner websiteSlug={data.website.slug} />
   
   <!-- Tajuk Halaman -->
   {#if aboutData.tentang_kami}

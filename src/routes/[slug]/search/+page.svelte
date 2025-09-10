@@ -3,7 +3,6 @@
   
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   
-  import AdBanner from '$lib/components/AdBanner.svelte';
   import { goto } from '$app/navigation';
 
   /** @type {import('./$types').PageData} */
@@ -61,8 +60,6 @@
 
 <main class="bg-gray-50 min-h-screen">
   <div class="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
-    <!-- Ad Banner Section -->
-    <AdBanner websiteSlug={websiteSlug} />
     
     <!-- Breadcrumb -->
     <nav class="mb-6">
@@ -195,10 +192,6 @@
       
       <!-- Sidebar -->
       <div class="lg:col-span-1">
-        <!-- Ad Banner Vertical -->
-        <div class="mb-6">
-          <AdBanner websiteSlug={websiteSlug} variant="vertical" />
-        </div>
         
         <TrendingSidebar />
       </div>

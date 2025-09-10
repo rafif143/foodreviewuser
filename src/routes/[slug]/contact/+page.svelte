@@ -2,11 +2,22 @@
   import { onMount } from 'svelte';
   import { supabase } from '$lib/supabase.js';
   import { page } from '$app/stores';
-  import AdBanner from '$lib/components/AdBanner.svelte';
 
   let contactData = null;
   let loading = true;
   let error = null;
+  
+  // Form data
+  let formData = {
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  };
+  
+  // Form submission state
+  let isSubmitting = false;
+  let submitMessage = '';
 
   onMount(async () => {
     try {
@@ -199,6 +210,50 @@
      };
      return platformNames[iconName] || iconName;
    }
+
+   // Handle form submission
+   function handleSubmit(event) {
+     event.preventDefault();
+     
+     // Validate form
+     if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+       submitMessage = 'Sila isi semua medan yang diperlukan.';
+       return;
+     }
+     
+     // Get subject label
+     const subjectLabel = contactData.form.subject_options.find(opt => opt.value === formData.subject)?.label || formData.subject;
+     
+     // Create Gmail URL with auto-fill
+     const gmailUrl = createGmailUrl({
+       to: contactData.email,
+       subject: `${subjectLabel} - ${formData.name}`,
+       body: `Halo,\n\nNama: ${formData.name}\nEmail: ${formData.email}\nSubjek: ${subjectLabel}\n\nPesan:\n${formData.message}\n\nTerima kasih.`
+     });
+     
+     // Open Gmail
+     window.open(gmailUrl, '_blank');
+     
+     // Show success message
+     submitMessage = 'Gmail dibuka dengan data anda. Sila hantar email melalui Gmail.';
+     
+     // Reset form after 3 seconds
+     setTimeout(() => {
+       formData = { name: '', email: '', subject: '', message: '' };
+       submitMessage = '';
+     }, 3000);
+   }
+   
+   // Create Gmail URL with auto-fill
+   function createGmailUrl({ to, subject, body }) {
+     const params = new URLSearchParams({
+       to: to,
+       subject: subject,
+       body: body
+     });
+     
+     return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+   }
 </script>
 
 {#if loading}
@@ -211,12 +266,6 @@
   </div>
 {:else if contactData}
   <div class="min-h-screen bg-gray-50">
-    <!-- Ad Banner Section -->
-    <div class="py-4 bg-gray-50">
-      <div class="container mx-auto px-4">
-        <AdBanner websiteSlug={$page.params.slug} />
-      </div>
-    </div>
     
     <!-- Header -->
     <div class="bg-white shadow-sm">
@@ -233,21 +282,39 @@
         <!-- Contact Form -->
         <div class="bg-white rounded-lg shadow-lg p-4 md:p-8">
           <h2 class="text-lg md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">Hantar Mesej</h2>
-          <form class="space-y-4 md:space-y-6">
+          
+          <form on:submit={handleSubmit} class="space-y-4 md:space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label for="contact-name" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Nama</label>
-                <input type="text" id="contact-name" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <input 
+                  type="text" 
+                  id="contact-name" 
+                  bind:value={formData.name}
+                  class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                  required
+                >
               </div>
               <div>
                 <label for="contact-email" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Email</label>
-                <input type="email" id="contact-email" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <input 
+                  type="email" 
+                  id="contact-email" 
+                  bind:value={formData.email}
+                  class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                  required
+                >
               </div>
             </div>
             
             <div>
               <label for="contact-subject" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Subjek</label>
-              <select id="contact-subject" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+              <select 
+                id="contact-subject" 
+                bind:value={formData.subject}
+                class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                required
+              >
                 {#each contactData.form.subject_options || [] as option}
                   <option value={option.value}>{option.label}</option>
                 {/each}
@@ -256,11 +323,28 @@
             
             <div>
               <label for="contact-message" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Pesan</label>
-              <textarea id="contact-message" rows="4" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+              <textarea 
+                id="contact-message" 
+                rows="4" 
+                bind:value={formData.message}
+                class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                required
+              ></textarea>
             </div>
             
-            <button type="submit" class="w-full bg-red-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-md hover:bg-red-700 transition-colors text-sm md:text-base">
-              Hantar Mesej
+            <!-- Success/Error Message -->
+            {#if submitMessage}
+              <div class="p-3 rounded-md {submitMessage.includes('Gmail dibuka') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                {submitMessage}
+              </div>
+            {/if}
+            
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              class="w-full bg-red-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-md hover:bg-red-700 transition-colors text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? 'Membuka Gmail...' : 'Hantar Mesej via Gmail'}
             </button>
           </form>
         </div>
