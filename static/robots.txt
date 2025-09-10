@@ -19,3 +19,6 @@ Allow: /kelantan/food/
 Allow: /kelantan/cafe/
 Allow: /kelantan/events/
 Allow: /kelantan/recipe/
+
+# Force re-index
+Allow: /google-reindex.html
