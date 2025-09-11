@@ -29,6 +29,7 @@
   onMount(() => {
     if (seoData) {
       updateDocumentHead();
+      updateFavicon();
     }
   });
   
@@ -37,13 +38,42 @@
     if (seoData.title) {
       document.title = seoData.title;
     }
-    
+
     // Update meta tags
     updateMetaTag('description', seoData.description);
     updateMetaTag('robots', seoData.robots);
     
     // Update canonical URL
     updateCanonicalUrl(seoData.canonical);
+  }
+
+  function updateFavicon() {
+    if (!website) return;
+    
+    // Update favicon link
+    const faviconLink = document.querySelector('link[rel="icon"]') || document.createElement('link');
+    faviconLink.rel = 'icon';
+    faviconLink.type = 'image/svg+xml';
+    faviconLink.href = `/${website.slug}/favicon.ico`;
+    
+    if (!document.querySelector('link[rel="icon"]')) {
+      document.head.appendChild(faviconLink);
+    }
+
+    // Update apple-touch-icon
+    const appleTouchIcon = document.querySelector('link[rel="apple-touch-icon"]') || document.createElement('link');
+    appleTouchIcon.rel = 'apple-touch-icon';
+    appleTouchIcon.href = `/${website.slug}/apple-touch-icon.png`;
+    
+    if (!document.querySelector('link[rel="apple-touch-icon"]')) {
+      document.head.appendChild(appleTouchIcon);
+    }
+
+    // Update Open Graph image jika website punya logo
+    if (website.logo_url) {
+      updateMetaTag('og:image', website.logo_url);
+      updateMetaTag('twitter:image', website.logo_url);
+    }
   }
   
   function updateMetaTag(name, content) {
