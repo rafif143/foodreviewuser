@@ -6,12 +6,10 @@ export default defineConfig({
 	build: {
 		// Optimize bundle size
 		chunkSizeWarningLimit: 1000,
-		minify: 'terser',
-		terserOptions: {
-			compress: {
-				drop_console: true,
-				drop_debugger: true
-			}
+		minify: 'esbuild',
+		// esbuild options (faster than terser)
+		esbuild: {
+			drop: ['console', 'debugger']
 		}
 	},
 	server: {
