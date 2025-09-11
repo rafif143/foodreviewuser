@@ -28,6 +28,22 @@
   // Dynamic favicon from database
   $: faviconUrl = websiteData?.logo_url || `https://${config.domain}/favicon.svg`;
   $: appleTouchIcon = websiteData?.logo_url || `https://${config.domain}/favicon.svg`;
+  
+  // Function to clean JSON schema (remove null/undefined values)
+  function cleanJsonSchema(obj) {
+    if (obj === null || obj === undefined) return undefined;
+    if (typeof obj !== 'object') return obj;
+    if (Array.isArray(obj)) return obj.map(cleanJsonSchema).filter(item => item !== undefined);
+    
+    const cleaned = {};
+    for (const [key, value] of Object.entries(obj)) {
+      const cleanedValue = cleanJsonSchema(value);
+      if (cleanedValue !== undefined) {
+        cleaned[key] = cleanedValue;
+      }
+    }
+    return cleaned;
+  }
 </script>
 
 <svelte:head>
@@ -105,44 +121,44 @@
   
   <!-- Structured Data (Schema.org) -->
   <script type="application/ld+json">
-    {JSON.stringify(schemaMarkup)}
+    {JSON.stringify(cleanJsonSchema(schemaMarkup), null, 2)}
   </script>
   
   <!-- Additional Schema for Restaurant -->
   {#if pageType === 'restaurant' && restaurantData}
     <script type="application/ld+json">
-      {JSON.stringify({
+      {JSON.stringify(cleanJsonSchema({
         "@context": "https://schema.org",
         "@type": "Restaurant",
-        "name": restaurantData.name || `Restoran di ${config.capital}`,
-        "description": restaurantData.description || `Restoran terbaik di ${config.capital}`,
+        "name": restaurantData.name || `Restoran di ${config.capital || 'Kota Bharu'}`,
+        "description": restaurantData.description || `Restoran terbaik di ${config.capital || 'Kota Bharu'}`,
         "address": {
           "@type": "PostalAddress",
           "streetAddress": restaurantData.address || "",
-          "addressLocality": config.capital,
-          "addressRegion": config.location,
+          "addressLocality": config.capital || 'Kota Bharu',
+          "addressRegion": config.location || 'Kelantan',
           "addressCountry": "Malaysia",
           "postalCode": restaurantData.postalCode || ""
         },
         "telephone": restaurantData.phone || "",
-        "url": restaurantData.website || `https://${config.domain}`,
-        "servesCuisine": config.localCuisine,
+        "url": restaurantData.website || `https://${config.domain || 'foodreviewuser.netlify.app'}`,
+        "servesCuisine": config.localCuisine || ['Nasi Kerabu', 'Ayam Percik'],
         "priceRange": restaurantData.priceRange || "$$",
         "openingHours": restaurantData.openingHours || [],
         "aggregateRating": restaurantData.rating ? {
           "@type": "AggregateRating",
           "ratingValue": restaurantData.rating,
           "reviewCount": restaurantData.reviewCount || 0
-        } : null,
+        } : undefined,
         "image": restaurantData.image || ogImage
-      })}
+      }), null, 2)}
     </script>
   {/if}
   
   <!-- Additional Schema for Article -->
   {#if pageType === 'article' && articleData}
     <script type="application/ld+json">
-      {JSON.stringify({
+      {JSON.stringify(cleanJsonSchema({
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": articleData.title || pageTitle,
@@ -150,15 +166,15 @@
         "image": articleData.mainImage || articleData.thumbnailImage || ogImage,
         "author": {
           "@type": "Organization",
-          "name": config.name,
-          "url": `https://${config.domain}`
+          "name": config.name || 'Kelantan Food Review',
+          "url": `https://${config.domain || 'foodreviewuser.netlify.app'}`
         },
         "publisher": {
           "@type": "Organization",
-          "name": config.name,
+          "name": config.name || 'Kelantan Food Review',
           "logo": {
             "@type": "ImageObject",
-            "url": websiteData?.logo_url || `https://${config.domain}/logo.png`
+            "url": websiteData?.logo_url || `https://${config.domain || 'foodreviewuser.netlify.app'}/logo.png`
           }
         },
         "datePublished": articleData.publishedDate || new Date().toISOString(),
@@ -169,14 +185,14 @@
         },
         "articleSection": articleData.category || "Kuliner",
         "keywords": keywords
-      })}
+      }), null, 2)}
     </script>
   {/if}
   
   <!-- Breadcrumb Schema -->
   {#if pageType !== 'homepage'}
     <script type="application/ld+json">
-      {JSON.stringify({
+      {JSON.stringify(cleanJsonSchema({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
@@ -184,7 +200,7 @@
             "@type": "ListItem",
             "position": 1,
             "name": "Utama",
-            "item": `https://${config.domain}`
+            "item": `https://${config.domain || 'foodreviewuser.netlify.app'}`
           },
           {
             "@type": "ListItem",
@@ -193,7 +209,7 @@
             "item": canonicalUrl
           }
         ]
-      })}
+      }), null, 2)}
     </script>
   {/if}
 </svelte:head>

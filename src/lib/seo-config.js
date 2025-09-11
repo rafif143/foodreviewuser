@@ -519,19 +519,29 @@ export function generateH2(websiteId, pageType, customH2 = '') {
 export function generateSchemaMarkup(websiteId, pageType, content = {}) {
   const config = getSEOConfig(websiteId);
   
+  // Clean content data to avoid undefined/null values
+  const cleanContent = {
+    name: content.name || '',
+    description: content.description || '',
+    title: content.title || '',
+    publishedDate: content.publishedDate || new Date().toISOString(),
+    modifiedDate: content.modifiedDate || new Date().toISOString(),
+    priceRange: content.priceRange || '$$'
+  };
+  
   const baseSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": config.name,
-    "url": `https://${config.domain}`,
-    "description": config.metaTemplates.description,
+    "name": config.name || 'Kelantan Food Review',
+    "url": `https://${config.domain || 'foodreviewuser.netlify.app'}`,
+    "description": config.metaTemplates?.description || 'Temukan restoran terbaik dan resepi tradisional di Kelantan',
     "publisher": {
       "@type": "Organization",
-      "name": config.name,
+      "name": config.name || 'Kelantan Food Review',
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": config.capital,
-        "addressRegion": config.location,
+        "addressLocality": config.capital || 'Kota Bharu',
+        "addressRegion": config.location || 'Kelantan',
         "addressCountry": "Malaysia"
       }
     }
@@ -541,16 +551,16 @@ export function generateSchemaMarkup(websiteId, pageType, content = {}) {
     return {
       ...baseSchema,
       "@type": "Restaurant",
-      "name": content.name || `Restoran di ${config.capital}`,
-      "description": content.description || `Restoran terbaik di ${config.capital}`,
+      "name": cleanContent.name || `Restoran di ${config.capital || 'Kota Bharu'}`,
+      "description": cleanContent.description || `Restoran terbaik di ${config.capital || 'Kota Bharu'}`,
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": config.capital,
-        "addressRegion": config.location,
+        "addressLocality": config.capital || 'Kota Bharu',
+        "addressRegion": config.location || 'Kelantan',
         "addressCountry": "Malaysia"
       },
-      "servesCuisine": config.localCuisine,
-      "priceRange": content.priceRange || "$$"
+      "servesCuisine": config.localCuisine || ['Nasi Kerabu', 'Ayam Percik'],
+      "priceRange": cleanContent.priceRange
     };
   }
 
@@ -558,22 +568,22 @@ export function generateSchemaMarkup(websiteId, pageType, content = {}) {
     return {
       ...baseSchema,
       "@type": "Article",
-      "headline": content.title || config.h1Templates.homepage,
-      "description": content.description || config.metaTemplates.description,
+      "headline": cleanContent.title || config.h1Templates?.homepage || 'Kelantan Food Review',
+      "description": cleanContent.description || config.metaTemplates?.description || 'Temukan restoran terbaik dan resepi tradisional di Kelantan',
       "author": {
         "@type": "Organization",
-        "name": config.name
+        "name": config.name || 'Kelantan Food Review'
       },
       "publisher": {
         "@type": "Organization",
-        "name": config.name,
+        "name": config.name || 'Kelantan Food Review',
         "logo": {
           "@type": "ImageObject",
-          "url": `https://${config.domain}/logo.png`
+          "url": `https://${config.domain || 'foodreviewuser.netlify.app'}/logo.png`
         }
       },
-      "datePublished": content.publishedDate || new Date().toISOString(),
-      "dateModified": content.modifiedDate || new Date().toISOString()
+      "datePublished": cleanContent.publishedDate,
+      "dateModified": cleanContent.modifiedDate
     };
   }
 
