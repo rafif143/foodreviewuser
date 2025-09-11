@@ -37,6 +37,92 @@
     }
   }
   
+  // Reactive JSON strings for all schema types
+  $: schemaJsonString = safeJsonStringify(schemaMarkup);
+  
+  // Restaurant schema
+  $: restaurantSchema = pageType === 'restaurant' && restaurantData ? {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": restaurantData.name || `Restoran di ${config.capital || 'Kota Bharu'}`,
+    "description": restaurantData.description || `Restoran terbaik di ${config.capital || 'Kota Bharu'}`,
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": restaurantData.address || "",
+      "addressLocality": config.capital || 'Kota Bharu',
+      "addressRegion": config.location || 'Kelantan',
+      "addressCountry": "Malaysia",
+      "postalCode": restaurantData.postalCode || ""
+    },
+    "telephone": restaurantData.phone || "",
+    "url": restaurantData.website || `https://${config.domain || 'foodreviewuser.netlify.app'}`,
+    "servesCuisine": config.localCuisine || ['Nasi Kerabu', 'Ayam Percik'],
+    "priceRange": restaurantData.priceRange || "$$",
+    "openingHours": restaurantData.openingHours || [],
+    "aggregateRating": restaurantData.rating ? {
+      "@type": "AggregateRating",
+      "ratingValue": restaurantData.rating,
+      "reviewCount": restaurantData.reviewCount || 0
+    } : undefined,
+    "image": restaurantData.image || ogImage
+  } : null;
+  
+  $: restaurantJsonString = restaurantSchema ? safeJsonStringify(restaurantSchema) : '';
+  
+  // Article schema
+  $: articleSchema = pageType === 'article' && articleData ? {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": articleData.title || pageTitle,
+    "description": articleData.summary || metaDescription,
+    "image": articleData.mainImage || articleData.thumbnailImage || ogImage,
+    "author": {
+      "@type": "Organization",
+      "name": config.name || 'Kelantan Food Review',
+      "url": `https://${config.domain || 'foodreviewuser.netlify.app'}`
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": config.name || 'Kelantan Food Review',
+      "logo": {
+        "@type": "ImageObject",
+        "url": websiteData?.logo_url || `https://${config.domain || 'foodreviewuser.netlify.app'}/logo.png`
+      }
+    },
+    "datePublished": articleData.publishedDate || new Date().toISOString(),
+    "dateModified": articleData.modifiedDate || new Date().toISOString(),
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": canonicalUrl
+    },
+    "articleSection": articleData.category || "Kuliner",
+    "keywords": keywords
+  } : null;
+  
+  $: articleJsonString = articleSchema ? safeJsonStringify(articleSchema) : '';
+  
+  // Breadcrumb schema
+  $: breadcrumbSchema = pageType !== 'homepage' ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Utama",
+        "item": `https://${config.domain || 'foodreviewuser.netlify.app'}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": pageType === 'article' ? 'Artikel' : pageType === 'restaurant' ? 'Restoran' : 'Halaman',
+        "item": canonicalUrl
+      }
+    ]
+  } : null;
+  
+  $: breadcrumbJsonString = breadcrumbSchema ? safeJsonStringify(breadcrumbSchema) : '';
+  
   // Generate URLs
   $: canonicalUrl = customUrl || `https://${config.domain}`;
   $: ogImage = customImage || `https://${config.domain}/og-image-${pageType}.jpg`;
@@ -155,95 +241,27 @@
   
   <!-- Structured Data (Schema.org) -->
   <script type="application/ld+json">
-    {safeJsonStringify(schemaMarkup)}
+    {schemaJsonString}
   </script>
   
   <!-- Additional Schema for Restaurant -->
-  {#if pageType === 'restaurant' && restaurantData}
+  {#if restaurantJsonString}
     <script type="application/ld+json">
-      {safeJsonStringify({
-        "@context": "https://schema.org",
-        "@type": "Restaurant",
-        "name": restaurantData.name || `Restoran di ${config.capital || 'Kota Bharu'}`,
-        "description": restaurantData.description || `Restoran terbaik di ${config.capital || 'Kota Bharu'}`,
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": restaurantData.address || "",
-          "addressLocality": config.capital || 'Kota Bharu',
-          "addressRegion": config.location || 'Kelantan',
-          "addressCountry": "Malaysia",
-          "postalCode": restaurantData.postalCode || ""
-        },
-        "telephone": restaurantData.phone || "",
-        "url": restaurantData.website || `https://${config.domain || 'foodreviewuser.netlify.app'}`,
-        "servesCuisine": config.localCuisine || ['Nasi Kerabu', 'Ayam Percik'],
-        "priceRange": restaurantData.priceRange || "$$",
-        "openingHours": restaurantData.openingHours || [],
-        "aggregateRating": restaurantData.rating ? {
-          "@type": "AggregateRating",
-          "ratingValue": restaurantData.rating,
-          "reviewCount": restaurantData.reviewCount || 0
-        } : undefined,
-        "image": restaurantData.image || ogImage
-      })}
+      {restaurantJsonString}
     </script>
   {/if}
   
   <!-- Additional Schema for Article -->
-  {#if pageType === 'article' && articleData}
+  {#if articleJsonString}
     <script type="application/ld+json">
-      {safeJsonStringify({
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": articleData.title || pageTitle,
-        "description": articleData.summary || metaDescription,
-        "image": articleData.mainImage || articleData.thumbnailImage || ogImage,
-        "author": {
-          "@type": "Organization",
-          "name": config.name || 'Kelantan Food Review',
-          "url": `https://${config.domain || 'foodreviewuser.netlify.app'}`
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": config.name || 'Kelantan Food Review',
-          "logo": {
-            "@type": "ImageObject",
-            "url": websiteData?.logo_url || `https://${config.domain || 'foodreviewuser.netlify.app'}/logo.png`
-          }
-        },
-        "datePublished": articleData.publishedDate || new Date().toISOString(),
-        "dateModified": articleData.modifiedDate || new Date().toISOString(),
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": canonicalUrl
-        },
-        "articleSection": articleData.category || "Kuliner",
-        "keywords": keywords
-      })}
+      {articleJsonString}
     </script>
   {/if}
   
   <!-- Breadcrumb Schema -->
-  {#if pageType !== 'homepage'}
+  {#if breadcrumbJsonString}
     <script type="application/ld+json">
-      {safeJsonStringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Utama",
-            "item": `https://${config.domain || 'foodreviewuser.netlify.app'}`
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": pageType === 'article' ? 'Artikel' : pageType === 'restaurant' ? 'Restoran' : 'Halaman',
-            "item": canonicalUrl
-          }
-        ]
-      })}
+      {breadcrumbJsonString}
     </script>
   {/if}
 </svelte:head>
