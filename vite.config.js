@@ -4,16 +4,6 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit()],
 	build: {
-		rollupOptions: {
-			output: {
-				manualChunks: {
-					// Vendor chunks for better caching
-					vendor: ['svelte', '@sveltejs/kit'],
-					// Separate chunk for large components
-					components: ['$lib/components']
-				}
-			}
-		},
 		// Optimize bundle size
 		chunkSizeWarningLimit: 1000,
 		minify: 'terser',
