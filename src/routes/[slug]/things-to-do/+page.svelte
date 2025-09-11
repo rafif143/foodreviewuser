@@ -125,6 +125,7 @@
   customDescription={`Temukan aktivitas dan tempat menarik terbaik di ${data.website.name}. Panduan perjalanan lengkap dengan rekomendasi aktivitas.`}
   customKeywords={['aktivitas menarik', 'tempat wisata', 'panduan perjalanan', data.website.name.toLowerCase()]}
   customUrl={`https://foodreviewuser.netlify.app/${data.website.slug}/things-to-do`}
+  websiteData={data.website}
 />
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">

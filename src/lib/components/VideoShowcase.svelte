@@ -94,9 +94,6 @@
   });
 </script>
 
-<svelte:head>
-  <script async src="https://www.tiktok.com/embed.js"></script>
-</svelte:head>
 
 <div class="w-full max-w-6xl mx-auto p-4">
   

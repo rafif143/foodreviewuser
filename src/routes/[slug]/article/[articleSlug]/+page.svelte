@@ -367,6 +367,7 @@
   customDescription={article?.summary}
   customImage={article?.main_image || article?.thumbnail_image}
   customUrl={`https://foodreviewuser.netlify.app/${websiteSlug}/article/${article?.slug}`}
+  websiteData={website}
   {articleData}
 />
 

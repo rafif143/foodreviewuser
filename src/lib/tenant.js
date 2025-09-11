@@ -32,11 +32,10 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
     const { data, error } = await supabase
       .from('websites')
       .select('*')
-      .eq('id', id)
-      .single();
+      .eq('id', id);
 
-    if (error || !data) {
-      console.error('Error fetching website:', error);
+    if (error) {
+      console.warn(`Database error fetching website by ID ${id}:`, error.message);
       // Gunakan fallback data
       const fallback = fallbackData[id] || {
         id: id,
@@ -49,11 +48,28 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
       return fallback;
     }
 
+    // Jika tidak ada data ditemukan
+    if (!data || data.length === 0) {
+      console.warn(`No website found with ID ${id}, using fallback data`);
+      const fallback = fallbackData[id] || {
+        id: id,
+        name: `Website ${id}`,
+        slug: `website-${id}`,
+        description: null,
+        logo_url: null
+      };
+      websiteCache.set(id, fallback);
+      return fallback;
+    }
+
+    // Ambil data pertama
+    const website = data[0];
+    
     // Simpan ke cache
-    websiteCache.set(id, data);
-    return data;
+    websiteCache.set(id, website);
+    return website;
   } catch (error) {
-    console.error('Error fetching website:', error);
+    console.warn(`Unexpected error fetching website by ID ${id}:`, error.message);
     // Gunakan fallback data
     const fallback = fallbackData[id] || {
       id: id,
@@ -73,24 +89,38 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
  * @returns {Promise<Object>} - Data website dari database
  */
 export async function getWebsiteBySlug(slug) {
+  // Validasi input
+  if (!slug || typeof slug !== 'string') {
+    console.warn('Invalid slug provided to getWebsiteBySlug:', slug);
+    return await getWebsiteById(DEFAULT_WEBSITE_ID);
+  }
+
   try {
     const { data, error } = await supabase
       .from('websites')
       .select('*')
-      .eq('slug', slug)
-      .single();
+      .eq('slug', slug);
 
+    // Handle error atau data kosong
     if (error) {
-      console.error('Error fetching website by slug:', error);
-      // Fallback ke website default
+      console.warn(`Database error fetching website by slug "${slug}":`, error.message);
       return await getWebsiteById(DEFAULT_WEBSITE_ID);
     }
 
+    // Jika tidak ada data ditemukan
+    if (!data || data.length === 0) {
+      console.warn(`No website found with slug "${slug}", using default website`);
+      return await getWebsiteById(DEFAULT_WEBSITE_ID);
+    }
+
+    // Ambil data pertama jika ada multiple results
+    const website = data[0];
+    
     // Simpan ke cache
-    websiteCache.set(data.id, data);
-    return data;
+    websiteCache.set(website.id, website);
+    return website;
   } catch (error) {
-    console.error('Error fetching website by slug:', error);
+    console.warn(`Unexpected error fetching website by slug "${slug}":`, error.message);
     // Fallback ke website default
     return await getWebsiteById(DEFAULT_WEBSITE_ID);
   }

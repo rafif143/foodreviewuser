@@ -32,6 +32,7 @@
   customTitle="Panduan Kuliner Terbaik"
   customDescription="Temukan restoran terbaik, resepi tradisional, dan acara kuliner. Panduan lengkap untuk makanan halal dan tempat makan enak."
   customKeywords={['restoran terbaik', 'makanan tradisional', 'tempat makan halal', 'kuliner', 'resepi']}
+  websiteData={data.website}
 />
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
@@ -138,9 +139,9 @@
   <!-- Video Rawak -->
   <section class="py-16 bg-gradient-to-br from-red-50 to-orange-50">
     <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <!-- Kandungan Utama -->
-        <div class="lg:col-span-3">
+      <div class="max-w-6xl mx-auto">
+        <!-- Kandungan Utama - Centered -->
+        <div class="w-full">
           <div class="text-center mb-12">
             <div class="inline-block p-2 bg-gradient-to-r from-orange-100 to-red-100 rounded-full mb-6">
               <div class="w-12 h-12 bg-gradient-to-br from-orange-600 to-red-600 rounded-full flex items-center justify-center mx-auto">
@@ -159,7 +160,6 @@
           </div>
           <VideoShowcase videos={data.randomVideos} websiteSlug={data.website.slug} websiteId={data.website.id} />
         </div>
-        
       </div>
     </div>
   </section>

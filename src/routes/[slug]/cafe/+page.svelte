@@ -125,6 +125,7 @@
   customDescription={`Temukan cafe dan kedai kopi terbaik di ${data.website.name}. Ulasan lengkap dengan rekomendasi cafe terbaik.`}
   customKeywords={['cafe terbaik', 'kedai kopi', 'coffee shop', data.website.name.toLowerCase()]}
   customUrl={`https://foodreviewuser.netlify.app/${data.website.slug}/cafe`}
+  websiteData={data.website}
 />
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">

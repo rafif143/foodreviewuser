@@ -11,6 +11,7 @@
   export let customUrl = '';
   export let articleData = {};
   export let restaurantData = {};
+  export let websiteData = {}; // Data website untuk logo_url
 
   // Generate SEO data
   $: config = getSEOConfig(websiteId);
@@ -23,6 +24,10 @@
   $: canonicalUrl = customUrl || `https://${config.domain}`;
   $: ogImage = customImage || `https://${config.domain}/og-image-${pageType}.jpg`;
   $: twitterImage = customImage || `https://${config.domain}/twitter-image-${pageType}.jpg`;
+  
+  // Dynamic favicon from database
+  $: faviconUrl = websiteData?.logo_url || `https://${config.domain}/favicon.svg`;
+  $: appleTouchIcon = websiteData?.logo_url || `https://${config.domain}/favicon.svg`;
 </script>
 
 <svelte:head>
@@ -40,6 +45,22 @@
   
   <!-- Canonical URL -->
   <link rel="canonical" href={canonicalUrl} />
+  
+  <!-- Dynamic Favicon -->
+  <link rel="icon" type="image/svg+xml" href={faviconUrl} />
+  <link rel="shortcut icon" type="image/svg+xml" href={faviconUrl} />
+  <link rel="icon" type="image/svg+xml" sizes="32x32" href={faviconUrl} />
+  <link rel="icon" type="image/svg+xml" sizes="16x16" href={faviconUrl} />
+  <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon} />
+  <link rel="apple-touch-icon" sizes="152x152" href={appleTouchIcon} />
+  <link rel="apple-touch-icon" sizes="144x144" href={appleTouchIcon} />
+  <link rel="apple-touch-icon" sizes="120x120" href={appleTouchIcon} />
+  <link rel="apple-touch-icon" sizes="114x114" href={appleTouchIcon} />
+  <link rel="apple-touch-icon" sizes="76x76" href={appleTouchIcon} />
+  <link rel="apple-touch-icon" sizes="72x72" href={appleTouchIcon} />
+  <link rel="apple-touch-icon" sizes="60x60" href={appleTouchIcon} />
+  <link rel="apple-touch-icon" sizes="57x57" href={appleTouchIcon} />
+  <meta name="msapplication-TileImage" content={appleTouchIcon} />
   
   <!-- Open Graph Meta Tags -->
   <meta property="og:type" content={pageType === 'article' ? 'article' : 'website'} />
@@ -137,7 +158,7 @@
           "name": config.name,
           "logo": {
             "@type": "ImageObject",
-            "url": `https://${config.domain}/logo.png`
+            "url": websiteData?.logo_url || `https://${config.domain}/logo.png`
           }
         },
         "datePublished": articleData.publishedDate || new Date().toISOString(),

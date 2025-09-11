@@ -125,6 +125,7 @@
   customDescription={`Temukan resep dan masakan tradisional terbaik di ${data.website.name}. Panduan memasak lengkap dengan tips masakan.`}
   customKeywords={['resep tradisional', 'masakan khas', 'panduan memasak', data.website.name.toLowerCase()]}
   customUrl={`https://foodreviewuser.netlify.app/${data.website.slug}/recipe`}
+  websiteData={data.website}
 />
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">

@@ -24,6 +24,7 @@
   customDescription="Temukan restoran terbaik, resepi tradisional, dan acara kuliner di Kelantan. Panduan lengkap untuk makanan halal dan tempat makan enak di Kota Bharu dan sekitarnya."
   customKeywords={['kelantan food', 'makanan kelantan', 'restoran kota bharu', 'nasi kerabu', 'laksa kelantan', 'kuliner malaysia']}
   customUrl="https://foodreviewuser.netlify.app"
+  websiteData={{ logo_url: null }}
 />
 
 <!-- Additional Meta Tags untuk SEO -->

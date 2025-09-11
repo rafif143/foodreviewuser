@@ -125,6 +125,7 @@
   customDescription={`Temukan event dan acara kuliner terbaik di ${data.website.name}. Panduan lengkap dengan rekomendasi event menarik.`}
   customKeywords={['event kuliner', 'acara makanan', 'festival makanan', data.website.name.toLowerCase()]}
   customUrl={`https://foodreviewuser.netlify.app/${data.website.slug}/events`}
+  websiteData={data.website}
 />
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">

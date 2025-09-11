@@ -125,6 +125,7 @@
   customDescription={`Temukan makanan terbaik, restoran halal, dan kuliner tradisional di ${data.website.name}. Ulasan lengkap dengan rekomendasi terbaik.`}
   customKeywords={['makanan terbaik', 'restoran halal', 'kuliner tradisional', data.website.name.toLowerCase()]}
   customUrl={`https://foodreviewuser.netlify.app/${data.website.slug}/food`}
+  websiteData={data.website}
 />
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
