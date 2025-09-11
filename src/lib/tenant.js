@@ -109,7 +109,10 @@ export async function getWebsiteBySlug(slug) {
 
     // Jika tidak ada data ditemukan
     if (!data || data.length === 0) {
-      console.warn(`No website found with slug "${slug}", using default website`);
+      // Hanya log jika bukan favicon request
+      if (!slug.includes('favicon')) {
+        console.warn(`No website found with slug "${slug}", using default website`);
+      }
       return await getWebsiteById(DEFAULT_WEBSITE_ID);
     }
 
