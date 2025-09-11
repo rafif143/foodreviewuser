@@ -34,10 +34,6 @@
   };
 </script>
 
-<svelte:head>
-  <title>Artikel dengan Tag: {tag} - {websiteSlug.charAt(0).toUpperCase() + websiteSlug.slice(1)}</title>
-  <meta name="description" content="Artikel-artikel dengan tag {tag} di {websiteSlug.charAt(0).toUpperCase() + websiteSlug.slice(1)}" />
-</svelte:head>
 
 <main class="bg-gray-50 min-h-screen">
 

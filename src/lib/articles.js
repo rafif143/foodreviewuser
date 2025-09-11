@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase, isSupabaseConfigured } from './supabase';
 
 /**
  * Mendapatkan semua artikel berdasarkan website_id dan kategori
@@ -10,6 +10,43 @@ import { supabase } from './supabase';
  * @returns {Promise<Array>} - Array berisi artikel
  */
 export async function getArticlesByCategory(websiteId, category, limit = 10, offset = 0, sortByVisit = false) {
+  // Jika Supabase tidak dikonfigurasi, return sample data
+  if (!isSupabaseConfigured) {
+    console.warn('Supabase not configured, returning sample articles');
+    const sampleArticles = [
+      {
+        id: 'sample-1',
+        title: 'Sample Artikel 1',
+        slug: 'sample-artikel-1',
+        author: 'Admin',
+        minute_read: 5,
+        category: category || 'food',
+        thumbnail_image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=500&fit=crop',
+        summary: 'Ini adalah artikel sample untuk testing SEO.',
+        published_at: new Date().toISOString(),
+        visit_count: 100,
+        tags: ['sample', 'test'],
+        labels: ['sample']
+      },
+      {
+        id: 'sample-2',
+        title: 'Sample Artikel 2',
+        slug: 'sample-artikel-2',
+        author: 'Admin',
+        minute_read: 3,
+        category: category || 'food',
+        thumbnail_image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=500&fit=crop',
+        summary: 'Ini adalah artikel sample kedua untuk testing SEO.',
+        published_at: new Date().toISOString(),
+        visit_count: 50,
+        tags: ['sample', 'test'],
+        labels: ['sample']
+      }
+    ];
+    
+    return sampleArticles.slice(offset, offset + limit);
+  }
+
   let query = supabase
     .from('articles')
     .select('id, title, slug, author, minute_read, category, thumbnail_image, summary, published_at, visit_count, tags, labels')
@@ -216,6 +253,28 @@ export async function getRelatedArticles(websiteId, category, currentArticleId, 
  * @returns {Promise<Array>} - Array berisi artikel terbaru
  */
 export async function getLatestArticles(websiteId, limit = 6) {
+  // Jika Supabase tidak dikonfigurasi, return sample data
+  if (!isSupabaseConfigured) {
+    console.warn('Supabase not configured, returning sample latest articles');
+    const sampleArticles = [
+      {
+        id: 'sample-1',
+        title: 'Sample Artikel Terbaru 1',
+        slug: 'sample-artikel-terbaru-1',
+        author: 'Admin',
+        minute_read: 5,
+        category: 'food',
+        thumbnail_image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=500&fit=crop',
+        summary: 'Ini adalah artikel terbaru sample untuk testing SEO.',
+        published_at: new Date().toISOString(),
+        tags: ['sample', 'terbaru'],
+        labels: ['sample']
+      }
+    ];
+    
+    return sampleArticles.slice(0, limit);
+  }
+
   const { data, error } = await supabase
     .from('articles')
     .select('id, title, slug, author, minute_read, category, thumbnail_image, summary, published_at, tags, labels')

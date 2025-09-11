@@ -1,11 +1,94 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<!-- Performance Optimizations -->
+		<link rel="preconnect" href="https://images.unsplash.com" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="dns-prefetch" href="https://images.unsplash.com" />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+		
+		<!-- Critical CSS Preload -->
+		<link rel="preload" href="/app.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+		<noscript><link rel="stylesheet" href="/app.css" /></noscript>
+		
+		<!-- SEO Meta Tags -->
+		<meta name="robots" content="index, follow" />
+		<meta name="language" content="Indonesian" />
+		<meta name="author" content="Food Review Team" />
+		<meta name="theme-color" content="#dc2626" />
+		
+		<!-- Open Graph Default -->
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="id_ID" />
+		<meta property="og:site_name" content="Food Review" />
+		
+		<!-- Twitter Card Default -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content="@foodreview" />
+		
+		<!-- Favicon -->
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="apple-touch-icon" href="/favicon.svg" />
+		
+		<!-- Performance Hints -->
+		<meta http-equiv="x-dns-prefetch-control" content="on" />
+		
 		%sveltekit.head%
+		
+		<!-- Critical CSS Inline -->
+		<style>
+			/* Critical above-the-fold CSS */
+			body {
+				margin: 0;
+				padding: 0;
+				font-family: system-ui, -apple-system, sans-serif;
+				background-color: #f9fafb;
+			}
+			
+			.loading-skeleton {
+				background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+				background-size: 200% 100%;
+				animation: loading 1.5s infinite;
+			}
+			
+			@keyframes loading {
+				0% { background-position: 200% 0; }
+				100% { background-position: -200% 0; }
+			}
+			
+			.above-fold {
+				min-height: 100vh;
+			}
+		</style>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
+		
+		<!-- Performance Scripts -->
+		<script>
+			// Preload critical resources
+			if ('requestIdleCallback' in window) {
+				requestIdleCallback(() => {
+					// Preload non-critical resources when browser is idle
+					const link = document.createElement('link');
+					link.rel = 'preload';
+					link.as = 'image';
+					link.href = 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=500&fit=crop';
+					document.head.appendChild(link);
+				});
+			}
+			
+			// Service Worker registration for caching
+			if ('serviceWorker' in navigator) {
+				window.addEventListener('load', () => {
+					navigator.serviceWorker.register('/sw.js')
+						.then(registration => console.log('SW registered'))
+						.catch(error => console.log('SW registration failed'));
+				});
+			}
+		</script>
 	</body>
 </html>

@@ -1,37 +1,25 @@
 <script>
   import { page } from '$app/stores';
+  import LazyComponent from '$lib/components/LazyComponent.svelte';
+  import LazyImage from '$lib/components/LazyImage.svelte';
+  import SEOHead from '$lib/components/SEOHead.svelte';
+  
+  // Import components directly untuk stability
   import NavigationMenu from '$lib/components/NavigationMenu.svelte';
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import ArticleTags from '$lib/components/ArticleTags.svelte';
-  import SEOHead from '$lib/components/SEOHead.svelte';
-  import SEOTemplates from '$lib/components/SEOTemplates.svelte';
 
   import { addComment, getCommentsByArticle } from '$lib/comments';
 
   /** @type {import('./$types').PageData} */
   export let data;
   
-  // SEO Configuration
   $: websiteId = data?.website?.id || 1;
   
   // Artikel yang sedang dipaparkan
   const article = data?.article;
   
-  // SEO Data untuk artikel
-  $: articleData = article ? {
-    title: article.title || '',
-    summary: article.summary || '',
-    publishedDate: article.published_at || article.created_at || new Date().toISOString(),
-    modifiedDate: article.updated_at || new Date().toISOString(),
-    author: article.author || '',
-    tags: article.tags || [],
-    labels: article.labels || [],
-    category: article.category || '',
-    minuteRead: article.minute_read || 5,
-    thumbnailImage: article.thumbnail_image || '',
-    mainImage: article.main_image || ''
-  } : {};
   // Artikel berkaitan
   const relatedArticles = data?.relatedArticles || [];
   // Komen awal dari muat
@@ -58,6 +46,9 @@
 
   // Ambil slug dari URL
   $: websiteSlug = $page?.params?.slug || 'food';
+  
+  // SEO data dari page load
+  $: seoData = data?.seo;
 
   // Fungsi untuk mengesahkan URL gambar
   const validateImageUrl = (url) => {
@@ -367,18 +358,10 @@
   }
 </script>
 
-<!-- SEO Head Component untuk artikel -->
-<SEOHead 
-  {websiteId}
-  pageType="article"
-  customTitle={article?.title}
-  customDescription={article?.summary}
-  customImage={article?.main_image || article?.thumbnail_image}
-  customUrl={`https://foodreviewuser.netlify.app/${websiteSlug}/article/${article?.slug}`}
-  websiteData={data.website}
-  {articleData}
-/>
 
+
+<!-- SEO Head Component -->
+<SEOHead seoData={seoData} />
 
 <main class="bg-gray-50 min-h-screen">
   {#if article}
@@ -461,11 +444,13 @@
 
             <!-- Main Image -->
             <div class="mb-6 sm:mb-8">
-              <img 
+              <LazyImage 
                 src={validateImageUrl(article.main_image)}
                 alt={article.title}
-                class="w-full h-56 sm:h-72 md:h-80 lg:h-96 object-cover rounded-lg shadow-md"
-                on:error={(e) => e.target.src = 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=500&fit=crop'}
+                className="w-full h-56 sm:h-72 md:h-80 lg:h-96 object-cover rounded-lg shadow-md"
+                loading="eager"
+                width="800"
+                height="400"
               />
             </div>
 
@@ -577,7 +562,13 @@
                 <a href="/{websiteSlug}/article/{relatedArticle.slug || relatedArticle.id}" class="group">
                   <article class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform transform hover:scale-105">
                     <div class="relative h-48">
-                      <img src="{validateImageUrl(relatedArticle.thumbnail_image)}" alt="{relatedArticle.title}" class="w-full h-full object-cover">
+                      <LazyImage 
+                        src={validateImageUrl(relatedArticle.thumbnail_image)}
+                        alt={relatedArticle.title}
+                        className="w-full h-full object-cover"
+                        width="400"
+                        height="200"
+                      />
                       <div class="absolute top-0 left-0 bg-primary-500 text-white text-xs font-bold px-3 py-1 m-2 rounded">
                         {formatCategory(relatedArticle.category)}
                       </div>

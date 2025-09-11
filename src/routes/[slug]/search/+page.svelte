@@ -51,10 +51,6 @@
   }
 </script>
 
-<svelte:head>
-  <title>Hasil Pencarian: {searchQuery} - {websiteSlug.charAt(0).toUpperCase() + websiteSlug.slice(1)}</title>
-  <meta name="description" content="Hasil pencarian untuk '{searchQuery}' di {websiteSlug.charAt(0).toUpperCase() + websiteSlug.slice(1)}" />
-</svelte:head>
 
 
 

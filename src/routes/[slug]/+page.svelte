@@ -1,17 +1,16 @@
 <script>
   import { goto } from '$app/navigation';
+  
+  // Import components directly untuk stability
   import FeaturedArticles from '$lib/components/PopularArticles.svelte';
   import VideoShowcase from '$lib/components/VideoShowcase.svelte';
   import RecentPost from '$lib/components/RecentPost.svelte';
   import TrendingSidebar from '$lib/components/Sidebar.svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
-  import SEOHead from '$lib/components/SEOHead.svelte';
-  import SEOTemplates from '$lib/components/SEOTemplates.svelte';
 
   /** @type {import('./$types').PageData} */
   export let data;
   
-  // SEO Configuration
   $: websiteId = data.website.id || 1;
   
   // Fungsi carian
@@ -25,15 +24,6 @@
   }
 </script>
 
-<!-- SEO Head Component -->
-<SEOHead 
-  {websiteId}
-  pageType="homepage"
-  customTitle="Panduan Kuliner Terbaik"
-  customDescription="Temukan restoran terbaik, resepi tradisional, dan acara kuliner. Panduan lengkap untuk makanan halal dan tempat makan enak."
-  customKeywords={['restoran terbaik', 'makanan tradisional', 'tempat makan halal', 'kuliner', 'resepi']}
-  websiteData={data.website}
-/>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
   

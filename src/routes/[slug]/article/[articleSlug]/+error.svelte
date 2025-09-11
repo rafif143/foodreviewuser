@@ -2,7 +2,6 @@
   import { page } from '$app/stores';
   import NavigationMenu from '$lib/components/NavigationMenu.svelte';
   import Footer from '$lib/components/Footer.svelte';
-  import SEOHead from '$lib/components/SEOHead.svelte';
   
   // Ambil error details dari page store
   $: errorDetails = $page.error;
@@ -11,14 +10,6 @@
   $: websiteSlug = errorDetails?.website || 'unknown';
 </script>
 
-<!-- SEO Head untuk halaman error -->
-<SEOHead 
-  websiteId={1}
-  pageType="error"
-  customTitle="Artikel Tidak Ditemukan"
-  customDescription="Artikel yang Anda cari tidak ditemukan atau mungkin telah dipindahkan."
-  websiteData={{ logo_url: null }}
-/>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
   <!-- Navigation -->

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
-  import AdBanner from '$lib/components/AdBanner.svelte';
+ 
   import { supabase } from '$lib/supabase.js';
 
   /** @type {import('./$types').PageData} */
@@ -158,11 +158,7 @@
     </div>
   {:else}
     <!-- Bahagian Banner Iklan -->
-    <div class="py-4 bg-gray-50">
-      <div class="container mx-auto px-4">
-        <AdBanner websiteSlug={data.website.slug} />
-      </div>
-    </div>
+    
 
     <!-- Tajuk Halaman -->
     {#if advertiseData.page_title}

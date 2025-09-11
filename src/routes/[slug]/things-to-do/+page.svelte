@@ -2,7 +2,6 @@
   import FoodCard from '$lib/components/FoodCard.svelte';
   import AboutKelantanCard from '$lib/components/AboutKelantanCard.svelte';
   import PageHeader from '$lib/components/PageHeader.svelte';
-  import SEOHead from '$lib/components/SEOHead.svelte';
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
@@ -117,16 +116,6 @@
   $: websiteSlug = $page.params.slug;
 </script>
 
-<!-- SEO Head Component untuk halaman kategori -->
-<SEOHead 
-  {websiteId}
-  pageType="category"
-  customTitle={`Aktivitas Terbaik di ${data.website.name}`}
-  customDescription={`Temukan aktivitas dan tempat menarik terbaik di ${data.website.name}. Panduan perjalanan lengkap dengan rekomendasi aktivitas.`}
-  customKeywords={['aktivitas menarik', 'tempat wisata', 'panduan perjalanan', data.website.name.toLowerCase()]}
-  customUrl={`https://foodreviewuser.netlify.app/${data.website.slug}/things-to-do`}
-  websiteData={data.website}
-/>
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50">
   

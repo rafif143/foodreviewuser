@@ -1,6 +1,16 @@
 import { supabase } from '$lib/supabase.js';
 import { getCommentsByArticle } from '$lib/comments';
 import { error } from '@sveltejs/kit';
+import { 
+  generateCanonicalUrl, 
+  generateArticleTitle, 
+  generateArticleDescription, 
+  generateArticleKeywords,
+  generateArticleOpenGraph,
+  generateArticleTwitterCard,
+  generateArticleStructuredData,
+  generateRobotsMeta
+} from '$lib/seo.js';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, parent }) {
@@ -96,12 +106,26 @@ export async function load({ params, parent }) {
       .order('visit_count', { ascending: false })
       .limit(5);
 
+    // Generate SEO data
+    const canonicalUrl = generateCanonicalUrl(website, `article/${article.slug}`);
+    const seoData = {
+      title: generateArticleTitle(article, website),
+      description: generateArticleDescription(article, website),
+      keywords: generateArticleKeywords(article, website),
+      canonical: canonicalUrl,
+      robots: generateRobotsMeta(article.is_published, true),
+      openGraph: generateArticleOpenGraph(article, website, canonicalUrl),
+      twitterCard: generateArticleTwitterCard(article, website, canonicalUrl),
+      structuredData: generateArticleStructuredData(article, website, canonicalUrl)
+    };
+
     return {
       article,
       relatedArticles: relatedArticles || [],
       comments,
       trendingArticles: trendingArticles || [],
-      website // Pastikan website data tersedia
+      website, // Pastikan website data tersedia
+      seo: seoData
     };
   } catch (err) {
     console.error('Error loading article:', err);

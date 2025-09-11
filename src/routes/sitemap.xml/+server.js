@@ -1,38 +1,53 @@
-// Sitemap API endpoint
-import { generateSitemap } from '$lib/sitemap-generator.js';
-import { supabase } from '$lib/supabase.js';
+import { json } from '@sveltejs/kit';
+import { getAllWebsites } from '$lib/tenant.js';
+import { getWebsiteDomain } from '$lib/website-seo-data.js';
 
+/** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
   try {
-    // Get website ID from query parameter or default to 1 (Kelantan)
-    const websiteId = parseInt(url.searchParams.get('website_id')) || 1;
-    
-    // Generate sitemap
-    const sitemap = await generateSitemap(websiteId, supabase);
-    
-    if (sitemap) {
-      return new Response(sitemap, {
-        headers: {
-          'Content-Type': 'application/xml; charset=utf-8',
-          'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
-          'X-Robots-Tag': 'index, follow'
-        }
-      });
-    } else {
-      return new Response('Error generating sitemap', { 
-        status: 500,
-        headers: {
-          'Content-Type': 'text/plain'
-        }
-      });
-    }
-  } catch (error) {
-    console.error('Sitemap generation error:', error);
-    return new Response('Internal Server Error', { 
-      status: 500,
+    // Ambil semua website dari database
+    const websites = await getAllWebsites();
+
+    // Generate sitemap index XML
+    const sitemapIndex = generateSitemapIndexXML(websites);
+
+    return new Response(sitemapIndex, {
       headers: {
-        'Content-Type': 'text/plain'
+        'Content-Type': 'application/xml',
+        'Cache-Control': 'public, max-age=3600' // Cache for 1 hour
       }
     });
+
+  } catch (error) {
+    console.error('Error generating sitemap index:', error);
+    return new Response('Error generating sitemap index', { status: 500 });
   }
+}
+
+/**
+ * Generate XML sitemap index
+ * @param {Array} websites - Array of websites
+ * @returns {string} - XML sitemap index
+ */
+function generateSitemapIndexXML(websites) {
+  const currentDate = new Date().toISOString();
+  
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+
+  websites.forEach(website => {
+    const domain = getWebsiteDomain(website.slug);
+    const sitemapUrl = `https://${domain}/sitemap.xml`;
+    
+    xml += `
+  <sitemap>
+    <loc>${sitemapUrl}</loc>
+    <lastmod>${currentDate}</lastmod>
+  </sitemap>`;
+  });
+
+  xml += `
+</sitemapindex>`;
+
+  return xml;
 }
