@@ -62,7 +62,7 @@ export async function generateSitemap(websiteId, supabase) {
     // Add articles from database
     if (articles && articles.length > 0) {
       articles.forEach(article => {
-        const lastmod = new Date(article.updated_at).toISOString();
+        const lastmod = new Date(article.updated_at || article.created_at).toISOString();
         sitemap += `
   <url>
     <loc>${baseUrl}/${config.slug}/article/${article.slug}</loc>
@@ -140,6 +140,7 @@ Allow: /
 
 # Sitemap
 Sitemap: https://${config.domain}/sitemap.xml
+Sitemap: https://${config.domain}/sitemap-index.xml
 
 # Disallow admin areas
 Disallow: /admin/
