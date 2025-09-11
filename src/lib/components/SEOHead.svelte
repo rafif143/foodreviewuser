@@ -20,6 +20,23 @@
   $: keywords = generateKeywords(websiteId, customKeywords);
   $: schemaMarkup = generateSchemaMarkup(websiteId, pageType, { ...articleData, ...restaurantData });
   
+  // Safe JSON stringify function
+  function safeJsonStringify(obj) {
+    try {
+      const cleaned = cleanJsonSchema(obj);
+      return JSON.stringify(cleaned, null, 2);
+    } catch (error) {
+      console.error('JSON stringify error:', error);
+      // Return minimal valid schema if error
+      return JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Kelantan Food Review",
+        "url": "https://foodreviewuser.netlify.app"
+      }, null, 2);
+    }
+  }
+  
   // Generate URLs
   $: canonicalUrl = customUrl || `https://${config.domain}`;
   $: ogImage = customImage || `https://${config.domain}/og-image-${pageType}.jpg`;
@@ -29,20 +46,37 @@
   $: faviconUrl = websiteData?.logo_url || `https://${config.domain}/favicon.svg`;
   $: appleTouchIcon = websiteData?.logo_url || `https://${config.domain}/favicon.svg`;
   
-  // Function to clean JSON schema (remove null/undefined values)
+  // Function to clean JSON schema (remove null/undefined values and sanitize strings)
   function cleanJsonSchema(obj) {
     if (obj === null || obj === undefined) return undefined;
-    if (typeof obj !== 'object') return obj;
-    if (Array.isArray(obj)) return obj.map(cleanJsonSchema).filter(item => item !== undefined);
-    
-    const cleaned = {};
-    for (const [key, value] of Object.entries(obj)) {
-      const cleanedValue = cleanJsonSchema(value);
-      if (cleanedValue !== undefined) {
-        cleaned[key] = cleanedValue;
-      }
+    if (typeof obj === 'string') {
+      // Sanitize string: remove control characters and escape quotes
+      return obj
+        .replace(/[\x00-\x1F\x7F]/g, '') // Remove control characters
+        .replace(/\\/g, '\\\\') // Escape backslashes
+        .replace(/"/g, '\\"') // Escape quotes
+        .trim();
     }
-    return cleaned;
+    if (typeof obj === 'number' || typeof obj === 'boolean') return obj;
+    if (Array.isArray(obj)) {
+      const cleaned = obj.map(cleanJsonSchema).filter(item => item !== undefined);
+      return cleaned.length > 0 ? cleaned : undefined;
+    }
+    if (typeof obj === 'object') {
+      const cleaned = {};
+      for (const [key, value] of Object.entries(obj)) {
+        // Clean the key as well
+        const cleanKey = key.replace(/[\x00-\x1F\x7F]/g, '').trim();
+        if (cleanKey) {
+          const cleanedValue = cleanJsonSchema(value);
+          if (cleanedValue !== undefined) {
+            cleaned[cleanKey] = cleanedValue;
+          }
+        }
+      }
+      return Object.keys(cleaned).length > 0 ? cleaned : undefined;
+    }
+    return obj;
   }
 </script>
 
@@ -121,13 +155,13 @@
   
   <!-- Structured Data (Schema.org) -->
   <script type="application/ld+json">
-    {JSON.stringify(cleanJsonSchema(schemaMarkup), null, 2)}
+    {safeJsonStringify(schemaMarkup)}
   </script>
   
   <!-- Additional Schema for Restaurant -->
   {#if pageType === 'restaurant' && restaurantData}
     <script type="application/ld+json">
-      {JSON.stringify(cleanJsonSchema({
+      {safeJsonStringify({
         "@context": "https://schema.org",
         "@type": "Restaurant",
         "name": restaurantData.name || `Restoran di ${config.capital || 'Kota Bharu'}`,
@@ -151,14 +185,14 @@
           "reviewCount": restaurantData.reviewCount || 0
         } : undefined,
         "image": restaurantData.image || ogImage
-      }), null, 2)}
+      })}
     </script>
   {/if}
   
   <!-- Additional Schema for Article -->
   {#if pageType === 'article' && articleData}
     <script type="application/ld+json">
-      {JSON.stringify(cleanJsonSchema({
+      {safeJsonStringify({
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": articleData.title || pageTitle,
@@ -185,14 +219,14 @@
         },
         "articleSection": articleData.category || "Kuliner",
         "keywords": keywords
-      }), null, 2)}
+      })}
     </script>
   {/if}
   
   <!-- Breadcrumb Schema -->
   {#if pageType !== 'homepage'}
     <script type="application/ld+json">
-      {JSON.stringify(cleanJsonSchema({
+      {safeJsonStringify({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
@@ -209,7 +243,7 @@
             "item": canonicalUrl
           }
         ]
-      }), null, 2)}
+      })}
     </script>
   {/if}
 </svelte:head>

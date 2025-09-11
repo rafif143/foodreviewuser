@@ -519,29 +519,39 @@ export function generateH2(websiteId, pageType, customH2 = '') {
 export function generateSchemaMarkup(websiteId, pageType, content = {}) {
   const config = getSEOConfig(websiteId);
   
+  // Sanitize string function
+  function sanitizeString(str) {
+    if (typeof str !== 'string') return str;
+    return str
+      .replace(/[\x00-\x1F\x7F]/g, '') // Remove control characters
+      .replace(/\\/g, '\\\\') // Escape backslashes
+      .replace(/"/g, '\\"') // Escape quotes
+      .trim();
+  }
+  
   // Clean content data to avoid undefined/null values
   const cleanContent = {
-    name: content.name || '',
-    description: content.description || '',
-    title: content.title || '',
+    name: sanitizeString(content.name || ''),
+    description: sanitizeString(content.description || ''),
+    title: sanitizeString(content.title || ''),
     publishedDate: content.publishedDate || new Date().toISOString(),
     modifiedDate: content.modifiedDate || new Date().toISOString(),
-    priceRange: content.priceRange || '$$'
+    priceRange: sanitizeString(content.priceRange || '$$')
   };
   
   const baseSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": config.name || 'Kelantan Food Review',
+    "name": sanitizeString(config.name || 'Kelantan Food Review'),
     "url": `https://${config.domain || 'foodreviewuser.netlify.app'}`,
-    "description": config.metaTemplates?.description || 'Temukan restoran terbaik dan resepi tradisional di Kelantan',
+    "description": sanitizeString(config.metaTemplates?.description || 'Temukan restoran terbaik dan resepi tradisional di Kelantan'),
     "publisher": {
       "@type": "Organization",
-      "name": config.name || 'Kelantan Food Review',
+      "name": sanitizeString(config.name || 'Kelantan Food Review'),
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": config.capital || 'Kota Bharu',
-        "addressRegion": config.location || 'Kelantan',
+        "addressLocality": sanitizeString(config.capital || 'Kota Bharu'),
+        "addressRegion": sanitizeString(config.location || 'Kelantan'),
         "addressCountry": "Malaysia"
       }
     }
@@ -551,15 +561,15 @@ export function generateSchemaMarkup(websiteId, pageType, content = {}) {
     return {
       ...baseSchema,
       "@type": "Restaurant",
-      "name": cleanContent.name || `Restoran di ${config.capital || 'Kota Bharu'}`,
-      "description": cleanContent.description || `Restoran terbaik di ${config.capital || 'Kota Bharu'}`,
+      "name": cleanContent.name || `Restoran di ${sanitizeString(config.capital || 'Kota Bharu')}`,
+      "description": cleanContent.description || `Restoran terbaik di ${sanitizeString(config.capital || 'Kota Bharu')}`,
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": config.capital || 'Kota Bharu',
-        "addressRegion": config.location || 'Kelantan',
+        "addressLocality": sanitizeString(config.capital || 'Kota Bharu'),
+        "addressRegion": sanitizeString(config.location || 'Kelantan'),
         "addressCountry": "Malaysia"
       },
-      "servesCuisine": config.localCuisine || ['Nasi Kerabu', 'Ayam Percik'],
+      "servesCuisine": (config.localCuisine || ['Nasi Kerabu', 'Ayam Percik']).map(sanitizeString),
       "priceRange": cleanContent.priceRange
     };
   }
@@ -568,15 +578,15 @@ export function generateSchemaMarkup(websiteId, pageType, content = {}) {
     return {
       ...baseSchema,
       "@type": "Article",
-      "headline": cleanContent.title || config.h1Templates?.homepage || 'Kelantan Food Review',
-      "description": cleanContent.description || config.metaTemplates?.description || 'Temukan restoran terbaik dan resepi tradisional di Kelantan',
+      "headline": cleanContent.title || sanitizeString(config.h1Templates?.homepage || 'Kelantan Food Review'),
+      "description": cleanContent.description || sanitizeString(config.metaTemplates?.description || 'Temukan restoran terbaik dan resepi tradisional di Kelantan'),
       "author": {
         "@type": "Organization",
-        "name": config.name || 'Kelantan Food Review'
+        "name": sanitizeString(config.name || 'Kelantan Food Review')
       },
       "publisher": {
         "@type": "Organization",
-        "name": config.name || 'Kelantan Food Review',
+        "name": sanitizeString(config.name || 'Kelantan Food Review'),
         "logo": {
           "@type": "ImageObject",
           "url": `https://${config.domain || 'foodreviewuser.netlify.app'}/logo.png`
