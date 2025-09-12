@@ -17,7 +17,7 @@
       redirectCountdown--;
       if (redirectCountdown <= 0) {
         clearInterval(interval);
-        goto('/kelantan');
+               goto('/kedah');
       }
     }, 1000);
   }
@@ -26,8 +26,8 @@
 <main class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 flex items-center justify-center">
   <div class="text-center">
     <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-red-600 mx-auto mb-4"></div>
-    <h1 class="text-2xl font-bold text-gray-800 mb-2">MakanKelantan</h1>
-    <p class="text-gray-600 mb-4">Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan</p>
+           <h1 class="text-2xl font-bold text-gray-800 mb-2">MakanKedah</h1>
+           <p class="text-gray-600 mb-4">Panduan kuliner terbaik di Kedah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kedah</p>
     <p class="text-sm text-gray-500">Mengalihkan ke halaman utama dalam {redirectCountdown} detik...</p>
   </div>
 </main>

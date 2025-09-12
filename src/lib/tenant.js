@@ -1,7 +1,7 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 
 // Default website ID - hardcode saja
-export const DEFAULT_WEBSITE_ID = 1;
+export const DEFAULT_WEBSITE_ID = 2;
 
 // Cache untuk menyimpan data website
 let websiteCache = new Map();
@@ -28,9 +28,9 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
     },
     2: {
       id: 2,
-      name: "Kedah Food Review",
+      name: "MakanKedah",
       slug: "kedah",
-      description: "Panduan kuliner terbaik di Kedah",
+      description: "Panduan kuliner terbaik di Kedah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kedah",
       logo_url: null
     },
     3: {
@@ -205,7 +205,7 @@ export async function getWebsiteBySlug(slug) {
     console.warn('Supabase not configured, using fallback data for slug:', slug);
     const fallbackData = {
       'kelantan': { id: 1, name: "MakanKelantan", slug: "kelantan", description: "Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan", logo_url: null },
-      'kedah': { id: 2, name: "Kedah Food Review", slug: "kedah", description: "Panduan kuliner terbaik di Kedah", logo_url: null },
+      'kedah': { id: 2, name: "MakanKedah", slug: "kedah", description: "Panduan kuliner terbaik di Kedah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kedah", logo_url: null },
       'penang': { id: 3, name: "Penang Food Review", slug: "penang", description: "Panduan kuliner terbaik di Penang", logo_url: null },
       'perak': { id: 4, name: "Perak Food Review", slug: "perak", description: "Panduan kuliner terbaik di Perak", logo_url: null },
       'perlis': { id: 5, name: "Perlis Food Review", slug: "perlis", description: "Panduan kuliner terbaik di Perlis", logo_url: null },

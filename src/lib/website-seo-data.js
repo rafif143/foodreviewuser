@@ -22,10 +22,10 @@ export const WEBSITE_SEO_DATA = {
   'kedah': {
     name: 'MakanKedah',
     domain: 'makankedah.com',
-    description: 'Jelajahi kelezatan kuliner Kedah. Dari nasi kandar hingga laksa kedah, temukan semua makanan enak di Kedah.',
-    keywords: 'kedah food, makanan kedah, restoran kedah, nasi kandar, laksa kedah, penang food',
+    description: 'Panduan kuliner terbaik di Kedah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kedah. Review restoran, resep masakan tradisional, dan panduan kuliner terlengkap di Kedah.',
+    keywords: 'makan kedah, restoran kedah, makanan tradisional kedah, nasi ulam, gulai kedah, laksa kedah, kuliner kedah, tempat makan kedah, makankedah, review makanan kedah, tempat makan enak kedah, makanan halal kedah',
     location: 'Kedah, Malaysia',
-    cuisine: 'Nasi Kandar, Laksa Kedah, Traditional Malay',
+    cuisine: 'Traditional Malay, Nasi Ulam, Gulai, Laksa Kedah, Ayam Percik',
     socialMedia: {
       facebook: 'https://facebook.com/MakanKedah',
       instagram: 'https://instagram.com/makankedah',
