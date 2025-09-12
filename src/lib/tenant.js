@@ -1,7 +1,7 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 
 // Default website ID - hardcode saja
-export const DEFAULT_WEBSITE_ID = 2;
+export const DEFAULT_WEBSITE_ID = 1;
 
 // Cache untuk menyimpan data website
 let websiteCache = new Map();

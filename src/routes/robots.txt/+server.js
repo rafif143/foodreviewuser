@@ -33,8 +33,8 @@ function generateGlobalRobotsTxt(websites) {
   let robotsTxt = `User-agent: *
 Allow: /
 
-       # Production Website - MakanKedah
-       Host: https://makankedah.com
+       # Production Website - MakanKelantan
+       Host: https://makankelantan.com
 
 # Disallow admin and private areas
 Disallow: /admin/
@@ -42,7 +42,7 @@ Disallow: /api/
 Disallow: /_app/
 
        # Main sitemap index - PRODUCTION MODE
-       Sitemap: https://makankedah.com/sitemap.xml
+       Sitemap: https://makankelantan.com/sitemap.xml
 
 `;
 
