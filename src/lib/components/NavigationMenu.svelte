@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
   import { DEFAULT_WEBSITE_ID, createWebsiteUrl } from '$lib/tenant';
+  import { formatDateMalayWithDay } from '$lib/dateUtils';
   // SVG Icons untuk kategori
   const icons = {
     Food: `<path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/>`,
@@ -16,11 +17,9 @@
     Recipe: `<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>`
   };
 
-  // Format tarikh
+  // Format tarikh dalam bahasa Melayu
   const today = new Date();
-  const formattedDate = today.toLocaleDateString('id-ID', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-  });
+  const formattedDate = formatDateMalayWithDay(today.toISOString());
 
   export let website = { id: DEFAULT_WEBSITE_ID, slug: 'kelantan' };
   export let contactData = null;

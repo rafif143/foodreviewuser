@@ -11,6 +11,7 @@
   import ArticleTags from '$lib/components/ArticleTags.svelte';
 
   import { addComment, getCommentsByArticle } from '$lib/comments';
+  import { formatDateForArticle } from '$lib/dateUtils';
 
   /** @type {import('./$types').PageData} */
   export let data;
@@ -30,13 +31,9 @@
   let submitError = '';
   let submitSuccess = '';
   
-  // Format tarikh dari ISO string ke format yang dikehendaki
+  // Format tarikh dari ISO string ke format yang dikehendaki (bahasa Melayu)
   function formatDate(isoString) {
-    const date = new Date(isoString);
-    const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
-    const day = date.getDate();
-    const year = date.getFullYear();
-    return `${month} ${day}, ${year}`;
+    return formatDateForArticle(isoString);
   }
   
   // Kategori yang diformat untuk paparan

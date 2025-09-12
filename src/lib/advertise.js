@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { formatDateMalay } from './dateUtils';
 
 /**
  * Mendapatkan data advertise untuk website tertentu
@@ -147,11 +148,7 @@ export function getDefaultAdvertiseData() {
         }
       ]
     },
-    last_updated: "Terakhir diperbarui: " + new Date().toLocaleDateString('id-ID', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
+    last_updated: "Terakhir diperbarui: " + formatDateMalay(new Date().toISOString())
   };
 }
 

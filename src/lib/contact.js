@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { formatDateMalay } from './dateUtils';
 
 /**
  * Mendapatkan data hubungan untuk laman web tertentu
@@ -61,11 +62,7 @@ export async function updateContactData(websiteId, contactData) {
           faq: contactData.faq,
           map: contactData.map,
           email: contactData.email,
-          last_updated: "Terakhir diperbarui: " + new Date().toLocaleDateString('id-ID', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          }),
+          last_updated: "Terakhir diperbarui: " + formatDateMalay(new Date().toISOString()),
           updated_at: new Date().toISOString()
         })
         .eq('website_id', websiteId);
@@ -88,11 +85,7 @@ export async function updateContactData(websiteId, contactData) {
           faq: contactData.faq,
           map: contactData.map,
           email: contactData.email,
-          last_updated: "Terakhir diperbarui: " + new Date().toLocaleDateString('id-ID', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })
+          last_updated: "Terakhir diperbarui: " + formatDateMalay(new Date().toISOString())
         });
 
       if (error) {

@@ -5,6 +5,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
+  import { formatDateMalay } from '$lib/dateUtils';
   
   /** @type {import('./$types').PageData} */
   export let data;
@@ -27,13 +28,9 @@
   // Search functionality
   let searchQuery = '';
   
-  // Format tarikh dari ISO string ke format yang dikehendaki
+  // Format tarikh dari ISO string ke format bahasa Melayu
   function formatDate(isoString) {
-    const date = new Date(isoString);
-    const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
-    const day = date.getDate();
-    const year = date.getFullYear();
-    return `${month} ${day}, ${year}`;
+    return formatDateMalay(isoString);
   }
   
   // Tukar data artikel dari pangkalan data ke format yang diperlukan oleh FoodCard

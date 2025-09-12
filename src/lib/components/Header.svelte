@@ -2,10 +2,10 @@
   let isMenuOpen = false;
   let searchQuery = '';
   
+  import { formatDateMalayWithDay } from '$lib/dateUtils';
+  
   const today = new Date();
-  const formattedDate = today.toLocaleDateString('id-ID', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-  });
+  const formattedDate = formatDateMalayWithDay(today.toISOString());
   
   const toggleMenu = () => {
     isMenuOpen = !isMenuOpen;
