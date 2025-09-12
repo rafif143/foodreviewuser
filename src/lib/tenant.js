@@ -21,9 +21,9 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
   const fallbackData = {
     1: {
       id: 1,
-      name: "Kelantan Food Review",
+      name: "MakanKelantan",
       slug: "kelantan",
-      description: "Panduan kuliner terbaik di Kelantan",
+      description: "Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan",
       logo_url: null
     },
     2: {
@@ -204,7 +204,7 @@ export async function getWebsiteBySlug(slug) {
   if (!isSupabaseConfigured) {
     console.warn('Supabase not configured, using fallback data for slug:', slug);
     const fallbackData = {
-      'kelantan': { id: 1, name: "Kelantan Food Review", slug: "kelantan", description: "Panduan kuliner terbaik di Kelantan", logo_url: null },
+      'kelantan': { id: 1, name: "MakanKelantan", slug: "kelantan", description: "Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan", logo_url: null },
       'kedah': { id: 2, name: "Kedah Food Review", slug: "kedah", description: "Panduan kuliner terbaik di Kedah", logo_url: null },
       'penang': { id: 3, name: "Penang Food Review", slug: "penang", description: "Panduan kuliner terbaik di Penang", logo_url: null },
       'perak': { id: 4, name: "Perak Food Review", slug: "perak", description: "Panduan kuliner terbaik di Perak", logo_url: null },

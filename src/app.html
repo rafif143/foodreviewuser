@@ -14,20 +14,34 @@
 		<link rel="preload" href="/app.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 		<noscript><link rel="stylesheet" href="/app.css" /></noscript>
 		
-		<!-- SEO Meta Tags -->
+		<!-- SEO Meta Tags - PRODUCTION MODE -->
+		<title>MakanKelantan - Panduan Kuliner Terbaik di Kelantan</title>
+		<meta name="description" content="Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan. Review restoran, resep masakan tradisional, dan panduan kuliner terlengkap." />
+		<meta name="keywords" content="makan kelantan, restoran kelantan, makanan tradisional kelantan, nasi kerabu, ayam percik, laksa kelantan, kuliner kelantan, tempat makan kelantan, makankelantan, review makanan kelantan, tempat makan enak kelantan" />
 		<meta name="robots" content="index, follow" />
 		<meta name="language" content="Indonesian" />
-		<meta name="author" content="Food Review Team" />
+		<meta name="author" content="MakanKelantan Team" />
 		<meta name="theme-color" content="#dc2626" />
+		<meta name="geo.region" content="MY-03" />
+		<meta name="geo.placename" content="Kelantan" />
+		<meta name="geo.position" content="6.1254;102.2431" />
+		<meta name="ICBM" content="6.1254, 102.2431" />
 		
-		<!-- Open Graph Default -->
+		<!-- Open Graph Default - PRODUCTION -->
 		<meta property="og:type" content="website" />
 		<meta property="og:locale" content="id_ID" />
-		<meta property="og:site_name" content="Food Review" />
+		<meta property="og:site_name" content="MakanKelantan" />
+		<meta property="og:title" content="MakanKelantan - Panduan Kuliner Terbaik di Kelantan" />
+		<meta property="og:description" content="Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan." />
+		<meta property="og:url" content="https://makankelantan.com" />
+		<meta property="og:image" content="https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center" />
 		
-		<!-- Twitter Card Default -->
+		<!-- Twitter Card Default - PRODUCTION -->
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:site" content="@foodreview" />
+		<meta name="twitter:site" content="@MakanKelantan" />
+		<meta name="twitter:title" content="MakanKelantan - Panduan Kuliner Terbaik di Kelantan" />
+		<meta name="twitter:description" content="Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan." />
+		<meta name="twitter:image" content="https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center" />
 		
 		<!-- Favicon (will be updated dynamically per website) -->
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -81,12 +95,12 @@
 				});
 			}
 			
-			// Service Worker registration for caching
+			// Service Worker registration for caching - PRODUCTION MODE
 			if ('serviceWorker' in navigator) {
 				window.addEventListener('load', () => {
 					navigator.serviceWorker.register('/sw.js')
-						.then(registration => console.log('SW registered'))
-						.catch(error => console.log('SW registration failed'));
+						.then(registration => {})
+						.catch(error => {});
 				});
 			}
 		</script>

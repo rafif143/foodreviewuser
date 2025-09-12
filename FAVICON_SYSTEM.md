@@ -103,13 +103,8 @@ function updateFavicon() {
 
 ## 🗄️ **Database Setup**
 
-### **1. Update Logo URLs**
-```sql
--- Jalankan script database/update_website_logos.sql
-UPDATE public.websites 
-SET logo_url = 'https://example.com/logo-kelantan.png'
-WHERE slug = 'kelantan';
-```
+### **1. Logo URLs dari Database**
+Logo URLs sudah tersimpan di database dalam field `logo_url` tabel `websites`. Tidak perlu update manual karena sudah ada di database.
 
 ### **2. Verifikasi Data**
 ```sql
@@ -118,6 +113,8 @@ FROM public.websites
 WHERE logo_url IS NOT NULL
 ORDER BY id;
 ```
+
+**Note**: Logo URLs sudah ada di database, tidak perlu hardcode di kode.
 
 ## 🔧 **Configuration**
 
@@ -153,8 +150,9 @@ ORDER BY id;
 
 ### **1. Database Setup**
 ```bash
-# Jalankan SQL script
-psql -d your_database -f database/update_website_logos.sql
+# Logo URLs sudah ada di database, tidak perlu setup manual
+# Cek data di database:
+psql -d your_database -c "SELECT id, name, slug, logo_url FROM websites WHERE logo_url IS NOT NULL;"
 ```
 
 ### **2. Test Favicons**
@@ -180,9 +178,12 @@ VALUES ('New Website', 'newwebsite', 'Description', 'https://example.com/logo.pn
 
 ### **Updating Logo**
 ```sql
+-- Update logo di database
 UPDATE public.websites 
 SET logo_url = 'https://new-logo-url.com/logo.png'
 WHERE slug = 'website-slug';
+
+-- Logo akan otomatis terupdate di favicon tanpa perlu restart aplikasi
 ```
 
 ## 🔍 **Troubleshooting**

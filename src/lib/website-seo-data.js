@@ -8,10 +8,10 @@ export const WEBSITE_SEO_DATA = {
   'kelantan': {
     name: 'MakanKelantan',
     domain: 'makankelantan.com',
-    description: 'Panduan kuliner terbaik di Kelantan. Temukan restoran, kedai makan, dan makanan tradisional Kelantan yang autentik.',
-    keywords: 'kelantan food, makanan kelantan, restoran kelantan, kedai makan kelantan, nasi kerabu, ayam percik',
+    description: 'Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan. Review restoran, resep masakan tradisional, dan panduan kuliner terlengkap.',
+    keywords: 'makan kelantan, restoran kelantan, makanan tradisional kelantan, nasi kerabu, ayam percik, laksa kelantan, kuliner kelantan, tempat makan kelantan, makankelantan, review makanan kelantan, tempat makan enak kelantan',
     location: 'Kelantan, Malaysia',
-    cuisine: 'Traditional Malay, Nasi Kerabu, Ayam Percik',
+    cuisine: 'Traditional Malay, Nasi Kerabu, Ayam Percik, Laksa Kelantan',
     socialMedia: {
       facebook: 'https://facebook.com/MakanKelantan',
       instagram: 'https://instagram.com/makankelantan',
