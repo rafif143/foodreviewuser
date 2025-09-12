@@ -10,6 +10,14 @@ export default defineConfig({
 		// esbuild options (faster than terser)
 		esbuild: {
 			drop: ['console', 'debugger']
+		},
+		// Fix chunk naming for production
+		rollupOptions: {
+			output: {
+				chunkFileNames: 'assets/[name]-[hash].js',
+				entryFileNames: 'assets/[name]-[hash].js',
+				assetFileNames: 'assets/[name]-[hash].[ext]'
+			}
 		}
 	},
 	server: {

@@ -5,7 +5,7 @@
   
   $: websiteId = DEFAULT_WEBSITE_ID;
   
-  let redirectCountdown = 3;
+  let redirectCountdown = 2;
   
   onMount(() => {
     // Start redirect countdown

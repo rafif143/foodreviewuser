@@ -1,0 +1,6 @@
+# Netlify redirects untuk fix 404 errors
+/_app/* /index.html 200
+/_app/immutable/* /index.html 200
+
+# Fallback untuk semua routes
+/* /index.html 200
