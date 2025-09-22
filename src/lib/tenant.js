@@ -340,6 +340,10 @@ export const TENANT_CONFIG = {
 
 // Helper untuk dapatkan konfigurasi tenant semasa
 export function getCurrentTenantConfig() {
+  // Set window.tenantId untuk app.html
+  if (typeof window !== 'undefined') {
+    window.tenantId = DEFAULT_WEBSITE_ID;
+  }
   return TENANT_CONFIG[DEFAULT_WEBSITE_ID] || TENANT_CONFIG[1];
 }
 

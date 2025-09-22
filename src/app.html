@@ -90,8 +90,9 @@
 			});
 			
 			function updateTenantMetaTags() {
-				// Get tenant config dari window global atau localStorage
-				const tenantId = getTenantId();
+				// Get tenant config dari window global
+				// Gak ada default, biarin error kalau gak ada
+				const tenantId = window.tenantId;
 				const tenantConfig = getTenantConfig(tenantId);
 				
 				if (tenantConfig) {
@@ -131,11 +132,8 @@
 				}
 			}
 			
-			function getTenantId() {
-				// Default tenant ID - AUTO SYNC dari tenant.js
-				// Script sync-tenant-config.js akan update ini otomatis
-				return 1; // AUTO-SYNC: JANGAN UBAH MANUAL
-			}
+			// Tenant ID langsung dari window global atau localStorage
+			// Biarin ngikut tenant.js aja, gausa setting 2x
 			
 			function getTenantConfig(id) {
 				// Inline tenant config lengkap (copy dari tenant.js)
