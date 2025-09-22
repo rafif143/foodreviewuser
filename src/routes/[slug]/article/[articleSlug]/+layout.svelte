@@ -10,7 +10,7 @@
   $: seo = data?.seo;
   $: article = data?.article;
   
-  // Update document head dengan SEO data
+  // Update document head dengan SEO data hanya di client-side
   onMount(() => {
     if (seo && article) {
       updateDocumentHead();
@@ -18,6 +18,11 @@
   });
   
   function updateDocumentHead() {
+    // Check if we're in browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+    
     // Update title
     if (seo.title) {
       document.title = seo.title;
@@ -54,6 +59,11 @@
   function updateMetaTag(name, content) {
     if (!content) return;
     
+    // Check if we're in browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+    
     let meta = document.querySelector(`meta[name="${name}"]`) || 
                document.querySelector(`meta[property="${name}"]`);
     
@@ -74,6 +84,11 @@
   function updateCanonicalUrl(url) {
     if (!url) return;
     
+    // Check if we're in browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+    
     let canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) {
       canonical.setAttribute('href', url);
@@ -86,6 +101,11 @@
   }
   
   function addStructuredData(data) {
+    // Check if we're in browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+    
     // Hapus structured data yang sudah ada
     const existingScript = document.querySelector('script[type="application/ld+json"]');
     if (existingScript) {

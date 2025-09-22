@@ -13,7 +13,7 @@
 
 <main class="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
   <!-- Navigation -->
-  <NavigationMenu />
+
   
   <!-- Error Content -->
   <div class="container mx-auto px-4 py-16">
@@ -93,7 +93,7 @@
   </div>
   
   <!-- Footer -->
-  <Footer />
+ 
 </main>
 
 <style>

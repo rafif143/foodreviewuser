@@ -4,11 +4,12 @@ import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').LayoutLoad} */
 export async function load({ params }) {
-  const website = await getWebsiteBySlug(params.slug);
-  
-  if (!website) {
-    throw error(404, 'Website not found');
-  }
+  try {
+    const website = await getWebsiteBySlug(params.slug);
+    
+    if (!website) {
+      throw error(404, 'Website not found');
+    }
 
   // Fetch contact data for social media links
   let contactData = null;
@@ -55,8 +56,21 @@ export async function load({ params }) {
     };
   }
 
-  return {
-    website,
-    contactData
-  };
+    return {
+      website,
+      contactData
+    };
+  } catch (err) {
+    console.error('Error in layout load:', err);
+    // Jika error 404, re-throw
+    if (err.status === 404) {
+      throw err;
+    }
+    // Untuk error lainnya, gunakan website default
+    const defaultWebsite = await getWebsiteBySlug('kelantan');
+    return {
+      website: defaultWebsite,
+      contactData: null
+    };
+  }
 }

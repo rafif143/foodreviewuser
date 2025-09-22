@@ -26,6 +26,11 @@ export default defineConfig({
 		// Optimize file serving
 		fs: {
 			strict: false
+		},
+		// Handle SPA routing for development
+		historyApiFallback: {
+			disableDotRule: true,
+			index: '/index.html'
 		}
 	},
 	optimizeDeps: {

@@ -1,6 +1,5 @@
-# Netlify redirects untuk fix 404 errors
-/_app/* /index.html 200
-/_app/immutable/* /index.html 200
+# Development redirects for SPA routing
+# This file handles client-side routing in development
 
-# Fallback untuk semua routes
+# Handle all routes to index.html for SPA
 /* /index.html 200

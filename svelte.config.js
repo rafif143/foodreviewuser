@@ -1,17 +1,15 @@
-import adapter from '@sveltejs/adapter-netlify';
+import adapter from '@sveltejs/adapter-auto';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = { 
   kit: { 
-    adapter: adapter({
-      // Netlify adapter options for better production performance
-      edge: false,
-      split: false
-    }),
-    // Optimize for production
+    adapter: adapter(),
+    // Development configuration
     prerender: {
       handleHttpError: 'warn'
-    }
+    },
+    // Handle trailing slashes consistently
+    trailingSlash: 'ignore'
   } 
 };
 
