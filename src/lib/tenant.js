@@ -1,7 +1,7 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 
 // ID laman web lalai - TUKAR NOMBOR INI UNTUK UBAH SEMUA KONFIGURASI
-export const DEFAULT_WEBSITE_ID = 12; // Tukar nombor ini untuk tukar tenant
+export const DEFAULT_WEBSITE_ID = 13; // Tukar nombor ini untuk tukar tenant
 
 // Cache untuk simpan data laman web
 let websiteCache = new Map();
