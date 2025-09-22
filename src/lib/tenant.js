@@ -1,32 +1,32 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 
-// Default website ID - UBAH ANGKA INI UNTUK GANTI SEMUA KONFIGURASI
-export const DEFAULT_WEBSITE_ID = 3; // Ganti angka ini untuk switch tenant
+// ID laman web lalai - TUKAR NOMBOR INI UNTUK UBAH SEMUA KONFIGURASI
+export const DEFAULT_WEBSITE_ID = 3; // Tukar nombor ini untuk tukar tenant
 
-// Cache untuk menyimpan data website
+// Cache untuk simpan data laman web
 let websiteCache = new Map();
 
-// Konfigurasi lengkap untuk setiap website/tenant
+// Konfigurasi lengkap untuk setiap laman web/tenant
 export const TENANT_CONFIG = {
   1: {
-    // Basic Info
+    // Maklumat Asas
     id: 1,
     name: "MakanKelantan",
     slug: "kelantan",
-    description: "Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan",
+    description: "Panduan makanan terbaik di Kelantan - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Kelantan",
     logo_url: null,
     
-    // SEO Config
+    // Konfigurasi SEO
     seo: {
-      title: "MakanKelantan - Panduan Kuliner Terbaik di Kelantan",
-      keywords: "makan kelantan, restoran kelantan, makanan tradisional kelantan, nasi lemak, satay, laksa, kuliner kelantan, tempat makan kelantan, makankelantan, review makanan kelantan, tempat makan enak kelantan",
-      author: "MakanKelantan Team",
+      title: "MakanKelantan - Panduan Makanan Terbaik di Kelantan",
+      keywords: "makan kelantan, restoran kelantan, makanan tradisional kelantan, nasi lemak, satay, laksa, makanan kelantan, tempat makan kelantan, makankelantan, ulasan makanan kelantan, tempat makan sedap kelantan",
+      author: "Pasukan MakanKelantan",
       themeColor: "#dc2626",
       twitterSite: "@MakanKelantan",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
     },
     
-    // Location Config
+    // Konfigurasi Lokasi
     location: {
       region: "MY-03",
       placename: "Kelantan",
@@ -34,7 +34,7 @@ export const TENANT_CONFIG = {
       icbm: "6.1254, 102.2386"
     },
     
-    // Domain Config
+    // Konfigurasi Domain
     domain: "https://makankelantan.com"
   },
   
@@ -42,12 +42,12 @@ export const TENANT_CONFIG = {
     id: 2,
     name: "MakanKedah",
     slug: "kedah",
-    description: "Panduan kuliner terbaik di Kedah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kedah",
+    description: "Panduan makanan terbaik di Kedah - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Kedah",
     logo_url: null,
     seo: {
-      title: "MakanKedah - Panduan Kuliner Terbaik di Kedah",
-      keywords: "makan kedah, restoran kedah, makanan tradisional kedah, kuliner kedah, tempat makan kedah",
-      author: "MakanKedah Team",
+      title: "MakanKedah - Panduan Makanan Terbaik di Kedah",
+      keywords: "makan kedah, restoran kedah, makanan tradisional kedah, makanan kedah, tempat makan kedah",
+      author: "Pasukan MakanKedah",
       themeColor: "#dc2626",
       twitterSite: "@MakanKedah",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -65,12 +65,12 @@ export const TENANT_CONFIG = {
     id: 3,
     name: "MakanPenang",
     slug: "penang",
-    description: "Panduan kuliner terbaik di Penang - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Penang",
+    description: "Panduan makanan terbaik di Penang - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Penang",
     logo_url: null,
     seo: {
-      title: "MakanPenang - Panduan Kuliner Terbaik di Penang",
-      keywords: "makan penang, restoran penang, makanan tradisional penang, char kway teow, assam laksa, kuliner penang, tempat makan penang",
-      author: "MakanPenang Team",
+      title: "MakanPenang - Panduan Makanan Terbaik di Penang",
+      keywords: "makan penang, restoran penang, makanan tradisional penang, char kway teow, assam laksa, makanan penang, tempat makan penang",
+      author: "Pasukan MakanPenang",
       themeColor: "#dc2626",
       twitterSite: "@MakanPenang",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -88,12 +88,12 @@ export const TENANT_CONFIG = {
     id: 4,
     name: "MakanPerak",
     slug: "perak",
-    description: "Panduan kuliner terbaik di Perak - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Perak",
+    description: "Panduan makanan terbaik di Perak - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Perak",
     logo_url: null,
     seo: {
-      title: "MakanPerak - Panduan Kuliner Terbaik di Perak",
-      keywords: "makan perak, restoran perak, makanan tradisional perak, kuliner perak, tempat makan perak",
-      author: "MakanPerak Team",
+      title: "MakanPerak - Panduan Makanan Terbaik di Perak",
+      keywords: "makan perak, restoran perak, makanan tradisional perak, makanan perak, tempat makan perak",
+      author: "Pasukan MakanPerak",
       themeColor: "#dc2626",
       twitterSite: "@MakanPerak",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -111,12 +111,12 @@ export const TENANT_CONFIG = {
     id: 5,
     name: "MakanPerlis",
     slug: "perlis",
-    description: "Panduan kuliner terbaik di Perlis - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Perlis",
+    description: "Panduan makanan terbaik di Perlis - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Perlis",
     logo_url: null,
     seo: {
-      title: "MakanPerlis - Panduan Kuliner Terbaik di Perlis",
-      keywords: "makan perlis, restoran perlis, makanan tradisional perlis, kuliner perlis, tempat makan perlis",
-      author: "MakanPerlis Team",
+      title: "MakanPerlis - Panduan Makanan Terbaik di Perlis",
+      keywords: "makan perlis, restoran perlis, makanan tradisional perlis, makanan perlis, tempat makan perlis",
+      author: "Pasukan MakanPerlis",
       themeColor: "#dc2626",
       twitterSite: "@MakanPerlis",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -134,12 +134,12 @@ export const TENANT_CONFIG = {
     id: 6,
     name: "MakanTerengganu",
     slug: "terengganu",
-    description: "Panduan kuliner terbaik di Terengganu - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Terengganu",
+    description: "Panduan makanan terbaik di Terengganu - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Terengganu",
     logo_url: null,
     seo: {
-      title: "MakanTerengganu - Panduan Kuliner Terbaik di Terengganu",
-      keywords: "makan terengganu, restoran terengganu, makanan tradisional terengganu, keropok lekor, kuliner terengganu, tempat makan terengganu",
-      author: "MakanTerengganu Team",
+      title: "MakanTerengganu - Panduan Makanan Terbaik di Terengganu",
+      keywords: "makan terengganu, restoran terengganu, makanan tradisional terengganu, keropok lekor, makanan terengganu, tempat makan terengganu",
+      author: "Pasukan MakanTerengganu",
       themeColor: "#dc2626",
       twitterSite: "@MakanTerengganu",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -157,12 +157,12 @@ export const TENANT_CONFIG = {
     id: 7,
     name: "MakanPahang",
     slug: "pahang",
-    description: "Panduan kuliner terbaik di Pahang - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Pahang",
+    description: "Panduan makanan terbaik di Pahang - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Pahang",
     logo_url: null,
     seo: {
-      title: "MakanPahang - Panduan Kuliner Terbaik di Pahang",
-      keywords: "makan pahang, restoran pahang, makanan tradisional pahang, kuliner pahang, tempat makan pahang",
-      author: "MakanPahang Team",
+      title: "MakanPahang - Panduan Makanan Terbaik di Pahang",
+      keywords: "makan pahang, restoran pahang, makanan tradisional pahang, makanan pahang, tempat makan pahang",
+      author: "Pasukan MakanPahang",
       themeColor: "#dc2626",
       twitterSite: "@MakanPahang",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -180,12 +180,12 @@ export const TENANT_CONFIG = {
     id: 8,
     name: "MakanKualaLumpur",
     slug: "kualalumpur",
-    description: "Panduan kuliner terbaik di Kuala Lumpur - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kuala Lumpur",
+    description: "Panduan makanan terbaik di Kuala Lumpur - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Kuala Lumpur",
     logo_url: null,
     seo: {
-      title: "MakanKualaLumpur - Panduan Kuliner Terbaik di Kuala Lumpur",
-      keywords: "makan kuala lumpur, restoran kl, makanan tradisional kuala lumpur, kuliner kl, tempat makan kuala lumpur",
-      author: "MakanKualaLumpur Team",
+      title: "MakanKualaLumpur - Panduan Makanan Terbaik di Kuala Lumpur",
+      keywords: "makan kuala lumpur, restoran kl, makanan tradisional kuala lumpur, makanan kl, tempat makan kuala lumpur",
+      author: "Pasukan MakanKualaLumpur",
       themeColor: "#dc2626",
       twitterSite: "@MakanKL",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -203,12 +203,12 @@ export const TENANT_CONFIG = {
     id: 9,
     name: "MakanSelangor",
     slug: "selangor",
-    description: "Panduan kuliner terbaik di Selangor - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Selangor",
+    description: "Panduan makanan terbaik di Selangor - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Selangor",
     logo_url: null,
     seo: {
-      title: "MakanSelangor - Panduan Kuliner Terbaik di Selangor",
-      keywords: "makan selangor, restoran selangor, makanan tradisional selangor, kuliner selangor, tempat makan selangor",
-      author: "MakanSelangor Team",
+      title: "MakanSelangor - Panduan Makanan Terbaik di Selangor",
+      keywords: "makan selangor, restoran selangor, makanan tradisional selangor, makanan selangor, tempat makan selangor",
+      author: "Pasukan MakanSelangor",
       themeColor: "#dc2626",
       twitterSite: "@MakanSelangor",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -226,12 +226,12 @@ export const TENANT_CONFIG = {
     id: 10,
     name: "MakanJohor",
     slug: "johor",
-    description: "Panduan kuliner terbaik di Johor - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Johor",
+    description: "Panduan makanan terbaik di Johor - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Johor",
     logo_url: null,
     seo: {
-      title: "MakanJohor - Panduan Kuliner Terbaik di Johor",
-      keywords: "makan johor, restoran johor, makanan tradisional johor, laksa johor, kuliner johor, tempat makan johor",
-      author: "MakanJohor Team",
+      title: "MakanJohor - Panduan Makanan Terbaik di Johor",
+      keywords: "makan johor, restoran johor, makanan tradisional johor, laksa johor, makanan johor, tempat makan johor",
+      author: "Pasukan MakanJohor",
       themeColor: "#dc2626",
       twitterSite: "@MakanJohor",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -249,12 +249,12 @@ export const TENANT_CONFIG = {
     id: 11,
     name: "MakanMelaka",
     slug: "melaka",
-    description: "Panduan kuliner terbaik di Melaka - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Melaka",
+    description: "Panduan makanan terbaik di Melaka - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Melaka",
     logo_url: null,
     seo: {
-      title: "MakanMelaka - Panduan Kuliner Terbaik di Melaka",
-      keywords: "makan melaka, restoran melaka, makanan tradisional melaka, chicken rice ball, kuliner melaka, tempat makan melaka",
-      author: "MakanMelaka Team",
+      title: "MakanMelaka - Panduan Makanan Terbaik di Melaka",
+      keywords: "makan melaka, restoran melaka, makanan tradisional melaka, chicken rice ball, makanan melaka, tempat makan melaka",
+      author: "Pasukan MakanMelaka",
       themeColor: "#dc2626",
       twitterSite: "@MakanMelaka",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -272,12 +272,12 @@ export const TENANT_CONFIG = {
     id: 12,
     name: "MakanNegeriSembilan",
     slug: "negerisembilan",
-    description: "Panduan kuliner terbaik di Negeri Sembilan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Negeri Sembilan",
+    description: "Panduan makanan terbaik di Negeri Sembilan - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Negeri Sembilan",
     logo_url: null,
     seo: {
-      title: "MakanNegeriSembilan - Panduan Kuliner Terbaik di Negeri Sembilan",
-      keywords: "makan negeri sembilan, restoran negeri sembilan, makanan tradisional negeri sembilan, kuliner negeri sembilan, tempat makan negeri sembilan",
-      author: "MakanNegeriSembilan Team",
+      title: "MakanNegeriSembilan - Panduan Makanan Terbaik di Negeri Sembilan",
+      keywords: "makan negeri sembilan, restoran negeri sembilan, makanan tradisional negeri sembilan, makanan negeri sembilan, tempat makan negeri sembilan",
+      author: "Pasukan MakanNegeriSembilan",
       themeColor: "#dc2626",
       twitterSite: "@MakanNS",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -295,12 +295,12 @@ export const TENANT_CONFIG = {
     id: 13,
     name: "MakanSabah",
     slug: "sabah",
-    description: "Panduan kuliner terbaik di Sabah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Sabah",
+    description: "Panduan makanan terbaik di Sabah - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Sabah",
     logo_url: null,
     seo: {
-      title: "MakanSabah - Panduan Kuliner Terbaik di Sabah",
-      keywords: "makan sabah, restoran sabah, makanan tradisional sabah, hinava, kuliner sabah, tempat makan sabah",
-      author: "MakanSabah Team",
+      title: "MakanSabah - Panduan Makanan Terbaik di Sabah",
+      keywords: "makan sabah, restoran sabah, makanan tradisional sabah, hinava, makanan sabah, tempat makan sabah",
+      author: "Pasukan MakanSabah",
       themeColor: "#dc2626",
       twitterSite: "@MakanSabah",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -318,12 +318,12 @@ export const TENANT_CONFIG = {
     id: 14,
     name: "MakanSarawak",
     slug: "sarawak",
-    description: "Panduan kuliner terbaik di Sarawak - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Sarawak",
+    description: "Panduan makanan terbaik di Sarawak - Cari tempat makan terbaik, resipi tradisional, dan ulasan restoran di Sarawak",
     logo_url: null,
     seo: {
-      title: "MakanSarawak - Panduan Kuliner Terbaik di Sarawak",
-      keywords: "makan sarawak, restoran sarawak, makanan tradisional sarawak, nasi lemak, satay, laksa, kuliner sarawak, tempat makan sarawak, makansarawak, review makanan sarawak, tempat makan enak sarawak",
-      author: "MakanSarawak Team",
+      title: "MakanSarawak - Panduan Makanan Terbaik di Sarawak",
+      keywords: "makan sarawak, restoran sarawak, makanan tradisional sarawak, nasi lemak, satay, laksa, makanan sarawak, tempat makan sarawak, makansarawak, ulasan makanan sarawak, tempat makan sedap sarawak",
+      author: "Pasukan MakanSarawak",
       themeColor: "#dc2626",
       twitterSite: "@MakanSarawak",
       ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
@@ -338,18 +338,18 @@ export const TENANT_CONFIG = {
   }
 };
 
-// Helper untuk mendapatkan konfigurasi tenant saat ini
+// Helper untuk dapatkan konfigurasi tenant semasa
 export function getCurrentTenantConfig() {
   return TENANT_CONFIG[DEFAULT_WEBSITE_ID] || TENANT_CONFIG[1];
 }
 
 /**
- * Mendapatkan data website dari database berdasarkan ID
- * @param {number} id - ID website
- * @returns {Promise<Object>} - Data website dari database
+ * Dapatkan data laman web dari database berdasarkan ID
+ * @param {number} id - ID laman web
+ * @returns {Promise<Object>} - Data laman web dari database
  */
 export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
-  // Cek cache dulu
+  // Periksa cache dulu
   if (websiteCache.has(id)) {
     return websiteCache.get(id);
   }
@@ -368,11 +368,11 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
     ])
   );
 
-  // Sekarang semua menggunakan TENANT_CONFIG yang konsisten
+  // Sekarang semua guna TENANT_CONFIG yang konsisten
 
-  // Jika Supabase tidak dikonfigurasi, gunakan fallback data
+  // Jika Supabase tak dikonfigurasi, guna data fallback
   if (!isSupabaseConfigured) {
-    console.warn('Supabase not configured, using fallback data');
+    console.warn('Supabase tak dikonfigurasi, guna data fallback');
     const fallback = fallbackData[id] || {
       id: id,
       name: `Website ${id}`,
