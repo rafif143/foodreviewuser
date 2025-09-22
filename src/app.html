@@ -13,33 +13,34 @@
 		<!-- Critical CSS -->
 		<link rel="stylesheet" href="/app.css" />
 		
-         <!-- SEO Meta Tags - PRODUCTION MODE -->
-         <title>MakanSarawak - Panduan Kuliner Terbaik di Sarawak</title>
-         <meta name="description" content="Panduan kuliner terbaik di Sarawak - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Sarawak. Review restoran, resep masakan tradisional, dan panduan kuliner terlengkap." />
-         <meta name="keywords" content="makan sarawak, restoran sarawak, makanan tradisional sarawak, nasi lemak, satay, laksa, kuliner sarawak, tempat makan sarawak, makansarawak, review makanan sarawak, tempat makan enak sarawak" />
+         <!-- SEO Meta Tags - DINAMIS BERDASARKAN TENANT CONFIG -->
+         <!-- Default fallback, akan diupdate oleh JavaScript -->
+         <title>Food Review - Panduan Kuliner Terbaik</title>
+         <meta name="description" content="Panduan kuliner terbaik - Temukan tempat makan terbaik, resep tradisional, dan review restoran." />
+         <meta name="keywords" content="food review, restoran, kuliner, tempat makan, review makanan" />
 		<meta name="robots" content="index, follow" />
 		<meta name="language" content="Indonesian" />
-		<meta name="author" content="MakanSarawak Team" />
+		<meta name="author" content="Food Review Team" />
 		<meta name="theme-color" content="#dc2626" />
-		<meta name="geo.region" content="MY-13" />
-		<meta name="geo.placename" content="Sarawak" />
-		<meta name="geo.position" content="1.5533;110.3593" />
-		<meta name="ICBM" content="1.5533, 110.3593" />
+		<meta name="geo.region" content="MY" />
+		<meta name="geo.placename" content="Malaysia" />
+		<meta name="geo.position" content="3.1390;101.6869" />
+		<meta name="ICBM" content="3.1390, 101.6869" />
 		
-		<!-- Open Graph Default - PRODUCTION -->
+		<!-- Open Graph Default -->
 		<meta property="og:type" content="website" />
 		<meta property="og:locale" content="id_ID" />
-		<meta property="og:site_name" content="MakanSarawak" />
-		<meta property="og:title" content="MakanSarawak - Panduan Kuliner Terbaik di Sarawak" />
-		<meta property="og:description" content="Panduan kuliner terbaik di Sarawak - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Sarawak." />
-		<meta property="og:url" content="https://makansarawak.com" />
+		<meta property="og:site_name" content="Food Review" />
+		<meta property="og:title" content="Food Review - Panduan Kuliner Terbaik" />
+		<meta property="og:description" content="Panduan kuliner terbaik - Temukan tempat makan terbaik, resep tradisional, dan review restoran." />
+		<meta property="og:url" content="https://foodreview.com" />
 		<meta property="og:image" content="https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center" />
 		
-		<!-- Twitter Card Default - PRODUCTION -->
+		<!-- Twitter Card Default -->
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:site" content="@MakanSarawak" />
-		<meta name="twitter:title" content="MakanSarawak - Panduan Kuliner Terbaik di Sarawak" />
-		<meta name="twitter:description" content="Panduan kuliner terbaik di Sarawak - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Sarawak." />
+		<meta name="twitter:site" content="@FoodReview" />
+		<meta name="twitter:title" content="Food Review - Panduan Kuliner Terbaik" />
+		<meta name="twitter:description" content="Panduan kuliner terbaik - Temukan tempat makan terbaik, resep tradisional, dan review restoran." />
 		<meta name="twitter:image" content="https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center" />
 		
 		<!-- Favicon (will be updated dynamically per website) -->
@@ -82,6 +83,376 @@
 		
 		<!-- Performance Scripts -->
 		<script>
+			// Dynamic Meta Tags Update berdasarkan Tenant Config - INLINE VERSION
+			window.addEventListener('DOMContentLoaded', function() {
+				// Inline tenant config update (no import needed)
+				updateTenantMetaTags();
+			});
+			
+			function updateTenantMetaTags() {
+				// Get tenant config dari window global atau localStorage
+				const tenantId = getTenantId();
+				const tenantConfig = getTenantConfig(tenantId);
+				
+				if (tenantConfig) {
+					// Update title
+					document.title = tenantConfig.seo.title;
+					
+					// Update meta tags
+					updateMetaTag('description', tenantConfig.description);
+					updateMetaTag('keywords', tenantConfig.seo.keywords);
+					updateMetaTag('author', tenantConfig.seo.author);
+					updateMetaTag('theme-color', tenantConfig.seo.themeColor);
+					
+					// Update geo tags
+					updateMetaTag('geo.region', tenantConfig.location.region);
+					updateMetaTag('geo.placename', tenantConfig.location.placename);
+					updateMetaTag('geo.position', tenantConfig.location.coordinates);
+					updateMetaTag('ICBM', tenantConfig.location.icbm);
+					
+					// Update Open Graph
+					updateMetaProperty('og:site_name', tenantConfig.name);
+					updateMetaProperty('og:title', tenantConfig.seo.title);
+					updateMetaProperty('og:description', tenantConfig.description);
+					updateMetaProperty('og:url', tenantConfig.domain);
+					updateMetaProperty('og:image', tenantConfig.seo.ogImage);
+					
+					// Update Twitter Card
+					updateMetaTag('twitter:site', tenantConfig.seo.twitterSite);
+					updateMetaTag('twitter:title', tenantConfig.seo.title);
+					updateMetaTag('twitter:description', tenantConfig.description);
+					updateMetaTag('twitter:image', tenantConfig.seo.ogImage);
+					
+					console.log('🎯 Current Tenant:', {
+						id: tenantConfig.id,
+						name: tenantConfig.name,
+						slug: tenantConfig.slug
+					});
+				}
+			}
+			
+			function getTenantId() {
+				// Default tenant ID (sesuai dengan tenant.js)
+				return 2; // UBAH ANGKA INI SESUAI DEFAULT_WEBSITE_ID
+			}
+			
+			function getTenantConfig(id) {
+				// Inline tenant config lengkap (copy dari tenant.js)
+				const configs = {
+					1: {
+						id: 1,
+						name: "MakanKelantan",
+						slug: "kelantan",
+						description: "Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan",
+						seo: {
+							title: "MakanKelantan - Panduan Kuliner Terbaik di Kelantan",
+							keywords: "makan kelantan, restoran kelantan, makanan tradisional kelantan, nasi lemak, satay, laksa, kuliner kelantan, tempat makan kelantan, makankelantan, review makanan kelantan, tempat makan enak kelantan",
+							author: "MakanKelantan Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanKelantan",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-03",
+							placename: "Kelantan",
+							coordinates: "6.1254;102.2386",
+							icbm: "6.1254, 102.2386"
+						},
+						domain: "https://makankelantan.com"
+					},
+					2: {
+						id: 2,
+						name: "MakanKedah",
+						slug: "kedah",
+						description: "Panduan kuliner terbaik di Kedah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kedah",
+						seo: {
+							title: "MakanKedah - Panduan Kuliner Terbaik di Kedah",
+							keywords: "makan kedah, restoran kedah, makanan tradisional kedah, kuliner kedah, tempat makan kedah",
+							author: "MakanKedah Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanKedah",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-02",
+							placename: "Kedah",
+							coordinates: "6.1184;100.3685",
+							icbm: "6.1184, 100.3685"
+						},
+						domain: "https://makankedah.com"
+					},
+					3: {
+						id: 3,
+						name: "MakanPenang",
+						slug: "penang",
+						description: "Panduan kuliner terbaik di Penang - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Penang",
+						seo: {
+							title: "MakanPenang - Panduan Kuliner Terbaik di Penang",
+							keywords: "makan penang, restoran penang, makanan tradisional penang, char kway teow, assam laksa, kuliner penang, tempat makan penang",
+							author: "MakanPenang Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanPenang",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-07",
+							placename: "Penang",
+							coordinates: "5.4164;100.3327",
+							icbm: "5.4164, 100.3327"
+						},
+						domain: "https://makanpenang.com"
+					},
+					4: {
+						id: 4,
+						name: "MakanPerak",
+						slug: "perak",
+						description: "Panduan kuliner terbaik di Perak - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Perak",
+						seo: {
+							title: "MakanPerak - Panduan Kuliner Terbaik di Perak",
+							keywords: "makan perak, restoran perak, makanan tradisional perak, kuliner perak, tempat makan perak",
+							author: "MakanPerak Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanPerak",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-08",
+							placename: "Perak",
+							coordinates: "4.5921;101.0901",
+							icbm: "4.5921, 101.0901"
+						},
+						domain: "https://makanperak.com"
+					},
+					5: {
+						id: 5,
+						name: "MakanPerlis",
+						slug: "perlis",
+						description: "Panduan kuliner terbaik di Perlis - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Perlis",
+						seo: {
+							title: "MakanPerlis - Panduan Kuliner Terbaik di Perlis",
+							keywords: "makan perlis, restoran perlis, makanan tradisional perlis, kuliner perlis, tempat makan perlis",
+							author: "MakanPerlis Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanPerlis",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-09",
+							placename: "Perlis",
+							coordinates: "6.4414;100.1986",
+							icbm: "6.4414, 100.1986"
+						},
+						domain: "https://makanperlis.com"
+					},
+					6: {
+						id: 6,
+						name: "MakanTerengganu",
+						slug: "terengganu",
+						description: "Panduan kuliner terbaik di Terengganu - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Terengganu",
+						seo: {
+							title: "MakanTerengganu - Panduan Kuliner Terbaik di Terengganu",
+							keywords: "makan terengganu, restoran terengganu, makanan tradisional terengganu, keropok lekor, kuliner terengganu, tempat makan terengganu",
+							author: "MakanTerengganu Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanTerengganu",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-11",
+							placename: "Terengganu",
+							coordinates: "5.3117;103.1324",
+							icbm: "5.3117, 103.1324"
+						},
+						domain: "https://makanterengganu.com"
+					},
+					7: {
+						id: 7,
+						name: "MakanPahang",
+						slug: "pahang",
+						description: "Panduan kuliner terbaik di Pahang - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Pahang",
+						seo: {
+							title: "MakanPahang - Panduan Kuliner Terbaik di Pahang",
+							keywords: "makan pahang, restoran pahang, makanan tradisional pahang, kuliner pahang, tempat makan pahang",
+							author: "MakanPahang Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanPahang",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-06",
+							placename: "Pahang",
+							coordinates: "3.8126;103.3256",
+							icbm: "3.8126, 103.3256"
+						},
+						domain: "https://makanpahang.com"
+					},
+					8: {
+						id: 8,
+						name: "MakanKualaLumpur",
+						slug: "kualalumpur",
+						description: "Panduan kuliner terbaik di Kuala Lumpur - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kuala Lumpur",
+						seo: {
+							title: "MakanKualaLumpur - Panduan Kuliner Terbaik di Kuala Lumpur",
+							keywords: "makan kuala lumpur, restoran kl, makanan tradisional kuala lumpur, kuliner kl, tempat makan kuala lumpur",
+							author: "MakanKualaLumpur Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanKL",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-14",
+							placename: "Kuala Lumpur",
+							coordinates: "3.1390;101.6869",
+							icbm: "3.1390, 101.6869"
+						},
+						domain: "https://makankualalumpur.com"
+					},
+					9: {
+						id: 9,
+						name: "MakanSelangor",
+						slug: "selangor",
+						description: "Panduan kuliner terbaik di Selangor - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Selangor",
+						seo: {
+							title: "MakanSelangor - Panduan Kuliner Terbaik di Selangor",
+							keywords: "makan selangor, restoran selangor, makanan tradisional selangor, kuliner selangor, tempat makan selangor",
+							author: "MakanSelangor Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanSelangor",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-10",
+							placename: "Selangor",
+							coordinates: "3.0738;101.5183",
+							icbm: "3.0738, 101.5183"
+						},
+						domain: "https://makanselangor.com"
+					},
+					10: {
+						id: 10,
+						name: "MakanJohor",
+						slug: "johor",
+						description: "Panduan kuliner terbaik di Johor - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Johor",
+						seo: {
+							title: "MakanJohor - Panduan Kuliner Terbaik di Johor",
+							keywords: "makan johor, restoran johor, makanan tradisional johor, laksa johor, kuliner johor, tempat makan johor",
+							author: "MakanJohor Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanJohor",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-01",
+							placename: "Johor",
+							coordinates: "1.4927;103.7414",
+							icbm: "1.4927, 103.7414"
+						},
+						domain: "https://makanjohor.com"
+					},
+					11: {
+						id: 11,
+						name: "MakanMelaka",
+						slug: "melaka",
+						description: "Panduan kuliner terbaik di Melaka - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Melaka",
+						seo: {
+							title: "MakanMelaka - Panduan Kuliner Terbaik di Melaka",
+							keywords: "makan melaka, restoran melaka, makanan tradisional melaka, chicken rice ball, kuliner melaka, tempat makan melaka",
+							author: "MakanMelaka Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanMelaka",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-04",
+							placename: "Melaka",
+							coordinates: "2.1896;102.2501",
+							icbm: "2.1896, 102.2501"
+						},
+						domain: "https://makanmelaka.com"
+					},
+					12: {
+						id: 12,
+						name: "MakanNegeriSembilan",
+						slug: "negerisembilan",
+						description: "Panduan kuliner terbaik di Negeri Sembilan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Negeri Sembilan",
+						seo: {
+							title: "MakanNegeriSembilan - Panduan Kuliner Terbaik di Negeri Sembilan",
+							keywords: "makan negeri sembilan, restoran negeri sembilan, makanan tradisional negeri sembilan, kuliner negeri sembilan, tempat makan negeri sembilan",
+							author: "MakanNegeriSembilan Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanNS",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-05",
+							placename: "Negeri Sembilan",
+							coordinates: "2.7297;101.9381",
+							icbm: "2.7297, 101.9381"
+						},
+						domain: "https://makannegerisembilan.com"
+					},
+					13: {
+						id: 13,
+						name: "MakanSabah",
+						slug: "sabah",
+						description: "Panduan kuliner terbaik di Sabah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Sabah",
+						seo: {
+							title: "MakanSabah - Panduan Kuliner Terbaik di Sabah",
+							keywords: "makan sabah, restoran sabah, makanan tradisional sabah, hinava, kuliner sabah, tempat makan sabah",
+							author: "MakanSabah Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanSabah",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-12",
+							placename: "Sabah",
+							coordinates: "5.9788;116.0753",
+							icbm: "5.9788, 116.0753"
+						},
+						domain: "https://makansabah.com"
+					},
+					14: {
+						id: 14,
+						name: "MakanSarawak",
+						slug: "sarawak",
+						description: "Panduan kuliner terbaik di Sarawak - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Sarawak",
+						seo: {
+							title: "MakanSarawak - Panduan Kuliner Terbaik di Sarawak",
+							keywords: "makan sarawak, restoran sarawak, makanan tradisional sarawak, nasi lemak, satay, laksa, kuliner sarawak, tempat makan sarawak, makansarawak, review makanan sarawak, tempat makan enak sarawak",
+							author: "MakanSarawak Team",
+							themeColor: "#dc2626",
+							twitterSite: "@MakanSarawak",
+							ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+						},
+						location: {
+							region: "MY-13",
+							placename: "Sarawak",
+							coordinates: "1.5533;110.3593",
+							icbm: "1.5533, 110.3593"
+						},
+						domain: "https://makansarawak.com"
+					}
+				};
+				return configs[id] || configs[1];
+			}
+			
+			function updateMetaTag(name, content) {
+				if (!content) return;
+				const meta = document.querySelector(`meta[name="${name}"]`);
+				if (meta) {
+					meta.setAttribute('content', content);
+				}
+			}
+			
+			function updateMetaProperty(property, content) {
+				if (!content) return;
+				const meta = document.querySelector(`meta[property="${property}"]`);
+				if (meta) {
+					meta.setAttribute('content', content);
+				}
+			}
+			
 			// Preload critical resources
 			if ('requestIdleCallback' in window) {
 				requestIdleCallback(() => {

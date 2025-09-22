@@ -9,7 +9,7 @@ const config = {
       handleHttpError: 'warn'
     },
     // Handle trailing slashes consistently
-    trailingSlash: 'ignore'
+   
   } 
 };
 

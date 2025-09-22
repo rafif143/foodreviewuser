@@ -1,10 +1,102 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 
-// Default website ID - hardcode saja
-export const DEFAULT_WEBSITE_ID = 14;
+// Default website ID - UBAH ANGKA INI UNTUK GANTI SEMUA KONFIGURASI
+export const DEFAULT_WEBSITE_ID = 1; // Ganti angka ini untuk switch tenant
 
 // Cache untuk menyimpan data website
 let websiteCache = new Map();
+
+// Konfigurasi lengkap untuk setiap website/tenant
+export const TENANT_CONFIG = {
+  1: {
+    // Basic Info
+    id: 1,
+    name: "MakanKelantan",
+    slug: "kelantan",
+    description: "Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan",
+    logo_url: null,
+    
+    // SEO Config
+    seo: {
+      title: "MakanKelantan - Panduan Kuliner Terbaik di Kelantan",
+      keywords: "makan kelantan, restoran kelantan, makanan tradisional kelantan, nasi lemak, satay, laksa, kuliner kelantan, tempat makan kelantan, makankelantan, review makanan kelantan, tempat makan enak kelantan",
+      author: "MakanKelantan Team",
+      themeColor: "#dc2626",
+      twitterSite: "@MakanKelantan",
+      ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+    },
+    
+    // Location Config
+    location: {
+      region: "MY-03",
+      placename: "Kelantan",
+      coordinates: "6.1254;102.2386",
+      icbm: "6.1254, 102.2386"
+    },
+    
+    // Domain Config
+    domain: "https://makankelantan.com"
+  },
+  
+  14: {
+    // Basic Info
+    id: 14,
+    name: "MakanSarawak",
+    slug: "sarawak",
+    description: "Panduan kuliner terbaik di Sarawak - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Sarawak",
+    logo_url: null,
+    
+    // SEO Config
+    seo: {
+      title: "MakanSarawak - Panduan Kuliner Terbaik di Sarawak",
+      keywords: "makan sarawak, restoran sarawak, makanan tradisional sarawak, nasi lemak, satay, laksa, kuliner sarawak, tempat makan sarawak, makansarawak, review makanan sarawak, tempat makan enak sarawak",
+      author: "MakanSarawak Team",
+      themeColor: "#dc2626",
+      twitterSite: "@MakanSarawak",
+      ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+    },
+    
+    // Location Config
+    location: {
+      region: "MY-13",
+      placename: "Sarawak",
+      coordinates: "1.5533;110.3593",
+      icbm: "1.5533, 110.3593"
+    },
+    
+    // Domain Config
+    domain: "https://makansarawak.com"
+  },
+  
+  // Tambah config lain sesuai kebutuhan
+  2: {
+    id: 2,
+    name: "MakanKedah",
+    slug: "kedah",
+    description: "Panduan kuliner terbaik di Kedah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kedah",
+    logo_url: null,
+    seo: {
+      title: "MakanKedah - Panduan Kuliner Terbaik di Kedah",
+      keywords: "makan kedah, restoran kedah, makanan tradisional kedah, kuliner kedah, tempat makan kedah",
+      author: "MakanKedah Team",
+      themeColor: "#dc2626",
+      twitterSite: "@MakanKedah",
+      ogImage: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=1200&h=630&fit=crop&crop=center"
+    },
+    location: {
+      region: "MY-02",
+      placename: "Kedah",
+      coordinates: "6.1184;100.3685",
+      icbm: "6.1184, 100.3685"
+    },
+    domain: "https://makankedah.com"
+  }
+};
+
+// Helper untuk mendapatkan konfigurasi tenant saat ini
+export function getCurrentTenantConfig() {
+  return TENANT_CONFIG[DEFAULT_WEBSITE_ID] || TENANT_CONFIG[1];
+}
 
 /**
  * Mendapatkan data website dari database berdasarkan ID
@@ -17,8 +109,22 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
     return websiteCache.get(id);
   }
 
-  // Fallback data untuk semua website
-  const fallbackData = {
+  // Gunakan konfigurasi terpusat sebagai fallback
+  const fallbackData = Object.fromEntries(
+    Object.entries(TENANT_CONFIG).map(([id, config]) => [
+      id,
+      {
+        id: config.id,
+        name: config.name,
+        slug: config.slug,
+        description: config.description,
+        logo_url: config.logo_url
+      }
+    ])
+  );
+
+  // Fallback data lama untuk kompatibilitas
+  const legacyFallbackData = {
     1: {
       id: 1,
       name: "MakanKelantan",
@@ -200,27 +306,22 @@ export async function getWebsiteBySlug(slug) {
     return await getWebsiteById(DEFAULT_WEBSITE_ID);
   }
 
-  // Jika Supabase tidak dikonfigurasi, gunakan fallback data berdasarkan slug
+  // Jika Supabase tidak dikonfigurasi, gunakan konfigurasi terpusat
   if (!isSupabaseConfigured) {
-    console.warn('Supabase not configured, using fallback data for slug:', slug);
-    const fallbackData = {
-      'kelantan': { id: 1, name: "MakanKelantan", slug: "kelantan", description: "Panduan kuliner terbaik di Kelantan - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kelantan", logo_url: null },
-      'kedah': { id: 2, name: "MakanKedah", slug: "kedah", description: "Panduan kuliner terbaik di Kedah - Temukan tempat makan terbaik, resep tradisional, dan review restoran di Kedah", logo_url: null },
-      'penang': { id: 3, name: "Penang Food Review", slug: "penang", description: "Panduan kuliner terbaik di Penang", logo_url: null },
-      'perak': { id: 4, name: "Perak Food Review", slug: "perak", description: "Panduan kuliner terbaik di Perak", logo_url: null },
-      'perlis': { id: 5, name: "Perlis Food Review", slug: "perlis", description: "Panduan kuliner terbaik di Perlis", logo_url: null },
-      'terengganu': { id: 6, name: "Terengganu Food Review", slug: "terengganu", description: "Panduan kuliner terbaik di Terengganu", logo_url: null },
-      'pahang': { id: 7, name: "Pahang Food Review", slug: "pahang", description: "Panduan kuliner terbaik di Pahang", logo_url: null },
-      'kualalumpur': { id: 8, name: "Kuala Lumpur Food Review", slug: "kualalumpur", description: "Panduan kuliner terbaik di Kuala Lumpur", logo_url: null },
-      'selangor': { id: 9, name: "Selangor Food Review", slug: "selangor", description: "Panduan kuliner terbaik di Selangor", logo_url: null },
-      'johor': { id: 10, name: "Johor Food Review", slug: "johor", description: "Panduan kuliner terbaik di Johor", logo_url: null },
-      'melaka': { id: 11, name: "Melaka Food Review", slug: "melaka", description: "Panduan kuliner terbaik di Melaka", logo_url: null },
-      'negerisembilan': { id: 12, name: "Negeri Sembilan Food Review", slug: "negerisembilan", description: "Panduan kuliner terbaik di Negeri Sembilan", logo_url: null },
-      'sabah': { id: 13, name: "Sabah Food Review", slug: "sabah", description: "Panduan kuliner terbaik di Sabah", logo_url: null },
-      'sarawak': { id: 14, name: "Sarawak Food Review", slug: "sarawak", description: "Panduan kuliner terbaik di Sarawak", logo_url: null }
-    };
+    console.warn('Supabase not configured, using tenant config for slug:', slug);
     
-    const website = fallbackData[slug] || fallbackData['kelantan'];
+    // Buat mapping dari slug ke config
+    const slugToConfig = Object.fromEntries(
+      Object.values(TENANT_CONFIG).map(config => [config.slug, {
+        id: config.id,
+        name: config.name,
+        slug: config.slug,
+        description: config.description,
+        logo_url: config.logo_url
+      }])
+    );
+    
+    const website = slugToConfig[slug] || getCurrentTenantConfig();
     websiteCache.set(website.id, website);
     return website;
   }
@@ -241,9 +342,10 @@ export async function getWebsiteBySlug(slug) {
     if (!data || data.length === 0) {
       // Hanya log jika bukan favicon request
       if (!slug.includes('favicon')) {
-        console.warn(`No website found with slug "${slug}", using default website`);
+        console.warn(`No website found with slug "${slug}", using tenant config fallback`);
       }
-      return await getWebsiteById(DEFAULT_WEBSITE_ID);
+      // Gunakan konfigurasi tenant saat ini sebagai fallback
+      return getCurrentTenantConfig();
     }
 
     // Ambil data pertama jika ada multiple results
@@ -254,8 +356,8 @@ export async function getWebsiteBySlug(slug) {
     return website;
   } catch (error) {
     console.warn(`Unexpected error fetching website by slug "${slug}":`, error.message);
-    // Fallback ke website default
-    return await getWebsiteById(DEFAULT_WEBSITE_ID);
+    // Fallback ke konfigurasi tenant saat ini
+    return getCurrentTenantConfig();
   }
 }
 

@@ -1,17 +1,20 @@
-import { DEFAULT_WEBSITE_ID } from '$lib/tenant';
+import { DEFAULT_WEBSITE_ID, getCurrentTenantConfig } from '$lib/tenant';
 
 /** @type {import('./$types').PageLoad} */
 export async function load() {
-  // Fallback data untuk sementara
+  // Gunakan konfigurasi terpusat dari tenant
+  const tenantConfig = getCurrentTenantConfig();
+  
   const website = {
-    id: DEFAULT_WEBSITE_ID,
-    name: "Kelantan Food Review",
-    slug: "kelantan",
-    description: "Panduan kuliner terbaik di Kelantan",
-    logo_url: null
+    id: tenantConfig.id,
+    name: tenantConfig.name,
+    slug: tenantConfig.slug,
+    description: tenantConfig.description,
+    logo_url: tenantConfig.logo_url
   };
   
   return {
-    website
+    website,
+    tenantConfig // Sertakan config lengkap untuk kebutuhan lain
   };
 }
