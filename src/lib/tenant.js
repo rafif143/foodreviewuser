@@ -1,7 +1,7 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 
 // Default website ID - UBAH ANGKA INI UNTUK GANTI SEMUA KONFIGURASI
-export const DEFAULT_WEBSITE_ID = 3; // Ganti angka ini untuk switch tenant
+export const DEFAULT_WEBSITE_ID = 4; // Ganti angka ini untuk switch tenant
 
 // Cache untuk menyimpan data website
 let websiteCache = new Map();
