@@ -27,9 +27,9 @@ console.log(`📋 Found DEFAULT_WEBSITE_ID: ${tenantId}`);
 const appHtmlPath = './src/app.html';
 let appHtmlContent = fs.readFileSync(appHtmlPath, 'utf8');
 
-// Replace tenant ID di app.html
-const oldPattern = /return \d+; \/\/ UBAH ANGKA INI SESUAI DEFAULT_WEBSITE_ID/;
-const newReplacement = `return ${tenantId}; // UBAH ANGKA INI SESUAI DEFAULT_WEBSITE_ID`;
+// Replace tenant ID di app.html - cari pattern AUTO-SYNC
+const oldPattern = /return \d+; \/\/ AUTO-SYNC: JANGAN UBAH MANUAL/;
+const newReplacement = `return ${tenantId}; // AUTO-SYNC: JANGAN UBAH MANUAL`;
 
 if (oldPattern.test(appHtmlContent)) {
   appHtmlContent = appHtmlContent.replace(oldPattern, newReplacement);

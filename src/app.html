@@ -132,8 +132,9 @@
 			}
 			
 			function getTenantId() {
-				// Default tenant ID (sesuai dengan tenant.js)
-				return 2; // UBAH ANGKA INI SESUAI DEFAULT_WEBSITE_ID
+				// Default tenant ID - AUTO SYNC dari tenant.js
+				// Script sync-tenant-config.js akan update ini otomatis
+				return 1; // AUTO-SYNC: JANGAN UBAH MANUAL
 			}
 			
 			function getTenantConfig(id) {
