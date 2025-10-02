@@ -7,8 +7,6 @@
 		<!-- Performance Optimizations -->
 		<link rel="preconnect" href="https://images.unsplash.com" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="dns-prefetch" href="https://images.unsplash.com" />
-		<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 		
 		<!-- Critical CSS -->
 		<link rel="stylesheet" href="/app.css" />
@@ -48,7 +46,6 @@
 		<link rel="apple-touch-icon" href="/favicon.svg" />
 		
 		<!-- Performance Hints -->
-		<meta http-equiv="x-dns-prefetch-control" content="on" />
 		
 		%sveltekit.head%
 		
@@ -78,14 +75,16 @@
 			}
 		</style>
 	</head>
-	<body data-sveltekit-preload-data="hover">
+	<body data-sveltekit-preload-data="false">
 		<div style="display: contents">%sveltekit.body%</div>
+		
+		<!-- Performance Optimizations -->
 		
 		<!-- Performance Scripts -->
 		<script>
 			// Dynamic Meta Tags Update berdasarkan Tenant Config - INLINE VERSION
 			// Set tenant ID langsung di sini, gausa tunggu dari tenant.js
-			window.tenantId = 14; // HARUS SAMA DENGAN DEFAULT_WEBSITE_ID di tenant.js
+			window.tenantId = 1; // HARUS SAMA DENGAN DEFAULT_WEBSITE_ID di tenant.js
 			
 			window.addEventListener('DOMContentLoaded', function() {
 				// Inline tenant config update (no import needed)
@@ -135,7 +134,7 @@
 				}
 			}
 			
-			// Tenant ID langsung dari window global atau localStorage
+			// Tenant ID langsung dari window global
 			// Biarin ngikut tenant.js aja, gausa setting 2x
 			
 			function getTenantConfig(id) {
@@ -455,26 +454,9 @@
 				}
 			}
 			
-			// Preload critical resources
-			if ('requestIdleCallback' in window) {
-				requestIdleCallback(() => {
-					// Preload non-critical resources when browser is idle
-					const link = document.createElement('link');
-					link.rel = 'preload';
-					link.as = 'image';
-					link.href = 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=500&fit=crop';
-					document.head.appendChild(link);
-				});
-			}
+			// No preloading - direct loading for better performance
 			
-			// Service Worker registration for caching - PRODUCTION MODE
-			if ('serviceWorker' in navigator) {
-				window.addEventListener('load', () => {
-					navigator.serviceWorker.register('/sw.js')
-						.then(registration => {})
-						.catch(error => {});
-				});
-			}
+			// NO SERVICE WORKER - No caching
 		</script>
 	</body>
 </html>

@@ -47,6 +47,7 @@ export async function getArticlesByCategory(websiteId, category, limit = 10, off
     return sampleArticles.slice(offset, offset + limit);
   }
 
+  // Optimized query - hanya select field yang diperlukan untuk performance
   let query = supabase
     .from('articles')
     .select('id, title, slug, author, minute_read, category, thumbnail_image, summary, published_at, visit_count, tags, labels')

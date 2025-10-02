@@ -1,10 +1,9 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 
 // ID laman web lalai - TUKAR NOMBOR INI UNTUK UBAH SEMUA KONFIGURASI
-export const DEFAULT_WEBSITE_ID = 14; // Tukar nombor ini untuk tukar tenant
+export const DEFAULT_WEBSITE_ID = 1; // Tukar nombor ini untuk tukar tenant
 
-// Cache untuk simpan data laman web
-let websiteCache = new Map();
+// NO CACHE - Always fetch fresh data
 
 // Konfigurasi lengkap untuk setiap laman web/tenant
 export const TENANT_CONFIG = {
@@ -353,10 +352,7 @@ export function getCurrentTenantConfig() {
  * @returns {Promise<Object>} - Data laman web dari database
  */
 export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
-  // Periksa cache dulu
-  if (websiteCache.has(id)) {
-    return websiteCache.get(id);
-  }
+  // NO CACHE - Always fetch fresh data
 
   // Gunakan konfigurasi terpusat sebagai fallback
   const fallbackData = Object.fromEntries(
@@ -384,7 +380,7 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
       description: `Panduan kuliner terbaik di Website ${id}`,
       logo_url: null
     };
-    websiteCache.set(id, fallback);
+    // NO CACHE
     return fallback;
   }
 
@@ -404,7 +400,7 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
         description: `Panduan kuliner terbaik di Website ${id}`,
         logo_url: null
       };
-      websiteCache.set(id, fallback);
+      // NO CACHE
       return fallback;
     }
 
@@ -418,7 +414,7 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
         description: null,
         logo_url: null
       };
-      websiteCache.set(id, fallback);
+      // NO CACHE
       return fallback;
     }
 
@@ -426,7 +422,7 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
     const website = data[0];
     
     // Simpan ke cache
-    websiteCache.set(id, website);
+      // NO CACHE
     return website;
   } catch (error) {
     console.warn(`Unexpected error fetching website by ID ${id}:`, error.message);
@@ -438,7 +434,7 @@ export async function getWebsiteById(id = DEFAULT_WEBSITE_ID) {
       description: null,
       logo_url: null
     };
-    websiteCache.set(id, fallback);
+    // NO CACHE
     return fallback;
   }
 }
@@ -471,7 +467,7 @@ export async function getWebsiteBySlug(slug) {
     );
     
     const website = slugToConfig[slug] || getCurrentTenantConfig();
-    websiteCache.set(website.id, website);
+    // NO CACHE
     return website;
   }
 
@@ -501,7 +497,7 @@ export async function getWebsiteBySlug(slug) {
     const website = data[0];
     
     // Simpan ke cache
-    websiteCache.set(website.id, website);
+    // NO CACHE
     return website;
   } catch (error) {
     console.warn(`Unexpected error fetching website by slug "${slug}":`, error.message);
@@ -528,7 +524,7 @@ export async function getAllWebsites() {
 
     // Simpan ke cache
     data.forEach(website => {
-      websiteCache.set(website.id, website);
+      // NO CACHE
     });
 
     return data || [];

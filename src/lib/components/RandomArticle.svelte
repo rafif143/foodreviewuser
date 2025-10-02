@@ -217,7 +217,6 @@
               src={article.image} 
               alt={article.title}
               class="w-full h-48 object-cover"
-              loading="lazy"
             />
             <div class="absolute top-4 left-4">
               <span class="px-3 py-1 text-xs font-semibold text-white bg-red-600 rounded-full">

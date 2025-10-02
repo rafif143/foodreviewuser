@@ -78,7 +78,7 @@ async function testWebsiteContent(websiteId, websiteName) {
 async function runTests() {
   try {
     // Test website ID 1 (Kelantan)
-    await testWebsiteContent(1, 'Kelantan Food Review');
+    await testWebsiteContent(1, 'MakanKelantan');
     
     // Test website ID 2 (jika ada)
     await testWebsiteContent(2, 'Website 2');

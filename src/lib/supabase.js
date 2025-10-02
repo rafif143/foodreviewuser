@@ -9,9 +9,25 @@ let isSupabaseConfigured = false;
 
 if (supabaseUrl && supabaseAnonKey) {
   try {
-    supabase = createClient(supabaseUrl, supabaseAnonKey);
+    // Optimized Supabase client configuration untuk performance tanpa cache
+    supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false, // No session caching
+        autoRefreshToken: false // No token refresh caching
+      },
+      global: {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate', // No caching headers
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      },
+      db: {
+        schema: 'public'
+      }
+    });
     isSupabaseConfigured = true;
-    console.log('✅ Supabase client initialized successfully');
+    console.log('✅ Supabase client initialized successfully (NO CACHE MODE)');
   } catch (error) {
     console.error('❌ Failed to initialize Supabase client:', error);
     isSupabaseConfigured = false;

@@ -101,7 +101,7 @@ create table public.contact (
 #### Insert Websites
 ```sql
 INSERT INTO websites (name, slug, description) VALUES
-('Kelantan Food Review', 'kelantan', 'Panduan kuliner terbaik di Kelantan'),
+('MakanKelantan', 'kelantan', 'Panduan kuliner terbaik di Kelantan'),
 ('Kedah Food Review', 'kedah', 'Panduan kuliner terbaik di Kedah'),
 ('Penang Food Review', 'penang', 'Panduan kuliner terbaik di Penang'),
 ('Perak Food Review', 'perak', 'Panduan kuliner terbaik di Perak'),

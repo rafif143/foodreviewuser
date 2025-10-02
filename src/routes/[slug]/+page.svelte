@@ -90,7 +90,6 @@
                     src={article.thumbnail_image || 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop'} 
                     alt={article.title}
                     class="w-full h-32 object-cover"
-                    loading="lazy"
                   />
                   <div class="absolute top-2 left-2">
                     <span class="px-2 py-1 text-[10px] font-semibold text-white bg-red-600 rounded-full">
@@ -211,7 +210,6 @@
                     src={article.thumbnail_image || 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop'} 
                     alt={article.title}
                     class="w-full h-32 object-cover"
-                    loading="lazy"
                   />
                   <div class="absolute top-2 left-2">
                     <span class="px-2 py-1 text-[10px] font-semibold text-white bg-red-600 rounded-full">

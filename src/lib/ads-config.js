@@ -1,8 +1,7 @@
 // Simple Ads Configuration untuk User-Side Only
 import { supabase } from './supabase';
 
-// Cache untuk ads config
-let adsConfigCache = new Map();
+// NO CACHE - Always fetch fresh data
 
 /**
  * Mendapatkan konfigurasi ads untuk website tertentu
@@ -10,10 +9,7 @@ let adsConfigCache = new Map();
  * @returns {Promise<Object>} - Konfigurasi ads
  */
 export async function getAdsConfig(websiteId) {
-  // Cek cache dulu
-  if (adsConfigCache.has(websiteId)) {
-    return adsConfigCache.get(websiteId);
-  }
+  // NO CACHE - Always fetch fresh data
 
   try {
     const { data, error } = await supabase
@@ -38,12 +34,11 @@ export async function getAdsConfig(websiteId) {
         ad_frequency: 1
       };
       
-      adsConfigCache.set(websiteId, defaultConfig);
+      // NO CACHE
       return defaultConfig;
     }
 
-    // Simpan ke cache
-    adsConfigCache.set(websiteId, data);
+    // NO CACHE
     return data;
   } catch (error) {
     console.warn(`Error fetching ads config for website ${websiteId}:`, error.message);
@@ -161,14 +156,4 @@ export function shouldDisplayAd(adContent, pageData = {}) {
   return true;
 }
 
-/**
- * Clear ads config cache
- * @param {number} websiteId - Website ID (optional)
- */
-export function clearAdsCache(websiteId = null) {
-  if (websiteId) {
-    adsConfigCache.delete(websiteId);
-  } else {
-    adsConfigCache.clear();
-  }
-}
+// NO CACHE - clearAdsCache function removed

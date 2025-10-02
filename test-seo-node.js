@@ -208,7 +208,7 @@ function estimateWordCount(content) {
 // Test data
 const testWebsite = {
   id: 1,
-  name: 'Kelantan Food Review',
+  name: 'MakanKelantan',
   slug: 'kelantan',
   description: 'Panduan kuliner terbaik di Kelantan'
 };

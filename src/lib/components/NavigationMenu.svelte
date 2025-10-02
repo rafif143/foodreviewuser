@@ -112,20 +112,14 @@ const iconSvgs = {
     return createWebsiteUrl(website, path);
   };
 
-  // Selalu buka sidebar secara default ketika page di-reload atau dibuka
+  // NO CACHE - Always open sidebar by default
   onMount(() => {
     if (browser) {
       // Force open sidebar untuk desktop dan mobile
       isDesktopSidebarOpen = true;
       isMobileSidebarOpen = true;
-      hasLoadedStorage = true;
     }
   });
-
-  $: if (browser && hasLoadedStorage) {
-    localStorage.setItem('isDesktopSidebarOpen', String(isDesktopSidebarOpen));
-    localStorage.setItem('isMobileSidebarOpen', String(isMobileSidebarOpen));
-  }
 </script>
 
 <!-- Top Header -->
@@ -199,7 +193,7 @@ const iconSvgs = {
         <!-- Brand Name -->
         <div class="flex items-center">
           <h1 class="font-handwriting text-lg md:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-            Kelantan Food Review
+            Makan{website?.name ? ` ${website.name.replace('Makan', '')}` : ''}
           </h1>
         </div>
         

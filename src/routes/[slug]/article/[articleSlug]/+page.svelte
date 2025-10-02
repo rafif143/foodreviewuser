@@ -1,7 +1,6 @@
 <script>
   import { page } from '$app/stores';
-  import LazyComponent from '$lib/components/LazyComponent.svelte';
-  import LazyImage from '$lib/components/LazyImage.svelte';
+  // NO LAZY LOADING - Direct loading for better performance
   import SEOHead from '$lib/components/SEOHead.svelte';
   
   // Import components directly untuk stability
@@ -441,11 +440,10 @@
 
             <!-- Main Image -->
             <div class="mb-6 sm:mb-8">
-              <LazyImage 
+              <img 
                 src={validateImageUrl(article.main_image)}
                 alt={article.title}
-                className="w-full h-56 sm:h-72 md:h-80 lg:h-96 object-cover rounded-lg shadow-md"
-                loading="eager"
+                class="w-full h-56 sm:h-72 md:h-80 lg:h-96 object-cover rounded-lg shadow-md"
                 width="800"
                 height="400"
               />
@@ -559,10 +557,10 @@
                 <a href="/{websiteSlug}/article/{relatedArticle.slug || relatedArticle.id}" class="group">
                   <article class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform transform hover:scale-105">
                     <div class="relative h-48">
-                      <LazyImage 
+                      <img 
                         src={validateImageUrl(relatedArticle.thumbnail_image)}
                         alt={relatedArticle.title}
-                        className="w-full h-full object-cover"
+                        class="w-full h-full object-cover"
                         width="400"
                         height="200"
                       />

@@ -23,7 +23,7 @@
         slug: article.slug,
         title: article.title,
         category: article.category,
-        author: article.author || 'Pasukan Kelantan Food Review',
+        author: article.author || `Pasukan ${website?.name || 'Makan'}`,
         date: formatDateMalay(article.published_at),
         excerpt: article.summary,
         image: article.thumbnail_image || 'https://images.unsplash.com/10.6905925346-21bda4d32df4?w=300&h=200&fit=crop&crop=center'

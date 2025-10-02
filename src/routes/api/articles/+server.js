@@ -18,9 +18,22 @@ export async function GET({ url }) {
   
   try {
     const articles = await getArticlesByCategory(websiteId, category, offset, limit);
-    return json(articles);
+    return json(articles, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
   } catch (error) {
     console.error('Error fetching articles:', error);
-    return json({ error: 'Failed to fetch articles' }, { status: 500 });
+    return json({ error: 'Failed to fetch articles' }, { 
+      status: 500,
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
   }
 }
