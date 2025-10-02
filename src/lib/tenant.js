@@ -80,7 +80,7 @@ export const TENANT_CONFIG = {
       coordinates: "5.4164;100.3327",
       icbm: "5.4164, 100.3327"
     },
-    domain: "https://makanpenang.com"
+    domain: "https://makan-penang.com"
   },
   
   4: {
